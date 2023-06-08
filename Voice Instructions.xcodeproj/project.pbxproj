@@ -28,6 +28,7 @@
 		5A3D09DC2A31CB6400FD1132 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */; };
 		5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */; };
 		5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */; };
+		5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfinityScrollViewData.swift; sourceTree = "<group>"; };
 		5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubbingBarView.swift; sourceTree = "<group>"; };
+		5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInfinity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +220,7 @@
 			children = (
 				5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */,
 				5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */,
+				5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */,
 			);
 			path = "Scrubbing bar";
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				5A3D09C92A31C21000FD1132 /* Video.swift in Sources */,
 				5A3D09D62A31C73100FD1132 /* EditorView.swift in Sources */,
 				5A3D09D42A31C6FE00FD1132 /* PlayerView.swift in Sources */,
+				5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
 				5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,

@@ -2,7 +2,6 @@
 //  ScrubbingBarView.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 08.06.2023.
 //
 
 import SwiftUI
@@ -11,47 +10,46 @@ struct ScrubbingBarView: View {
     let significanceValue: CGFloat = 10
     var duration: CGFloat = 60
     @Binding var time: Double
+    @State var totalOffset: CGFloat = .zero
     var body: some View {
-        VStack {
-            InfinteHScrollView(alignment: .center){
-                    ForEach(1...10, id: \.self) { _ in
-                        cellView
-                    }
-            } onChange: { totalOffset in
-                let value = (totalOffset / significanceValue) / 10
-                let newTime = duration + value
-                time = min(max(newTime, 0), duration)
+        
+        InfinteHScrollView(alignment: .center){
+            HStack(spacing: 0){
+                ForEach(1...8, id: \.self) { _ in
+                    Image("scrubbingImage")
+                }
             }
-            Text("\(duration)")
-                .foregroundColor(.white)
+        } onChange: { totalOffset in
+            self.totalOffset = totalOffset
+            let value = (totalOffset / significanceValue) / 100
+            time = abs(min(min(value, 0), duration))
         }
         .frame(height: 80)
         .background(Color.black)
+        .overlay {
+            LinearGradient(colors: [.black.opacity(0.3), .clear], startPoint: .trailing, endPoint: .center)
+                .allowsHitTesting(false)
+            LinearGradient(colors: [.black.opacity(0.3), .clear], startPoint: .leading, endPoint: .center)
+                .allowsHitTesting(false)
+        }
     }
 }
 
 struct ScrubbingBarView_Previews: PreviewProvider {
-    @State static var time: Double = 0
+
     static var previews: some View {
-        ZStack{
-            Color.black
-            ScrubbingBarView(duration: 60, time: $time)
-        }
+        TestView()
     }
 }
 
-extension ScrubbingBarView{
-    private var cellView: some View{
-        HStack(spacing: 12){
-            ForEach(1...19, id: \.self) { index in
-                Rectangle()
-                    .opacity(index == 19 ? 0 : 1)
-                    .frame(width: 2, height: (index % 5 == 0) || (index == 1) ? 25 : 16)
-                    .foregroundColor(index == 10 ? .red : .white)
-            }
-            .frame(height: 80)
-            .background(Color.black)
-            .contentShape(Rectangle())
+
+
+struct TestView: View{
+    @State  var time: Double = 0
+    var body: some View{
+        ZStack{
+            Color.black
+            ScrubbingBarView(time: $time)
         }
     }
 }

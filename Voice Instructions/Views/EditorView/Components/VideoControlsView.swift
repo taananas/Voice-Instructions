@@ -16,10 +16,15 @@ struct VideoControlsView: View {
         VStack{
             timeSlider
             HStack(spacing: 16) {
-                playPauseButton
-                Spacer()
-                rateButton
-//                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime)
+                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime)
+                    .padding(.horizontal, 30)
+            }
+            .overlay {
+                HStack{
+                    playPauseButton
+                    Spacer()
+                    rateButton
+                }
             }
         }
         .vBottom()
