@@ -20,7 +20,6 @@ struct VideoControlsView: View {
                 Spacer()
                 rateButton
 //                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime)
-               // RateButton(onChange: playerManager.setRateAndPlay)
             }
         }
         .vBottom()
@@ -141,3 +140,26 @@ extension VideoControlsView{
 
 
 
+
+enum EnumRate: String, CaseIterable{
+    
+    case x2 = "2x"
+    case x15 = "1.5"
+    case x1 = "1x"
+    case x125 = "1.25"
+    case x12 = "1/2"
+    case x14 = "1/4"
+    case x18 = "1/8"
+    
+    var value: Float{
+        switch self {
+        case .x2: return 2
+        case .x15: return 1.5
+        case .x1: return 1
+        case .x125: return 1.25
+        case .x12: return 0.5
+        case .x14: return 0.25
+        case .x18: return 0.125
+        }
+    }
+}
