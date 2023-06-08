@@ -50,7 +50,8 @@ final class VideoPlayerManager: ObservableObject{
     }
     
     /// Play or pause video
-    func action(_ video: Video){
+    func action(){
+        guard let video else {return}
         self.currentDurationRange = video.rangeDuration
         if isPlaying{
             pause()
@@ -224,7 +225,6 @@ extension VideoPlayerManager{
     /// load storage video object
     private func loadVideo(){
         self.video = videoStorageService.load()
-        print(video)
         if let video{
             self.videoPlayer = AVPlayer(url: video.url)
             self.startControlStatusSubscriptions()

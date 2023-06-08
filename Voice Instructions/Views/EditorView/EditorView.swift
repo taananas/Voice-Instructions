@@ -2,7 +2,6 @@
 //  EditorView.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 08.06.2023.
 //
 
 import SwiftUI
@@ -10,6 +9,7 @@ import PhotosUI
 import AVKit
 
 struct EditorView: View {
+   
     @StateObject var playerManager = VideoPlayerManager()
     var body: some View {
         ZStack{
@@ -26,9 +26,6 @@ struct EditorView: View {
             }
         }
         .onChange(of: playerManager.selectedItem, perform: setVideo)
-        .overlay(alignment: .topLeading) {
-            removeButton
-        }
     }
 }
 
@@ -48,10 +45,13 @@ extension EditorView{
         ZStack{
             PlayerRepresentable(player: playerManager.videoPlayer)
                  .ignoresSafeArea()
-//            if let video = playerManager.video{
-//                VideoControlsView(playerManager: playerManager, video: video)
-//                    .vBottom()
-//            }
+            if let video = playerManager.video{
+                VideoControlsView(playerManager: playerManager, video: video)
+                    .vBottom()
+            }
+        }
+        .overlay(alignment: .topLeading) {
+            removeButton
         }
     }
     
@@ -70,16 +70,31 @@ extension EditorView{
     }
     
     private var removeButton: some View{
-        Button {
-            playerManager.removeVideo()
-        } label: {
-            Image(systemName: "xmark")
-                .foregroundColor(.white)
-                .padding(10)
-                .background(Material.ultraThinMaterial, in: Circle())
-                .padding()
-        }
+        CloseButton(onRemove: playerManager.removeVideo)
     }
 }
 
 
+extension EditorView{
+    struct CloseButton: View{
+        @State private var isPresented: Bool = false
+        let onRemove: () -> Void
+        var body: some View{
+            Button {
+                isPresented.toggle()
+            } label: {
+                Image(systemName: "xmark")
+                    .foregroundColor(.white)
+                    .padding(10)
+                    .background(Material.ultraThinMaterial, in: Circle())
+                    .padding()
+            }
+            .alert("Remove video", isPresented: $isPresented) {
+                Button("Cancel", role: .cancel, action: {})
+                Button("Remove", role: .destructive, action: onRemove)
+            } message: {
+                Text("Are you sure you want to delete the video?")
+            }
+        }
+    }
+}
