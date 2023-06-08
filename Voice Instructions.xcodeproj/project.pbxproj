@@ -21,6 +21,9 @@
 		5A3D09CB2A31C25800FD1132 /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09CA2A31C25800FD1132 /* VideoItem.swift */; };
 		5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */; };
 		5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09CE2A31C44E00FD1132 /* VideoStorageService.swift */; };
+		5A3D09D22A31C6BA00FD1132 /* PlayerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09D12A31C6BA00FD1132 /* PlayerRepresentable.swift */; };
+		5A3D09D42A31C6FE00FD1132 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09D32A31C6FE00FD1132 /* PlayerView.swift */; };
+		5A3D09D62A31C73100FD1132 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09D52A31C73100FD1132 /* EditorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +42,9 @@
 		5A3D09CA2A31C25800FD1132 /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		5A3D09CE2A31C44E00FD1132 /* VideoStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStorageService.swift; sourceTree = "<group>"; };
+		5A3D09D12A31C6BA00FD1132 /* PlayerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerRepresentable.swift; sourceTree = "<group>"; };
+		5A3D09D32A31C6FE00FD1132 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		5A3D09D52A31C73100FD1132 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +108,7 @@
 		5A3D09B32A31C01200FD1132 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				5A3D09B92A31C06100FD1132 /* RootView */,
+				5A3D09B92A31C06100FD1132 /* EditorView */,
 				5A3D09B72A31C04600FD1132 /* ViewComponents */,
 			);
 			path = Views;
@@ -153,11 +159,13 @@
 			path = Sliders;
 			sourceTree = "<group>";
 		};
-		5A3D09B92A31C06100FD1132 /* RootView */ = {
+		5A3D09B92A31C06100FD1132 /* EditorView */ = {
 			isa = PBXGroup;
 			children = (
+				5A3D09D02A31C6AB00FD1132 /* Player */,
+				5A3D09D52A31C73100FD1132 /* EditorView.swift */,
 			);
-			path = RootView;
+			path = EditorView;
 			sourceTree = "<group>";
 		};
 		5A3D09C42A31C1CE00FD1132 /* Sevices */ = {
@@ -173,6 +181,15 @@
 			isa = PBXGroup;
 			children = (
 				5A3D09C62A31C1E700FD1132 /* VideoPlayerManager.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+		5A3D09D02A31C6AB00FD1132 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				5A3D09D12A31C6BA00FD1132 /* PlayerRepresentable.swift */,
+				5A3D09D32A31C6FE00FD1132 /* PlayerView.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -251,10 +268,13 @@
 				5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */,
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
+				5A3D09D22A31C6BA00FD1132 /* PlayerRepresentable.swift in Sources */,
 				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
 				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
 				5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */,
 				5A3D09C92A31C21000FD1132 /* Video.swift in Sources */,
+				5A3D09D62A31C73100FD1132 /* EditorView.swift in Sources */,
+				5A3D09D42A31C6FE00FD1132 /* PlayerView.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
 				5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,

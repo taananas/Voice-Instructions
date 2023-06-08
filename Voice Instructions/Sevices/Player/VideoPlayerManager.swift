@@ -189,6 +189,7 @@ extension VideoPlayerManager{
                 self.video = .init(url: video.url, originalDuration: duration ?? 1)
                 self.startControlStatusSubscriptions()
                 print("AVPlayer set url:", video.url.absoluteString)
+                self.save()
                 loadState = .loaded
             } else {
                 loadState = .failed
@@ -223,17 +224,28 @@ extension VideoPlayerManager{
     /// load storage video object
     private func loadVideo(){
         self.video = videoStorageService.load()
+        print(video)
         if let video{
             self.videoPlayer = AVPlayer(url: video.url)
             self.startControlStatusSubscriptions()
+            self.loadState = .loaded
         }
         
     }
+    
+    private func save(){
+        guard let video else {return}
+        videoStorageService.save(video)
+    }
+    
     ///remove copy video and storage video object
-    private func remove(){
+    func removeVideo(){
         if let video{
             FileManager.default.removeFileExists(for: video.url)
             videoStorageService.remove()
+            removeTimeObserver()
+            self.videoPlayer = .init()
+            self.loadState = .unknown
         }
     }
 }
