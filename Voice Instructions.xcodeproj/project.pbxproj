@@ -26,6 +26,8 @@
 		5A3D09D62A31C73100FD1132 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09D52A31C73100FD1132 /* EditorView.swift */; };
 		5A3D09DA2A31CB5200FD1132 /* VideoControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09D92A31CB5200FD1132 /* VideoControlsView.swift */; };
 		5A3D09DC2A31CB6400FD1132 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */; };
+		5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */; };
+		5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,8 @@
 		5A3D09D52A31C73100FD1132 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		5A3D09D92A31CB5200FD1132 /* VideoControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoControlsView.swift; sourceTree = "<group>"; };
 		5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
+		5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfinityScrollViewData.swift; sourceTree = "<group>"; };
+		5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubbingBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +155,7 @@
 		5A3D09B72A31C04600FD1132 /* ViewComponents */ = {
 			isa = PBXGroup;
 			children = (
+				5A3D09DD2A31D38600FD1132 /* Scrubbing bar */,
 				5A3D09B82A31C05400FD1132 /* Sliders */,
 			);
 			path = ViewComponents;
@@ -208,6 +213,15 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		5A3D09DD2A31D38600FD1132 /* Scrubbing bar */ = {
+			isa = PBXGroup;
+			children = (
+				5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */,
+				5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */,
+			);
+			path = "Scrubbing bar";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -224,6 +238,8 @@
 			dependencies = (
 			);
 			name = "Voice Instructions";
+			packageProductDependencies = (
+			);
 			productName = "Voice Instructions";
 			productReference = 5A3D09A12A31BF6E00FD1132 /* Voice Instructions.app */;
 			productType = "com.apple.product-type.application";
@@ -252,6 +268,8 @@
 				Base,
 			);
 			mainGroup = 5A3D09982A31BF6E00FD1132;
+			packageReferences = (
+			);
 			productRefGroup = 5A3D09A22A31BF6E00FD1132 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -283,9 +301,11 @@
 				5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */,
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
+				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
 				5A3D09D22A31C6BA00FD1132 /* PlayerRepresentable.swift in Sources */,
 				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
 				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
+				5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */,
 				5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */,
 				5A3D09DA2A31CB5200FD1132 /* VideoControlsView.swift in Sources */,
 				5A3D09C92A31C21000FD1132 /* Video.swift in Sources */,

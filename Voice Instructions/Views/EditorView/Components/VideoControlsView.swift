@@ -2,7 +2,6 @@
 //  VideoControlsView.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 08.06.2023.
 //
 
 import SwiftUI
@@ -16,7 +15,7 @@ struct VideoControlsView: View {
             timeSlider
             HStack(spacing: 16) {
                 playPauseButton
-                Spacer()
+                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime)
             }
         }
         .vBottom()
