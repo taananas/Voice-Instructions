@@ -27,11 +27,15 @@ final class VideoPlayerManager: ObservableObject{
     private var timeObserver: Any?
     private var currentDurationRange: ClosedRange<Double>?
     private var isSeekInProgress: Bool = false
+    private let videoStorageService = VideoStorageService.shared
     
     deinit {
         removeTimeObserver()
     }
     
+    init(){
+        loadVideo()
+    }
 
     /// Scrubbing state for seek video time
     var scrubState: PlayerScrubState = .reset {
@@ -214,4 +218,22 @@ extension VideoPlayerManager{
 
 
 
-
+extension VideoPlayerManager{
+    
+    /// load storage video object
+    private func loadVideo(){
+        self.video = videoStorageService.load()
+        if let video{
+            self.videoPlayer = AVPlayer(url: video.url)
+            self.startControlStatusSubscriptions()
+        }
+        
+    }
+    ///remove copy video and storage video object
+    private func remove(){
+        if let video{
+            FileManager.default.removeFileExists(for: video.url)
+            videoStorageService.remove()
+        }
+    }
+}

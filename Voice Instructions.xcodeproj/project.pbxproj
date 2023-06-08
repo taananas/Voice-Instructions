@@ -19,6 +19,8 @@
 		5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09C62A31C1E700FD1132 /* VideoPlayerManager.swift */; };
 		5A3D09C92A31C21000FD1132 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09C82A31C21000FD1132 /* Video.swift */; };
 		5A3D09CB2A31C25800FD1132 /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09CA2A31C25800FD1132 /* VideoItem.swift */; };
+		5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */; };
+		5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09CE2A31C44E00FD1132 /* VideoStorageService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		5A3D09C62A31C1E700FD1132 /* VideoPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerManager.swift; sourceTree = "<group>"; };
 		5A3D09C82A31C21000FD1132 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		5A3D09CA2A31C25800FD1132 /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
+		5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		5A3D09CE2A31C44E00FD1132 /* VideoStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStorageService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +124,7 @@
 				5A3D09BE2A31C0D500FD1132 /* FileManager.swift */,
 				5A3D09C02A31C0E900FD1132 /* Double.swift */,
 				5A3D09C22A31C0FC00FD1132 /* CancelBag.swift */,
+				5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -159,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				5A3D09C52A31C1DA00FD1132 /* Player */,
+				5A3D09CE2A31C44E00FD1132 /* VideoStorageService.swift */,
 			);
 			path = Sevices;
 			sourceTree = "<group>";
@@ -242,8 +248,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A3D09CB2A31C25800FD1132 /* VideoItem.swift in Sources */,
+				5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */,
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
+				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
 				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
 				5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */,
 				5A3D09C92A31C21000FD1132 /* Video.swift in Sources */,

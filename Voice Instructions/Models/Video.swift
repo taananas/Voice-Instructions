@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct Video: Identifiable{
+struct Video: Identifiable, Codable{
     
     var id: UUID = UUID()
     var url: URL
