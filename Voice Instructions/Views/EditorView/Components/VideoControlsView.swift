@@ -10,16 +10,35 @@ struct VideoControlsView: View {
     @ObservedObject var playerManager: VideoPlayerManager
     var video: Video
     private let thumbRadius: CGFloat = 30
+    @State private var showRatePicker: Bool = false
+    @State var selectedRate: EnumRate = .x1
     var body: some View {
         VStack{
             timeSlider
             HStack(spacing: 16) {
                 playPauseButton
-                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime)
+                Spacer()
+                rateButton
+//                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime)
+               // RateButton(onChange: playerManager.setRateAndPlay)
             }
         }
         .vBottom()
-        .padding()
+        .padding(.horizontal, 18)
+        .overlay {
+            Group{
+                if showRatePicker{
+                    ZStack(alignment: .bottomTrailing){
+                        Color.black.opacity(0.1)
+                            .onTapGesture {
+                                showRatePicker.toggle()
+                            }
+                       ratePicker
+                    }
+                }
+            }
+            .animation(.default, value: showRatePicker)
+        }
     }
 }
 
@@ -85,6 +104,38 @@ extension VideoControlsView{
             )
         }
         .frame(height: 30)
+    }
+    
+    
+    private var rateButton: some View{
+        Text(selectedRate.rawValue)
+            .foregroundColor(.white)
+            .font(.body.weight(.bold))
+            .padding(.leading, 10)
+            .onTapGesture {
+                showRatePicker.toggle()
+            }
+    }
+    
+    private var ratePicker: some View{
+        VStack(spacing: 10){
+            ForEach(EnumRate.allCases, id: \.self) { rate in
+                Text(rate.rawValue)
+                    .foregroundColor(rate == selectedRate ? .orange : .white)
+                    .padding(.vertical, 5)
+                    .font(.body.weight(.bold))
+                    .onTapGesture {
+                        selectedRate = rate
+                        showRatePicker.toggle()
+                        playerManager.setRateAndPlay(rate.value)
+                    }
+            }
+        }
+        .padding(.vertical, 10)
+        .frame(width: 50)
+        .background(Material.ultraThinMaterial, in: Capsule())
+        .offset(y: -100)
+        .padding(.horizontal, 9)
     }
 }
 

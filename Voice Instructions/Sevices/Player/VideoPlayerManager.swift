@@ -134,7 +134,10 @@ final class VideoPlayerManager: ObservableObject{
          }
     }
     
-    
+    func setRateAndPlay(_ rate: Float){
+        videoPlayer.pause()
+        play(rate)
+    }
     
     /// Start video timer
     private func startTimer() {
