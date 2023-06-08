@@ -16,6 +16,9 @@
 		5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09BE2A31C0D500FD1132 /* FileManager.swift */; };
 		5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09C02A31C0E900FD1132 /* Double.swift */; };
 		5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09C22A31C0FC00FD1132 /* CancelBag.swift */; };
+		5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09C62A31C1E700FD1132 /* VideoPlayerManager.swift */; };
+		5A3D09C92A31C21000FD1132 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09C82A31C21000FD1132 /* Video.swift */; };
+		5A3D09CB2A31C25800FD1132 /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09CA2A31C25800FD1132 /* VideoItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,9 @@
 		5A3D09BE2A31C0D500FD1132 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		5A3D09C02A31C0E900FD1132 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		5A3D09C22A31C0FC00FD1132 /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
+		5A3D09C62A31C1E700FD1132 /* VideoPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerManager.swift; sourceTree = "<group>"; };
+		5A3D09C82A31C21000FD1132 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
+		5A3D09CA2A31C25800FD1132 /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				5A3D09B22A31C00C00FD1132 /* App */,
+				5A3D09C42A31C1CE00FD1132 /* Sevices */,
 				5A3D09B62A31C03B00FD1132 /* Models */,
 				5A3D09B42A31C01900FD1132 /* Utils */,
 				5A3D09B32A31C01200FD1132 /* Views */,
@@ -120,6 +127,8 @@
 		5A3D09B62A31C03B00FD1132 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5A3D09C82A31C21000FD1132 /* Video.swift */,
+				5A3D09CA2A31C25800FD1132 /* VideoItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -144,6 +153,22 @@
 			children = (
 			);
 			path = RootView;
+			sourceTree = "<group>";
+		};
+		5A3D09C42A31C1CE00FD1132 /* Sevices */ = {
+			isa = PBXGroup;
+			children = (
+				5A3D09C52A31C1DA00FD1132 /* Player */,
+			);
+			path = Sevices;
+			sourceTree = "<group>";
+		};
+		5A3D09C52A31C1DA00FD1132 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				5A3D09C62A31C1E700FD1132 /* VideoPlayerManager.swift */,
+			);
+			path = Player;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,9 +241,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A3D09CB2A31C25800FD1132 /* VideoItem.swift in Sources */,
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
+				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
 				5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */,
+				5A3D09C92A31C21000FD1132 /* Video.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
 				5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,
@@ -357,8 +385,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -366,6 +395,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tanaas.Voice-Instructions";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -386,8 +418,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -395,6 +428,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tanaas.Voice-Instructions";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
