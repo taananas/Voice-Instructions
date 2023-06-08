@@ -9,7 +9,7 @@ import Foundation
 struct Video: Identifiable, Codable{
     
     var id: UUID = UUID()
-    var url: URL
+    private var url: URL
     let originalDuration: Double
     var rangeDuration: ClosedRange<Double>
     
@@ -21,6 +21,10 @@ struct Video: Identifiable, Codable{
         self.url = url
         self.originalDuration = originalDuration
         self.rangeDuration = 0...originalDuration
+    }
+    
+    var fullPath: URL{
+        FileManager.default.createVideoPath(with: url.lastPathComponent) ?? url
     }
 }
 

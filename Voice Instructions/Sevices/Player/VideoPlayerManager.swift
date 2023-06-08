@@ -231,7 +231,7 @@ extension VideoPlayerManager{
     private func loadVideo(){
         self.video = videoStorageService.load()
         if let video{
-            self.videoPlayer = AVPlayer(url: video.url)
+            self.videoPlayer = AVPlayer(url: video.fullPath)
             self.startControlStatusSubscriptions()
             self.loadState = .loaded
         }
@@ -246,7 +246,7 @@ extension VideoPlayerManager{
     ///remove copy video and storage video object
     func removeVideo(){
         if let video{
-            FileManager.default.removeFileExists(for: video.url)
+            FileManager.default.removeFileExists(for: video.fullPath)
             videoStorageService.remove()
             removeTimeObserver()
             self.videoPlayer = .init()

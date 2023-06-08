@@ -17,7 +17,7 @@ struct VideoControlsView: View {
             timeSlider
                 .padding(.horizontal, 18)
             HStack(spacing: 16) {
-                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime, onChangeTime: playerManager.seek)
+                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime, onChangeTime: seek)
                     .padding(.horizontal, 40)
             }
             .padding(.horizontal, 18)
@@ -72,6 +72,9 @@ extension VideoControlsView{
         .padding(.horizontal)
     }
     
+    private func seek(_ time: Double){
+        playerManager.scrubState = .scrubEnded(time)
+    }
     
     private var timeSlider: some View{
         
@@ -80,7 +83,7 @@ extension VideoControlsView{
                 playerManager.currentTime
             }, set: { newValue in
                 playerManager.currentTime = newValue
-                playerManager.scrubState = .scrubEnded(newValue)
+                seek(newValue)
             }),
                          in: video.rangeDuration,
                          step: 0.003,
