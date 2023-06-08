@@ -15,10 +15,12 @@ struct VideoControlsView: View {
     var body: some View {
         VStack{
             timeSlider
+                .padding(.horizontal, 18)
             HStack(spacing: 16) {
-                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime)
-                    .padding(.horizontal, 30)
+                ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime, onChangeTime: playerManager.seek)
+                    .padding(.horizontal, 40)
             }
+            .padding(.horizontal, 18)
             .overlay {
                 HStack{
                     playPauseButton
@@ -27,8 +29,8 @@ struct VideoControlsView: View {
                 }
             }
         }
+        
         .vBottom()
-        .padding(.horizontal, 18)
         .overlay {
             Group{
                 if showRatePicker{
@@ -51,7 +53,6 @@ struct VideoControlsView_Previews: PreviewProvider {
         ZStack{
             Color.black
             VideoControlsView(playerManager: VideoPlayerManager(), video: .mock)
-                .padding()
         }
     }
 }
@@ -68,7 +69,7 @@ extension VideoControlsView{
                 .frame(width: 20, height: 20)
                 .foregroundColor(.white)
         }
-
+        .padding(.horizontal)
     }
     
     
@@ -114,8 +115,8 @@ extension VideoControlsView{
     private var rateButton: some View{
         Text(selectedRate.rawValue)
             .foregroundColor(.white)
-            .font(.body.weight(.bold))
-            .padding(.leading, 10)
+            .font(.headline.weight(.bold))
+            .padding(.horizontal)
             .onTapGesture {
                 showRatePicker.toggle()
             }
@@ -138,7 +139,7 @@ extension VideoControlsView{
         .padding(.vertical, 10)
         .frame(width: 50)
         .background(Material.ultraThinMaterial, in: Capsule())
-        .offset(y: -100)
+        .offset(y: -140)
         .padding(.horizontal, 9)
     }
 }

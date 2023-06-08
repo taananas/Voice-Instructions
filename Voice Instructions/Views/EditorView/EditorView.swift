@@ -49,8 +49,6 @@ extension EditorView{
                 VideoControlsView(playerManager: playerManager, video: video)
                     .vBottom()
             }
-            
-        
         }
         .overlay(alignment: .topLeading) {
             removeButton

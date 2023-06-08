@@ -110,6 +110,7 @@ final class VideoPlayerManager: ObservableObject{
         videoPlayer.play()
         
         if let rate{
+            self.rate = rate
             videoPlayer.rate = rate
         }
         
@@ -195,6 +196,7 @@ extension VideoPlayerManager{
                 print("AVPlayer set url:", video.url.absoluteString)
                 self.save()
                 loadState = .loaded
+                self.action()
             } else {
                 loadState = .failed
             }

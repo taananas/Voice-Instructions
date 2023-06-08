@@ -68,7 +68,7 @@ struct InfinteHScrollView<Content>: View where Content: View {
                 }
                 Spacer()
             }
-            .onChange(of: dragOffset + xOffset) { newValue in
+            .onChange(of: dragOffset) { newValue in
                 onChange?(newValue)
             }
         }

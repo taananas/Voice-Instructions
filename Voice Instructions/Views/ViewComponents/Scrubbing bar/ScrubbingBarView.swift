@@ -7,10 +7,10 @@
 import SwiftUI
 
 struct ScrubbingBarView: View {
-    let significanceValue: CGFloat = 10
+    let significanceValue: CGFloat = 100_000
     var duration: CGFloat = 60
     @Binding var time: Double
-    @State var totalOffset: CGFloat = .zero
+    let onChangeTime: (Double) -> Void
     var body: some View {
         
         InfinteHScrollView(alignment: .center){
@@ -20,9 +20,9 @@ struct ScrubbingBarView: View {
                 }
             }
         } onChange: { totalOffset in
-            self.totalOffset = totalOffset
-            let value = (totalOffset / significanceValue) / 100
-            time = abs(min(min(value, 0), duration))
+            let value = (totalOffset / significanceValue)
+            time = min(max(time + value, 0), duration)
+            onChangeTime(time)
         }
         .frame(height: 80)
         .background(Color.black)
@@ -49,7 +49,7 @@ struct TestView: View{
     var body: some View{
         ZStack{
             Color.black
-            ScrubbingBarView(time: $time)
+            ScrubbingBarView(time: $time, onChangeTime: {_ in})
         }
     }
 }
