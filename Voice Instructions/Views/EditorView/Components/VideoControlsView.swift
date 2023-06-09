@@ -146,7 +146,7 @@ extension VideoControlsView{
         .padding(.vertical, 10)
         .frame(width: 50)
         .background(Material.ultraThinMaterial, in: Capsule())
-        .offset(y: -140)
+        .offset(y: -120)
         .padding(.horizontal, 9)
     }
 }

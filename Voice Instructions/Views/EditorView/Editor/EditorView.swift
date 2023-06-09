@@ -18,7 +18,7 @@ struct EditorView: View {
             case .loading:
                 ProgressView()
             case .loaded:
-                playerSectionView
+                playerLayers
             case .unknown:
                 pickerButton
             case.failed:
@@ -26,6 +26,9 @@ struct EditorView: View {
             }
         }
         .onChange(of: playerManager.selectedItem, perform: setVideo)
+        .safeAreaInset(edge: .top, alignment: .center, spacing: 0){
+            navBarView
+        }
     }
 }
 
@@ -41,30 +44,21 @@ extension EditorView{
     
     
     
-    private var playerSectionView: some View{
+    private var playerLayers: some View{
         ZStack{
             PlayerRepresentable(player: playerManager.videoPlayer, videoSize: playerManager.video?.originalSize)
                  .ignoresSafeArea()
             if showLayer{
                 DrawVideoLayer(playerManager: playerManager)
             }
-           
-            if let video = playerManager.video{
-                VideoControlsView(playerManager: playerManager, video: video)
-                    .vBottom()
-            }
+            
         }
-        .overlay(alignment: .topLeading) {
-            removeButton
+        .overlay(alignment: .bottom) {
+            bottomControlsView
         }
-        .overlay(alignment: .topTrailing) {
-            Button {
-                showLayer.toggle()
-            } label: {
-                Image(systemName: "pencil")
-                    .padding()
-            }
-
+        .overlay(alignment: .top) {
+            ToolsView()
+                .padding(.top, 30)
         }
     }
     
@@ -75,44 +69,31 @@ extension EditorView{
                      photoLibrary: .shared())
         .foregroundColor(.white)
     }
+
+}
+
+// safeAreaInset content
+extension EditorView{
     
-   private func setVideo(_ item: PhotosPickerItem?){
-        Task{
-           await playerManager.loadVideoItem(item)
+    @ViewBuilder
+    private var navBarView: some View{
+        if playerManager.loadState == .loaded{
+            NavigationBarView(playerManager: playerManager)
         }
     }
     
-    private var removeButton: some View{
-        CloseButton(onRemove: playerManager.removeVideo)
-    }
-    
-    
-    private func setVideoSize(){
-        
+    @ViewBuilder
+    private var bottomControlsView: some View{
+        if let video = playerManager.video, playerManager.loadState == .loaded{
+            VideoControlsView(playerManager: playerManager, video: video)
+        }
     }
 }
 
-
 extension EditorView{
-    struct CloseButton: View{
-        @State private var isPresented: Bool = false
-        let onRemove: () -> Void
-        var body: some View{
-            Button {
-                isPresented.toggle()
-            } label: {
-                Image(systemName: "xmark")
-                    .foregroundColor(.white)
-                    .padding(10)
-                    .background(Material.ultraThinMaterial, in: Circle())
-                    .padding()
-            }
-            .alert("Remove video", isPresented: $isPresented) {
-                Button("Cancel", role: .cancel, action: {})
-                Button("Remove", role: .destructive, action: onRemove)
-            } message: {
-                Text("Are you sure you want to delete the video?")
-            }
-        }
-    }
+    private func setVideo(_ item: PhotosPickerItem?){
+         Task{
+            await playerManager.loadVideoItem(item)
+         }
+     }
 }

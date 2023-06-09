@@ -31,6 +31,9 @@
 		5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */; };
 		5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */; };
 		5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */; };
+		5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */; };
+		5AEA54CF2A33672800BA1D9A /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CE2A33672800BA1D9A /* ToolsView.swift */; };
+		5AEA54D12A336C8600BA1D9A /* ToolDropdownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +62,9 @@
 		5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInfinity.swift; sourceTree = "<group>"; };
 		5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawVideoLayer.swift; sourceTree = "<group>"; };
 		5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAsset.swift; sourceTree = "<group>"; };
+		5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
+		5AEA54CE2A33672800BA1D9A /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
+		5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolDropdownMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +223,9 @@
 			isa = PBXGroup;
 			children = (
 				5A3D09D92A31CB5200FD1132 /* VideoControlsView.swift */,
+				5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */,
+				5AEA54CE2A33672800BA1D9A /* ToolsView.swift */,
+				5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -327,6 +336,7 @@
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
 				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
+				5AEA54CF2A33672800BA1D9A /* ToolsView.swift in Sources */,
 				5A3D09D22A31C6BA00FD1132 /* PlayerRepresentable.swift in Sources */,
 				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
 				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
@@ -334,12 +344,14 @@
 				5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */,
 				5A3D09DA2A31CB5200FD1132 /* VideoControlsView.swift in Sources */,
 				5A3D09C92A31C21000FD1132 /* Video.swift in Sources */,
+				5AEA54D12A336C8600BA1D9A /* ToolDropdownMenu.swift in Sources */,
 				5A3D09D62A31C73100FD1132 /* EditorView.swift in Sources */,
 				5A3D09D42A31C6FE00FD1132 /* PlayerView.swift in Sources */,
 				5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
 				5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */,
 				5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */,
+				5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */,
 				5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,
 				5A3D09BB2A31C08400FD1132 /* View.swift in Sources */,
