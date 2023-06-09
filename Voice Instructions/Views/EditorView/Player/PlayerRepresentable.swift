@@ -18,6 +18,7 @@ struct PlayerRepresentable: UIViewControllerRepresentable {
         view.player = player
         view.showsPlaybackControls = false
         view.videoGravity = .resizeAspect
+        view.allowsVideoFrameAnalysis = false
         return view
     }
     

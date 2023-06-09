@@ -13,15 +13,18 @@ struct InfinteHScrollView<Content>: View where Content: View {
     @State var rowWidth: CGFloat = 0.0
     @State var outerWidth: CGFloat = 0.0
     @State var xOffset: CGFloat = 0.0
-    @ViewBuilder var content: () -> Content
+
     @State private var contentMultiplier = 2
 
     @State private var isDragging = true
 
-    var onChange: ((CGFloat) -> Void)?
+    var onChange: ((CGFloat, CGFloat) -> Void)?
 
+    @ViewBuilder var content: () -> Content
+    
     var body: some View {
         ZStack {
+            
             InnerHView(xOffset: xOffset + dragOffset, outerWidth: outerWidth, rowWidth: $rowWidth, contentMultiplier: $contentMultiplier, content: content)
                 .fixedSize(horizontal: true, vertical: false)
                 .frame(width: outerWidth, alignment: contentMultiplier > 1 ? .center : Alignment(horizontal: alignment, vertical: .center))
@@ -69,7 +72,10 @@ struct InfinteHScrollView<Content>: View where Content: View {
                 Spacer()
             }
             .onChange(of: dragOffset) { newValue in
-                onChange?(newValue)
+                onChange?(newValue, 0)
+            }
+            .onChange(of: xOffset) { newValue in
+                onChange?(0, newValue)
             }
         }
     }

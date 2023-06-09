@@ -13,7 +13,7 @@ struct VideoControlsView: View {
     @State private var showRatePicker: Bool = false
     @State var selectedRate: EnumRate = .x1
     var body: some View {
-        VStack{
+        VStack(spacing: 0){
             timeSlider
                 .padding(.horizontal, 18)
             HStack(spacing: 16) {
@@ -29,7 +29,7 @@ struct VideoControlsView: View {
                 }
             }
         }
-        
+        .background(Color.black.opacity(0.25))
         .vBottom()
         .overlay {
             Group{
@@ -105,6 +105,9 @@ extension VideoControlsView{
                         Text(playerManager.currentTime.stringFromTimeInterval())
                             .fixedSize()
                             .foregroundColor(.white)
+                            .padding(.vertical, 2)
+                            .padding(.horizontal, 5)
+                            .background(Material.ultraThinMaterial, in: Capsule())
                             .offset(y: -30)
                     }
             }, thumbSize:
