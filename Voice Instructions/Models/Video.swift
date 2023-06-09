@@ -12,15 +12,17 @@ struct Video: Identifiable, Codable{
     private var url: URL
     let originalDuration: Double
     var rangeDuration: ClosedRange<Double>
+    var originalSize: CGSize?
     
     var totalDuration: Double{
         rangeDuration.upperBound - rangeDuration.lowerBound
     }
     
-    init(url: URL, originalDuration: Double){
+    init(url: URL, originalDuration: Double, originalSize: CGSize? = nil){
         self.url = url
         self.originalDuration = originalDuration
         self.rangeDuration = 0...originalDuration
+        self.originalSize = originalSize
     }
     
     var fullPath: URL{

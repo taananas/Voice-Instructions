@@ -19,6 +19,7 @@ struct VideoControlsView: View {
             HStack(spacing: 16) {
                 ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime, onChangeTime: seek)
                     .padding(.horizontal, 40)
+                
             }
             .padding(.horizontal, 18)
             .overlay {
@@ -51,7 +52,7 @@ struct VideoControlsView: View {
 struct VideoControlsView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
-            Color.black
+            Color.secondary
             VideoControlsView(playerManager: VideoPlayerManager(), video: .mock)
         }
     }

@@ -8,22 +8,24 @@ import SwiftUI
 
 struct ScrubbingBarView: View {
     let significanceValue: CGFloat = 1000
-    var duration: CGFloat = 160
+    var duration: CGFloat = 12
     @Binding var time: Double
     let onChangeTime: (Double) -> Void
+    @State private var lastOffset: CGFloat = .zero
     var body: some View {
         
-        InfinteHScrollView(alignment: .center, onChange: setTime){
-            imagesSection
+        VStack {
+//            Text("\(time)")
+//                .foregroundColor(.white)
+//            Text("\(lastOffset)")
+//                .foregroundColor(.white)
+            InfinteHScrollView(alignment: .center, onChange: setTime){
+                imagesSection
+            }
+            .frame(height: 60)
+        .background(Color.clear)
         }
-        .frame(height: 80)
-        .background(Color.black.opacity(0.25))
-        .overlay {
-            LinearGradient(colors: [.black.opacity(0.25), .clear], startPoint: .trailing, endPoint: .center)
-                .allowsHitTesting(false)
-            LinearGradient(colors: [.black.opacity(0.25), .clear], startPoint: .leading, endPoint: .center)
-                .allowsHitTesting(false)
-        }
+
     }
 }
 

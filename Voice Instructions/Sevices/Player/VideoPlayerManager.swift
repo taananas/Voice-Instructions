@@ -189,14 +189,25 @@ extension VideoPlayerManager{
             loadState = .loading
             if let video = try await selectedItem?.loadTransferable(type: VideoItem.self) {
                 self.pause()
+                
+                /// Create video
                 self.videoPlayer = AVPlayer(url: video.url)
                 let duration = try? await videoPlayer.currentItem?.asset.load(.duration).seconds
-                self.video = .init(url: video.url, originalDuration: duration ?? 1)
+                let size = await videoPlayer.currentItem?.asset.naturalSize()
+                self.video = .init(url: video.url, originalDuration: duration ?? 1, originalSize: size)
+                
                 self.startControlStatusSubscriptions()
+                
                 print("AVPlayer set url:", video.url.absoluteString)
+                
+                /// save video to storage
                 self.save()
+                
                 loadState = .loaded
+                
+                ///play
                 self.action()
+                
             } else {
                 loadState = .failed
             }

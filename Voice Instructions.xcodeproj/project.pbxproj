@@ -29,6 +29,8 @@
 		5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */; };
 		5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */; };
 		5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */; };
+		5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */; };
+		5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +57,8 @@
 		5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfinityScrollViewData.swift; sourceTree = "<group>"; };
 		5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubbingBarView.swift; sourceTree = "<group>"; };
 		5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInfinity.swift; sourceTree = "<group>"; };
+		5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawVideoLayer.swift; sourceTree = "<group>"; };
+		5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAsset.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,7 @@
 				5A3D09C02A31C0E900FD1132 /* Double.swift */,
 				5A3D09C22A31C0FC00FD1132 /* CancelBag.swift */,
 				5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */,
+				5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -174,9 +179,10 @@
 		5A3D09B92A31C06100FD1132 /* EditorView */ = {
 			isa = PBXGroup;
 			children = (
+				5AEA54C62A33398500BA1D9A /* DrawLayer */,
+				5AEA54C72A33399800BA1D9A /* Editor */,
 				5A3D09D82A31CB4900FD1132 /* Components */,
 				5A3D09D02A31C6AB00FD1132 /* Player */,
-				5A3D09D52A31C73100FD1132 /* EditorView.swift */,
 			);
 			path = EditorView;
 			sourceTree = "<group>";
@@ -223,6 +229,22 @@
 				5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */,
 			);
 			path = "Scrubbing bar";
+			sourceTree = "<group>";
+		};
+		5AEA54C62A33398500BA1D9A /* DrawLayer */ = {
+			isa = PBXGroup;
+			children = (
+				5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */,
+			);
+			path = DrawLayer;
+			sourceTree = "<group>";
+		};
+		5AEA54C72A33399800BA1D9A /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				5A3D09D52A31C73100FD1132 /* EditorView.swift */,
+			);
+			path = Editor;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,7 +338,9 @@
 				5A3D09D42A31C6FE00FD1132 /* PlayerView.swift in Sources */,
 				5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
+				5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */,
 				5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */,
+				5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,
 				5A3D09BB2A31C08400FD1132 /* View.swift in Sources */,
 			);

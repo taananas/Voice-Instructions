@@ -9,7 +9,7 @@ import PhotosUI
 import AVKit
 
 struct EditorView: View {
-   
+    @State var showLayer: Bool = false
     @StateObject var playerManager = VideoPlayerManager()
     var body: some View {
         ZStack{
@@ -43,8 +43,12 @@ extension EditorView{
     
     private var playerSectionView: some View{
         ZStack{
-            PlayerRepresentable(player: playerManager.videoPlayer)
+            PlayerRepresentable(player: playerManager.videoPlayer, videoSize: playerManager.video?.originalSize)
                  .ignoresSafeArea()
+            if showLayer{
+                DrawVideoLayer(playerManager: playerManager)
+            }
+           
             if let video = playerManager.video{
                 VideoControlsView(playerManager: playerManager, video: video)
                     .vBottom()
@@ -52,6 +56,15 @@ extension EditorView{
         }
         .overlay(alignment: .topLeading) {
             removeButton
+        }
+        .overlay(alignment: .topTrailing) {
+            Button {
+                showLayer.toggle()
+            } label: {
+                Image(systemName: "pencil")
+                    .padding()
+            }
+
         }
     }
     
@@ -71,6 +84,11 @@ extension EditorView{
     
     private var removeButton: some View{
         CloseButton(onRemove: playerManager.removeVideo)
+    }
+    
+    
+    private func setVideoSize(){
+        
     }
 }
 
