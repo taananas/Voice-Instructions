@@ -2,30 +2,31 @@
 //  NavigationBarView.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 09.06.2023.
 //
 
 import SwiftUI
 
 struct NavigationBarView: View {
+    @ObservedObject var recorderManager: ScreenRecorderManager
     @ObservedObject var playerManager: VideoPlayerManager
-    @State private var isPresented: Bool = false
-    @State private var isRecord: Bool = false
+    @State private var isPresentedAlert: Bool = false
     var body: some View {
         HStack{
             closeButton
                 .hLeading()
                 .overlay {
                     HStack(spacing: 30) {
-                        stopButton
+                        if recorderManager.recorderIsActive{
+                            stopButton
+                        }
                         micButton
                     }
                 }
         }
         .padding(.horizontal, 18)
-        .padding(.bottom, 10)
+        .padding(16)
         .background(Color.black.opacity(0.25))
-        .alert("Remove video", isPresented: $isPresented) {
+        .alert("Remove video", isPresented: $isPresentedAlert) {
             Button("Cancel", role: .cancel, action: {})
             Button("Remove", role: .destructive, action: playerManager.removeVideo)
         } message: {
@@ -40,7 +41,7 @@ struct NavigationBarView_Previews: PreviewProvider {
             Color.secondary.ignoresSafeArea()
         }
         .safeAreaInset(edge: .top, spacing: 0) {
-            NavigationBarView(playerManager: VideoPlayerManager())
+            NavigationBarView(recorderManager: ScreenRecorderManager(), playerManager: VideoPlayerManager())
         }
     }
 }
@@ -49,7 +50,11 @@ extension NavigationBarView{
     
     private var closeButton: some View{
         Button {
-            isPresented.toggle()
+            if recorderManager.recorderIsActive{
+                recorderManager.removeAll()
+            }else{
+                isPresentedAlert.toggle()
+            }
         } label: {
             buttonLabel("xmark")
         }
@@ -57,15 +62,19 @@ extension NavigationBarView{
     
     private var micButton: some View{
         Button {
-            isRecord.toggle()
+            if recorderManager.isRecord{
+                recorderManager.pause()
+            }else{
+                recorderManager.startRecoding()
+            }
         } label: {
-            buttonLabel(isRecord ? "pause.fill" : "mic.fill")
+            buttonLabel(recorderManager.isRecord ? "pause.fill" : "mic.fill")
         }
     }
     
     private var stopButton: some View{
         Button {
-            
+            recorderManager.stop()
         } label: {
             buttonLabel("stop.fill", foregroundColor: .red)
         }

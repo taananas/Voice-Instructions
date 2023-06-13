@@ -11,6 +11,7 @@ import AVKit
 struct EditorView: View {
     @State var showLayer: Bool = false
     @StateObject var playerManager = VideoPlayerManager()
+    @StateObject var recorderManager = ScreenRecorderManager()
     var body: some View {
         ZStack{
             Color.black.ignoresSafeArea()
@@ -78,7 +79,7 @@ extension EditorView{
     @ViewBuilder
     private var navBarView: some View{
         if playerManager.loadState == .loaded{
-            NavigationBarView(playerManager: playerManager)
+            NavigationBarView(recorderManager: recorderManager, playerManager: playerManager)
         }
     }
     

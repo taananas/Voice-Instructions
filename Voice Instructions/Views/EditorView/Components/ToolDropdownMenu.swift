@@ -2,7 +2,6 @@
 //  ToolDropdownMenu.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 09.06.2023.
 //
 
 import SwiftUI
