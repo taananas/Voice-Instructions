@@ -8,28 +8,27 @@
 import SwiftUI
 
 struct ToolDropdownMenu: View {
-    @State private var isFoldTools: Bool = false
-    @State private var isTapTool: Bool = false
+    @State private var isOpenTool: Bool = false
     @State private var tools = ToolEnum.allCases.map({Tool(type: $0)})
     @State private var selectedTools: ToolEnum?
     @Namespace private var animation
     var body: some View {
         VStack(spacing: 10) {
-            Image(systemName: isTapTool || selectedTools != nil ? "xmark" : "pencil")
+            Image(systemName: isOpenTool || selectedTools != nil ? "xmark" : "pencil")
                 .font(.title3.weight(.bold))
                 .onTapGesture {
-                    if selectedTools != nil && isFoldTools{
+                    if selectedTools != nil{
                         selectedTools = nil
                     }else{
-                        isTapTool.toggle()
+                        isOpenTool.toggle()
                     }
                 }
             
-            if let selectedTools, isFoldTools, !isTapTool{
+            if let selectedTools, !isOpenTool{
                 toolCell(selectedTools)
                 chevronDownButton
             }
-            if isTapTool{
+            if isOpenTool{
                 ForEach(tools) { tool in
                     toolCell(tool.type)
                         .onTapGesture {
@@ -46,8 +45,7 @@ struct ToolDropdownMenu: View {
                 .fill(Color.black.opacity(0.25))
         }
         .foregroundColor(.white)
-        .animation(.spring(), value: isTapTool)
-        .animation(.spring(), value: isFoldTools)
+        .animation(.spring(), value: isOpenTool)
         .animation(.spring(), value: selectedTools)
     }
 }
@@ -77,12 +75,11 @@ extension ToolDropdownMenu{
     }
     
     private var chevronDownButton: some View{
-        Image(systemName: isFoldTools ? "chevron.down" : "chevron.up")
+        Image(systemName: isOpenTool ? "chevron.up" : "chevron.down")
             .font(.body.bold())
             .padding(.top, 10)
             .onTapGesture {
-                isTapTool = false
-                isFoldTools.toggle()
+                isOpenTool.toggle()
             }
     }
     
