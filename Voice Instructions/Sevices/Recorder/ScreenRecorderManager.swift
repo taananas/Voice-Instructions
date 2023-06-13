@@ -12,8 +12,9 @@ import Combine
 class ScreenRecorderManager: ObservableObject{
     
     @Published var recorderIsActive: Bool = false
+    @Published var showPreview: Bool = false
     @Published private(set) var isRecord: Bool = false
-    private var finalURl = CurrentValueSubject<URL?, Never>(nil)
+    private(set) var finalURl = CurrentValueSubject<URL?, Never>(nil)
     private(set) var videoURLs = [URL]()
     
     private let recorder = RPScreenRecorder.shared()
@@ -24,7 +25,7 @@ class ScreenRecorderManager: ObservableObject{
     
     
     init(){
-        startFinishedSubs()
+        startCreatorSubs()
     }
     
     func startRecoding(){
@@ -118,14 +119,17 @@ class ScreenRecorderManager: ObservableObject{
                 }
                 
                 guard let videoInput = self.videoInput,
-                      let audioMicInput = self.audioMicInput,
                       let assetWriter = self.assetWriter else {
                     self.isRecord = false
                     return
                 }
                 
                 videoInput.markAsFinished()
-                audioMicInput.markAsFinished()
+                
+                if let audioMicInput = self.audioMicInput {
+                    audioMicInput.markAsFinished()
+                }
+               
                 assetWriter.finishWriting {
                     
                     DispatchQueue.main.async {
@@ -149,24 +153,12 @@ class ScreenRecorderManager: ObservableObject{
     //    }
     
     
-    private func startFinishedSubs(){
+    private func startCreatorSubs(){
         finalURl
             .receive(on: RunLoop.main)
             .sink { url in
                 guard let url else {return}
-                PHPhotoLibrary.shared().performChanges({
-                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
-                }) { (saved, error) in
-                    
-                    if let error = error {
-                        print("PHAssetChangeRequest Video Error: \(error.localizedDescription)")
-                        return
-                    }
-                    if saved {
-                        print("Saved")
-                        // ... show success message
-                    }
-                }
+                self.showPreview = true
             }
             .store(in: cancelBag)
     }
@@ -179,10 +171,10 @@ class ScreenRecorderManager: ObservableObject{
         
         let composition = AVMutableComposition()
         
-        print(urls)
+        print("Merged video urls:", urls)
         
         do{
-            try await mergeVideos(to: composition, from: assets)
+            try await mergeVideos(to: composition, from: assets, audioEnabled: recorder.isMicrophoneEnabled)
             
             ///Remove all cash videos
             urls.forEach { url in
@@ -197,19 +189,25 @@ class ScreenRecorderManager: ObservableObject{
         
         let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)
         let exportUrl =  URL.documentsDirectory.appending(path: "record.mp4")
-
-        FileManager.default.removeFileExists(for: exportUrl)
+        let fileManager = FileManager.default
+        fileManager.removeFileExists(for: exportUrl)
         
         exporter?.outputURL = exportUrl
         exporter?.outputFileType = .mp4
-        
+
         await exporter?.export()
-        
+
         if exporter?.status == .completed {
-            let fileManager = FileManager.default
+            
             if fileManager.fileExists(atPath: exportUrl.path) {
+                
                 self.finalURl.send(exportUrl)
+                self.videoURLs.append(exportUrl)
+                /// will need video trimming later on
+               //await cropVideo(exportUrl)
             }
+        }else if let error = exporter?.error{
+            print(error.localizedDescription)
         }
     }
     
@@ -238,8 +236,8 @@ extension ScreenRecorderManager{
         
         let videoOutputSettings: [String: Any] = [
             AVVideoCodecKey: videoCodecType,
-            AVVideoWidthKey: UIScreen.main.nativeBounds.width / 1.1,
-            AVVideoHeightKey: UIScreen.main.nativeBounds.height / 1.1,
+            AVVideoWidthKey: UIScreen.main.nativeBounds.width,
+            AVVideoHeightKey: UIScreen.main.nativeBounds.height,
             AVVideoCompressionPropertiesKey: compression,
         ]
         
@@ -265,37 +263,91 @@ extension ScreenRecorderManager{
     }
     
     private func mergeVideos(to composition: AVMutableComposition,
-                                          from assets: [AVAsset]) async throws{
+                             from assets: [AVAsset], audioEnabled: Bool) async throws{
+        
+
         
         let compositionVideoTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
         
-        let compositionAudioTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let compositionAudioTrack: AVMutableCompositionTrack? = audioEnabled ? composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) : nil
         
         var lastTime: CMTime = .zero
         
         for asset in assets {
             
-            let videoTracks =  try await asset.loadTracks(withMediaType: .video)
-            let audioTracks = try await asset.loadTracks(withMediaType: .audio)
+            let videoTracks = try await asset.loadTracks(withMediaType: .video)
+            let audioTracks = try? await asset.loadTracks(withMediaType: .audio)
             
             let duration = try await asset.load(.duration)
             let timeRange = CMTimeRangeMake(start: CMTime.zero, duration: duration)
             
             
-            if !audioTracks.isEmpty{
-                let audioTrack = audioTracks.first!
-                try compositionAudioTrack?.insertTimeRange(timeRange, of: audioTrack, at: lastTime)
-                let auduoPreferredTransform = try await audioTrack.load(.preferredTransform)
-                compositionAudioTrack?.preferredTransform = auduoPreferredTransform
+            if let audioTracks, !audioTracks.isEmpty, let audioTrack = audioTracks.first,
+               let compositionAudioTrack {
+                try compositionAudioTrack.insertTimeRange(timeRange, of: audioTrack, at: lastTime)
+                let audioPreferredTransform = try await audioTrack.load(.preferredTransform)
+                compositionAudioTrack.preferredTransform = audioPreferredTransform
             }
-
-            let videoTrack = videoTracks.first!
+            
+            guard let videoTrack = videoTracks.first else {return}
             try compositionVideoTrack?.insertTimeRange(timeRange, of: videoTrack, at: lastTime)
             let videoPreferredTransform = try await videoTrack.load(.preferredTransform)
             compositionVideoTrack?.preferredTransform = videoPreferredTransform
             
             lastTime = CMTimeAdd(lastTime, duration)
         }
+
     }
+
+
+    
+    func cropVideo( _ outputFileUrl: URL) async {
+
+        let videoAsset: AVAsset = AVAsset(url: outputFileUrl)
+        
+        do{
+            guard let clipVideoTrack = try await videoAsset.loadTracks(withMediaType: .video).first else {return}
+            let naturalSize = try await clipVideoTrack.load(.naturalSize)
+            let croppedSize = CGSize(width: naturalSize.width - 200, height: naturalSize.height - 400)
+            let duration = try await videoAsset.load(.duration)
+            
+            let videoComposition = AVMutableVideoComposition()
+            videoComposition.renderSize = croppedSize
+            videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
+            
+            let transformer = AVMutableVideoCompositionLayerInstruction( assetTrack: clipVideoTrack)
+            
+            let t1 = CGAffineTransform(translationX: -200, y: -100)
+            let t2 = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            transformer.setTransform(t1.concatenating(t2), at: CMTime.zero)
+            let instruction = AVMutableVideoCompositionInstruction()
+            
+            instruction.timeRange = CMTimeRangeMake(start: .zero, duration: duration)
+            
+            instruction.layerInstructions = [transformer]
+            videoComposition.instructions = [instruction]
+            
+            // Export
+            let exporter = AVAssetExportSession(asset: videoAsset, presetName: AVAssetExportPresetHighestQuality)!
+            let croppedOutputFileUrl = URL.documentsDirectory.appending(path: "recordFinished.mp4")
+            FileManager.default.removeFileExists(for: croppedOutputFileUrl)
+            exporter.videoComposition = videoComposition
+            exporter.outputURL = croppedOutputFileUrl
+            exporter.outputFileType = .mp4
+            
+            await exporter.export()
+            
+            if exporter.status == .completed {
+                self.finalURl.send(croppedOutputFileUrl)
+                FileManager.default.removeFileExists(for: outputFileUrl)
+            }else if let error = exporter.error{
+                print(error.localizedDescription)
+            }
+            
+        }catch{
+            print(error.localizedDescription)
+        }
+    }
+    
     
 }

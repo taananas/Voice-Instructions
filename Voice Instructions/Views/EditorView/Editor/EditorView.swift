@@ -30,6 +30,9 @@ struct EditorView: View {
         .safeAreaInset(edge: .top, alignment: .center, spacing: 0){
             navBarView
         }
+        .sheet(isPresented: $recorderManager.showPreview) {
+            VideoPreview(url: recorderManager.finalURl.value)
+        }
     }
 }
 

@@ -30,6 +30,7 @@
 		5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */; };
 		5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */; };
 		5AE399502A385CB900DD4A17 /* ScreenRecorderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE3994F2A385CB900DD4A17 /* ScreenRecorderManager.swift */; };
+		5AE399532A3878AE00DD4A17 /* VideoPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE399522A3878AE00DD4A17 /* VideoPreview.swift */; };
 		5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */; };
 		5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */; };
 		5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */; };
@@ -62,6 +63,7 @@
 		5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubbingBarView.swift; sourceTree = "<group>"; };
 		5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInfinity.swift; sourceTree = "<group>"; };
 		5AE3994F2A385CB900DD4A17 /* ScreenRecorderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecorderManager.swift; sourceTree = "<group>"; };
+		5AE399522A3878AE00DD4A17 /* VideoPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreview.swift; sourceTree = "<group>"; };
 		5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawVideoLayer.swift; sourceTree = "<group>"; };
 		5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAsset.swift; sourceTree = "<group>"; };
 		5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 		5A3D09B32A31C01200FD1132 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5AE399512A38789100DD4A17 /* VideoPreview */,
 				5A3D09B92A31C06100FD1132 /* EditorView */,
 				5A3D09B72A31C04600FD1132 /* ViewComponents */,
 			);
@@ -251,6 +254,14 @@
 			path = Recorder;
 			sourceTree = "<group>";
 		};
+		5AE399512A38789100DD4A17 /* VideoPreview */ = {
+			isa = PBXGroup;
+			children = (
+				5AE399522A3878AE00DD4A17 /* VideoPreview.swift */,
+			);
+			path = VideoPreview;
+			sourceTree = "<group>";
+		};
 		5AEA54C62A33398500BA1D9A /* DrawLayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,6 +370,7 @@
 				5AEA54D12A336C8600BA1D9A /* ToolDropdownMenu.swift in Sources */,
 				5A3D09D62A31C73100FD1132 /* EditorView.swift in Sources */,
 				5A3D09D42A31C6FE00FD1132 /* PlayerView.swift in Sources */,
+				5AE399532A3878AE00DD4A17 /* VideoPreview.swift in Sources */,
 				5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
 				5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */,
