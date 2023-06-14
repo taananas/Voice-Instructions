@@ -10,7 +10,7 @@ import AVKit
 
 struct EditorView: View {
     @State var showLayer: Bool = false
-    @StateObject var playerManager = VideoPlayerManager()
+    @StateObject var playerManager = VideoPlayerManager(fromStorage: true)
     @StateObject var recorderManager = ScreenRecorderManager()
     var body: some View {
         ZStack{
@@ -30,7 +30,7 @@ struct EditorView: View {
         .safeAreaInset(edge: .top, alignment: .center, spacing: 0){
             navBarView
         }
-        .sheet(isPresented: $recorderManager.showPreview) {
+        .fullScreenCover(isPresented: $recorderManager.showPreview) {
             VideoPreview(url: recorderManager.finalURl.value)
         }
     }

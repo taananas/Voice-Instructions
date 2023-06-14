@@ -19,7 +19,13 @@ struct PlayerRepresentable: UIViewControllerRepresentable {
 
         view.allowsVideoFrameAnalysis = false
     
-        if let videoSize, videoSize.width > videoSize.height{
+        
+        guard let videoSize else {
+            view.videoGravity = .resizeAspect
+            return view
+        }
+        
+        if videoSize.width > videoSize.height{
             view.videoGravity = .resizeAspect
         }else{
             view.videoGravity = .resizeAspectFill

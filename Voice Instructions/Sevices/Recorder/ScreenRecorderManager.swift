@@ -157,7 +157,7 @@ class ScreenRecorderManager: ObservableObject{
         finalURl
             .receive(on: RunLoop.main)
             .sink { url in
-                guard let url else {return}
+                guard url != nil else {return}
                 self.showPreview = true
             }
             .store(in: cancelBag)
