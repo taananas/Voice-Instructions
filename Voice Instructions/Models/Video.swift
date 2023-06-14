@@ -22,7 +22,7 @@ struct Video: Identifiable, Codable{
     init(url: URL, originalDuration: Double, originalSize: CGSize? = nil){
         self.url = url
         self.originalDuration = originalDuration
-        self.rangeDuration = 0...originalDuration
+        self.rangeDuration = 0...(originalDuration - 0.2)
         self.originalSize = originalSize
     }
     
@@ -30,7 +30,7 @@ struct Video: Identifiable, Codable{
         let asset =  AVAsset(url: url)
         self.url = url
         self.originalDuration = (try? await asset.load(.duration).seconds) ?? 1
-        self.rangeDuration = 0...originalDuration
+        self.rangeDuration = 0...(originalDuration - 0.2)
         self.originalSize = await asset.naturalSize()
     }
     

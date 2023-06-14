@@ -8,13 +8,14 @@
 import Foundation
 import SwiftUI
 import AVKit
+import Photos
 
 
 class VideoPreviewViewModel: ObservableObject{
     
     @Published var video: Video?
     @Published private(set) var thumbnailsImages = [ThumbnailImage]()
-    
+    @Published var showLoader: Bool = false
    
     
     @MainActor
@@ -25,6 +26,29 @@ class VideoPreviewViewModel: ObservableObject{
         return video
     }
     
+    
+    
+    func save(_ range: ClosedRange<Double>) async {
+        guard let video, !showLoader else {return}
+        DispatchQueue.main.async {
+            self.showLoader = true
+        }
+        
+        let exportSession = await cropTimeVideo(from: video.fullPath, range: range)
+        
+        if let url = exportSession.outputURL, exportSession.status == .completed{
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }) {[weak self] saved, error in
+                guard let self = self else {return}
+                if saved {
+                    DispatchQueue.main.async {
+                        self.showLoader = false
+                    }
+                }
+            }
+        }
+    }
 }
 
 /// Thumbnail image logic
@@ -60,3 +84,32 @@ extension VideoPreviewViewModel{
         }
     }
 }
+
+extension VideoPreviewViewModel{
+    
+    func cropTimeVideo(from url: URL, range: ClosedRange<Double>) async -> AVAssetExportSession{
+        
+        let manager = FileManager.default
+        let asset = AVAsset(url: url)
+        
+        let outputURL = URL.documentsDirectory.appending(path: "\(UUID().uuidString).mp4")
+        FileManager.default.removeFileExists(for: outputURL)
+        
+        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)!
+        exportSession.outputURL = outputURL
+        exportSession.outputFileType = .mp4
+        
+        let startTime = CMTime(seconds: range.lowerBound, preferredTimescale: 1000)
+        let endTime = CMTime(seconds: range.upperBound, preferredTimescale: 1000)
+        let timeRange = CMTimeRange(start: startTime, end: endTime)
+        
+        exportSession.timeRange = timeRange
+        
+        await exportSession.export()
+        
+        return exportSession
+    
+    }
+}
+    
+

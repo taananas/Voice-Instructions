@@ -45,7 +45,6 @@ final class VideoPlayerManager: ObservableObject{
         didSet {
             switch scrubState {
             case .scrubEnded(let seekTime):
-                pause()
                 seek(seekTime)
             default : break
             }
@@ -122,8 +121,8 @@ final class VideoPlayerManager: ObservableObject{
             self.rate = rate
             videoPlayer.rate = rate
         }
-        
-        if let currentDurationRange, videoPlayer.currentItem?.duration.seconds ?? 0 >= currentDurationRange.upperBound{
+
+        if isPlaying{
             NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: videoPlayer.currentItem, queue: .main) { _ in
                 self.playerDidFinishPlaying()
             }
@@ -133,6 +132,7 @@ final class VideoPlayerManager: ObservableObject{
     /// Seek video time
      func seek(_ seconds: Double){
          if isSeekInProgress{return}
+         pause()
          isSeekInProgress = true
          videoPlayer.seek(to: CMTimeMakeWithSeconds(seconds, preferredTimescale: 600), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) {[weak self] isFinished in
              guard let self = self else {return}
@@ -176,7 +176,7 @@ final class VideoPlayerManager: ObservableObject{
     
     /// Did finish action seek to zero
     private func playerDidFinishPlaying() {
-        self.videoPlayer.seek(to: .zero)
+        seek(currentDurationRange?.lowerBound ?? 0)
     }
     
     /// Remove all time observers

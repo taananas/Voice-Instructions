@@ -16,7 +16,7 @@ struct VideoPreview: View {
         ZStack{
             GeometryReader { proxy in
                 VStack(spacing: 0) {
-                    if let video = viewModel.video{
+                    if playerManager.loadState == .loaded{
                         PlayerRepresentable(player: playerManager.videoPlayer)
                     }
                     controlsSection(proxy)
@@ -28,11 +28,20 @@ struct VideoPreview: View {
                     self.rangeDuration = video.rangeDuration
                 }
             }
+            if viewModel.showLoader{
+                loaderView
+            }
         }
         .safeAreaInset(edge: .top, spacing: 0) {
             header
         }
         .preferredColorScheme(.dark)
+        .onChange(of: rangeDuration.lowerBound) { newValue in
+            playerManager.seek(newValue)
+        }
+        .onChange(of: rangeDuration.upperBound) { newValue in
+            playerManager.seek(newValue)
+        }
     }
 }
 
@@ -55,9 +64,7 @@ extension VideoPreview{
                 
                 ZStack{
                     thumbnailsImagesSection(proxy)
-                    RangedSliderView(value: $rangeDuration, bounds: video.rangeDuration, onEndChange: {
-                        setOnChangeTrim(video)
-                    }, thumbView: {
+                    RangedSliderView(value: $rangeDuration, bounds: video.rangeDuration, onEndChange: {}, thumbView: {
                         Rectangle()
                             .blendMode(.destinationOut)
                         InternalSlider(value: $playerManager.currentTime, in: rangeDuration, height: 70, width: 6, step: 0.01) {
@@ -69,7 +76,7 @@ extension VideoPreview{
                 .padding(.horizontal)
                 .padding(.top)
             }
-
+            
             Button {
                 playerManager.action(rangeDuration)
             } label: {
@@ -90,9 +97,11 @@ extension VideoPreview{
                     }
                     Spacer()
                     Button {
-                        
+                        Task{
+                            await viewModel.save(rangeDuration)
+                        }
                     } label: {
-                        Text("Use")
+                        Text("Save")
                     }
                 }
                 .foregroundColor(.white)
@@ -115,11 +124,26 @@ extension VideoPreview{
                 if let image = trimData.image{
                     Image(uiImage: image)
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .aspectRatio(contentMode: .fit)
                         .frame(width: (proxy.size.width - 64) / CGFloat(viewModel.thumbnailsImages.count), height: 70)
                         .clipped()
                 }
             }
         }
+        .cornerRadius(5)
+        .onTapGesture {
+            playerManager.action(rangeDuration)
+        }
+    }
+        
+    @ViewBuilder
+    private var loaderView: some View{
+        Color.black.opacity(0.2)
+        VStack{
+            Text("Saving video")
+            ProgressView()
+        }
+        .padding()
+        .background(Color(uiColor: .systemGray5), in: RoundedRectangle(cornerRadius: 10))
     }
 }
