@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import AVKit
 
 struct Video: Identifiable, Codable{
     
@@ -23,6 +24,14 @@ struct Video: Identifiable, Codable{
         self.originalDuration = originalDuration
         self.rangeDuration = 0...originalDuration
         self.originalSize = originalSize
+    }
+    
+    init(url: URL) async{
+        let asset =  AVAsset(url: url)
+        self.url = url
+        self.originalDuration = (try? await asset.load(.duration).seconds) ?? 1
+        self.rangeDuration = 0...originalDuration
+        self.originalSize = await asset.naturalSize()
     }
     
     var fullPath: URL{

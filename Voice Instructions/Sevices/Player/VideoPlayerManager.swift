@@ -20,7 +20,7 @@ final class VideoPlayerManager: ObservableObject{
     @Published private(set) var loadState: LoadState = .unknown
     @Published private(set) var isPlaying: Bool = false
     
-    private(set) var videoPlayer = AVPlayer()
+    var videoPlayer = AVPlayer()
     
     private var rate: Float = 1
     private var cancelBag = CancelBag()
@@ -33,8 +33,11 @@ final class VideoPlayerManager: ObservableObject{
         removeTimeObserver()
     }
     
-    init(){
-        loadVideo()
+    init(fromStorage: Bool = false){
+        
+        if fromStorage{
+            loadVideo(videoStorageService.load())
+        }
     }
 
     /// Scrubbing state for seek video time
@@ -51,8 +54,6 @@ final class VideoPlayerManager: ObservableObject{
     
     /// Play or pause video
     func action(){
-        guard let video else {return}
-        self.currentDurationRange = video.rangeDuration
         if isPlaying{
             pause()
         }else{
@@ -60,6 +61,16 @@ final class VideoPlayerManager: ObservableObject{
         }
     }
     
+    /// Play or pause video from range
+    func action(_ range: ClosedRange<Double>){
+        self.currentDurationRange = range
+        if isPlaying{
+            pause()
+        }else{
+            play(rate)
+        }
+    }
+        
     /// Observing the change timeControlStatus
     private func startControlStatusSubscriptions(){
         videoPlayer.publisher(for: \.timeControlStatus)
@@ -67,6 +78,7 @@ final class VideoPlayerManager: ObservableObject{
                 guard let self = self else {return}
                 switch status {
                 case .playing:
+                    print("playing")
                     self.startTimer()
                     self.isPlaying = true
                 case .paused:
@@ -82,17 +94,14 @@ final class VideoPlayerManager: ObservableObject{
     
     
     func pause(){
-        if isPlaying{
-            videoPlayer.pause()
-        }
+        guard isPlaying else {return}
+        videoPlayer.pause()
     }
     
     /// Set video volume
-    func setVolume(_ isVideo: Bool, value: Float){
+    func setVolume(_ value: Float){
         pause()
-        if isVideo{
-            videoPlayer.volume = value
-        }
+        videoPlayer.volume = value
     }
 
     /// Play for rate and durationRange
@@ -187,18 +196,17 @@ extension VideoPlayerManager{
     func loadVideoItem(_ selectedItem: PhotosPickerItem?) async{
         do {
             loadState = .loading
-            if let video = try await selectedItem?.loadTransferable(type: VideoItem.self) {
+            if let item = try await selectedItem?.loadTransferable(type: VideoItem.self) {
                 self.pause()
                 
                 /// Create video
-                self.videoPlayer = AVPlayer(url: video.url)
-                let duration = try? await videoPlayer.currentItem?.asset.load(.duration).seconds
-                let size = await videoPlayer.currentItem?.asset.naturalSize()
-                self.video = .init(url: video.url, originalDuration: duration ?? 1, originalSize: size)
-                
+                self.videoPlayer = AVPlayer(url: item.url)
+                let video = await Video(url: item.url)
+                self.video = video
+                self.currentDurationRange = video.rangeDuration
                 self.startControlStatusSubscriptions()
                 
-                print("AVPlayer set url:", video.url.absoluteString)
+                print("AVPlayer set url:", item.url.absoluteString)
                 
                 /// save video to storage
                 self.save()
@@ -239,10 +247,11 @@ extension VideoPlayerManager{
 extension VideoPlayerManager{
     
     /// load storage video object
-    private func loadVideo(){
-        self.video = videoStorageService.load()
+    func loadVideo(_ video: Video?){
         if let video{
+            self.video = video
             self.videoPlayer = AVPlayer(url: video.fullPath)
+            self.currentDurationRange = video.rangeDuration
             self.startControlStatusSubscriptions()
             self.loadState = .loaded
         }

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A27D56B2A39B46A00D8E862 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */; };
+		5A27D56D2A39B64200D8E862 /* InternalSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56C2A39B64200D8E862 /* InternalSlider.swift */; };
+		5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */; };
+		5A27D5712A39CCF200D8E862 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D5702A39CCF200D8E862 /* UIImage.swift */; };
 		5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */; };
 		5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A62A31BF6E00FD1132 /* ContentView.swift */; };
 		5A3D09A92A31BF6F00FD1132 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A3D09A82A31BF6F00FD1132 /* Assets.xcassets */; };
@@ -39,6 +43,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
+		5A27D56C2A39B64200D8E862 /* InternalSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalSlider.swift; sourceTree = "<group>"; };
+		5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewViewModel.swift; sourceTree = "<group>"; };
+		5A27D5702A39CCF200D8E862 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		5A3D09A12A31BF6E00FD1132 /* Voice Instructions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Voice Instructions.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voice_InstructionsApp.swift; sourceTree = "<group>"; };
 		5A3D09A62A31BF6E00FD1132 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -157,6 +165,7 @@
 				5A3D09C22A31C0FC00FD1132 /* CancelBag.swift */,
 				5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */,
 				5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */,
+				5A27D5702A39CCF200D8E862 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -183,6 +192,8 @@
 			isa = PBXGroup;
 			children = (
 				5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */,
+				5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */,
+				5A27D56C2A39B64200D8E862 /* InternalSlider.swift */,
 			);
 			path = Sliders;
 			sourceTree = "<group>";
@@ -258,6 +269,7 @@
 			isa = PBXGroup;
 			children = (
 				5AE399522A3878AE00DD4A17 /* VideoPreview.swift */,
+				5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */,
 			);
 			path = VideoPreview;
 			sourceTree = "<group>";
@@ -354,8 +366,10 @@
 			files = (
 				5A3D09CB2A31C25800FD1132 /* VideoItem.swift in Sources */,
 				5A3D09DC2A31CB6400FD1132 /* CustomSlider.swift in Sources */,
+				5A27D56D2A39B64200D8E862 /* InternalSlider.swift in Sources */,
 				5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */,
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
+				5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
 				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
 				5AEA54CF2A33672800BA1D9A /* ToolsView.swift in Sources */,
@@ -363,7 +377,9 @@
 				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
 				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
 				5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */,
+				5A27D5712A39CCF200D8E862 /* UIImage.swift in Sources */,
 				5AE399502A385CB900DD4A17 /* ScreenRecorderManager.swift in Sources */,
+				5A27D56B2A39B46A00D8E862 /* RangeSlider.swift in Sources */,
 				5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */,
 				5A3D09DA2A31CB5200FD1132 /* VideoControlsView.swift in Sources */,
 				5A3D09C92A31C21000FD1132 /* Video.swift in Sources */,
