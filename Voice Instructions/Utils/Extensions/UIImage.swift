@@ -2,7 +2,6 @@
 //  UIImage.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 14.06.2023.
 //
 
 import UIKit

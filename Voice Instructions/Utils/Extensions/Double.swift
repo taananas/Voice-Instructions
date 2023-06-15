@@ -7,6 +7,8 @@
 extension Double{
     
     
+    /// Time string
+    /// - Returns: 01.23 or 01:02.45
     func stringFromTimeInterval() -> String {
 
         let time = Int(self)
@@ -22,6 +24,8 @@ extension Double{
         }
     }
     
+    /// Short time
+    /// - Returns: 02:22
     func formatterTimeString() -> String{
         let minutes = Int(self / 60)
           let seconds = Int(self.truncatingRemainder(dividingBy: 60))

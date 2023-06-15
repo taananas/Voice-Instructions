@@ -27,7 +27,7 @@ struct VideoItem: Transferable {
     static func createVideoItem(_ received: ReceivedTransferredFile) -> VideoItem{
         let id = UUID().uuidString
         let copyURl = URL.documentsDirectory.appending(path: "\(id).mp4")
-        FileManager.default.removeFileExists(for: copyURl)
+        FileManager.default.removeFileIfExists(for: copyURl)
         try? FileManager.default.copyItem(at: received.file, to: copyURl)
         return .init(url: copyURl)
     }

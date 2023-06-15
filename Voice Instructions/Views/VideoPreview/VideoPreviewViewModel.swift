@@ -2,7 +2,6 @@
 //  VideoPreviewViewModel.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 14.06.2023.
 //
 
 import Foundation
@@ -27,7 +26,9 @@ class VideoPreviewViewModel: ObservableObject{
     }
     
     
-    
+    /// Save
+    /// Create new crop video
+    /// Save video in PhotoLibrary
     func save(_ range: ClosedRange<Double>) async {
         guard let video, !showLoader else {return}
         DispatchQueue.main.async {
@@ -54,7 +55,8 @@ class VideoPreviewViewModel: ObservableObject{
 /// Thumbnail image logic
 extension VideoPreviewViewModel{
     
-    
+    /// Create and set thumbnail images
+    /// Size - bounds size from geometry reader
     private func setThumbnailImages(_ size: CGSize, video: Video){
         
         let imagesCount = thumbnailCount(size)
@@ -87,13 +89,15 @@ extension VideoPreviewViewModel{
 
 extension VideoPreviewViewModel{
     
+    
+    /// Crop video time for range
     func cropTimeVideo(from url: URL, range: ClosedRange<Double>) async -> AVAssetExportSession{
         
         let manager = FileManager.default
         let asset = AVAsset(url: url)
         
         let outputURL = URL.documentsDirectory.appending(path: "\(UUID().uuidString).mp4")
-        FileManager.default.removeFileExists(for: outputURL)
+        FileManager.default.removeFileIfExists(for: outputURL)
         
         let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)!
         exportSession.outputURL = outputURL

@@ -22,15 +22,18 @@ class ScreenRecorderManager: ObservableObject{
     private var videoInput: AVAssetWriterInput!
     private var audioMicInput: AVAssetWriterInput!
     private var cancelBag = CancelBag()
-    
+    private let fileManager = FileManager.default
     
     init(){
         startCreatorSubs()
     }
     
+    /// start record session, initializing the record alert
+    /// setup AssetWriters
+    /// save audio and video buffer
     func startRecoding(){
         let name = "\(Date().ISO8601Format()).mp4"
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
+        let url = fileManager.temporaryDirectory.appendingPathComponent(name)
         videoURLs.append(url)
         setupAssetWriters(url)
         AVAudioSession.sharedInstance().playAndRecord()
@@ -86,15 +89,21 @@ class ScreenRecorderManager: ObservableObject{
         }
     }
     
+    ///remove all video and reset state
     func removeAll(){
         isRecord = false
         recorderIsActive = false
-        videoURLs = []
-        if let finalURl = finalURl.value{
-            FileManager.default.removeFileExists(for: finalURl)
+        videoURLs.forEach { url in
+            fileManager.removeFileIfExists(for: url)
         }
+        if let finalURl = finalURl.value{
+            fileManager.removeFileIfExists(for: finalURl)
+        }
+        videoURLs = []
     }
     
+    /// Pause
+    /// stop capture and finish writing
     func pause(){
         recorder.stopCapture { error in
             self.videoInput.markAsFinished()
@@ -107,17 +116,16 @@ class ScreenRecorderManager: ObservableObject{
         }
     }
     
+    /// Stop
+    /// If we record stop and create video otherwise we create a video
     func stop(){
-        
         if recorder.isRecording{
             recorder.stopCapture { (error) in
-                
                 if let error{
                     print(error.localizedDescription)
                     self.isRecord = false
                     return
                 }
-                
                 guard let videoInput = self.videoInput,
                       let assetWriter = self.assetWriter else {
                     self.isRecord = false
@@ -148,11 +156,7 @@ class ScreenRecorderManager: ObservableObject{
         }
     }
     
-    //    private func showShareSheet(data: Any){
-    //        UIActivityViewController(activityItems: [data], applicationActivities: nil).presentInKeyWindow()
-    //    }
-    
-    
+    /// Subscription to create a video
     private func startCreatorSubs(){
         finalURl
             .receive(on: RunLoop.main)
@@ -163,22 +167,24 @@ class ScreenRecorderManager: ObservableObject{
             .store(in: cancelBag)
     }
     
+    
+    /// Create video
+    /// Merge and render videos
     private func createVideo(_ urls: [URL]) async {
         guard !urls.isEmpty else {
             return
         }
-        let assets = urls.map({AVAsset(url: $0)})
         
         let composition = AVMutableComposition()
         
         print("Merged video urls:", urls)
         
         do{
-            try await mergeVideos(to: composition, from: assets, audioEnabled: recorder.isMicrophoneEnabled)
+            try await mergeVideos(to: composition, from: urls, audioEnabled: recorder.isMicrophoneEnabled)
             
             ///Remove all cash videos
             urls.forEach { url in
-                FileManager.default.removeFileExists(for: url)
+                fileManager.removeFileIfExists(for: url)
             }
             self.videoURLs.removeAll(keepingCapacity: false)
             
@@ -189,8 +195,7 @@ class ScreenRecorderManager: ObservableObject{
         
         let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)
         let exportUrl =  URL.documentsDirectory.appending(path: "record.mp4")
-        let fileManager = FileManager.default
-        fileManager.removeFileExists(for: exportUrl)
+        fileManager.removeFileIfExists(for: exportUrl)
         
         exporter?.outputURL = exportUrl
         exporter?.outputFileType = .mp4
@@ -201,7 +206,9 @@ class ScreenRecorderManager: ObservableObject{
             
             if fileManager.fileExists(atPath: exportUrl.path) {
                 
+                ///save url
                 self.finalURl.send(exportUrl)
+                
                 self.videoURLs.append(exportUrl)
                 /// will need video trimming later on
                //await cropVideo(exportUrl)
@@ -217,6 +224,10 @@ class ScreenRecorderManager: ObservableObject{
 //MARK: - Helpers
 extension ScreenRecorderManager{
     
+    
+    /// Setup AVAssetWriter
+    /// Setup video and audio settings
+    /// High quality video and audio
     private func setupAssetWriters(_ url: URL){
         do {
             try assetWriter = AVAssetWriter(outputURL: url, fileType: .mp4)
@@ -262,10 +273,13 @@ extension ScreenRecorderManager{
         }
     }
     
+    /// Merge videos
+    /// Combining multiple videos for a composition
+    /// audioEnabled:  Turning on the audio track
     private func mergeVideos(to composition: AVMutableComposition,
-                             from assets: [AVAsset], audioEnabled: Bool) async throws{
+                             from urls: [URL], audioEnabled: Bool) async throws{
         
-
+        let assets = urls.map({AVAsset(url: $0)})
         
         let compositionVideoTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
         
@@ -300,7 +314,7 @@ extension ScreenRecorderManager{
     }
 
 
-    
+    /// Crop video size
     func cropVideo( _ outputFileUrl: URL) async {
 
         let videoAsset: AVAsset = AVAsset(url: outputFileUrl)
@@ -330,7 +344,7 @@ extension ScreenRecorderManager{
             // Export
             let exporter = AVAssetExportSession(asset: videoAsset, presetName: AVAssetExportPresetHighestQuality)!
             let croppedOutputFileUrl = URL.documentsDirectory.appending(path: "recordFinished.mp4")
-            FileManager.default.removeFileExists(for: croppedOutputFileUrl)
+            FileManager.default.removeFileIfExists(for: croppedOutputFileUrl)
             exporter.videoComposition = videoComposition
             exporter.outputURL = croppedOutputFileUrl
             exporter.outputFileType = .mp4
@@ -339,7 +353,7 @@ extension ScreenRecorderManager{
             
             if exporter.status == .completed {
                 self.finalURl.send(croppedOutputFileUrl)
-                FileManager.default.removeFileExists(for: outputFileUrl)
+                FileManager.default.removeFileIfExists(for: outputFileUrl)
             }else if let error = exporter.error{
                 print(error.localizedDescription)
             }
