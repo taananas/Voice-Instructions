@@ -9,29 +9,29 @@ import SwiftUI
 struct ToolDropdownMenu: View {
     @State private var isOpenTool: Bool = false
     @State private var tools = ToolEnum.allCases.map({Tool(type: $0)})
-    @State private var selectedTools: ToolEnum?
+    @Binding var selectedTool: ToolEnum?
     @Namespace private var animation
     var body: some View {
         VStack(spacing: 10) {
-            Image(systemName: isOpenTool || selectedTools != nil ? "xmark" : "pencil")
+            Image(systemName: isOpenTool || selectedTool != nil ? "xmark" : "pencil")
                 .font(.title3.weight(.bold))
                 .onTapGesture {
-                    if selectedTools != nil{
-                        selectedTools = nil
+                    if selectedTool != nil{
+                        selectedTool = nil
                     }else{
                         isOpenTool.toggle()
                     }
                 }
             
-            if let selectedTools, !isOpenTool{
-                toolCell(selectedTools)
+            if let selectedTool, !isOpenTool{
+                toolCell(selectedTool)
                 chevronDownButton
             }
             if isOpenTool{
                 ForEach(tools) { tool in
                     toolCell(tool.type)
                         .onTapGesture {
-                            selectedTools = tool.type
+                            selectedTool = tool.type
                         }
                 }
                 chevronDownButton
@@ -45,7 +45,7 @@ struct ToolDropdownMenu: View {
         }
         .foregroundColor(.white)
         .animation(.spring(), value: isOpenTool)
-        .animation(.spring(), value: selectedTools)
+        .animation(.spring(), value: selectedTool)
     }
 }
 
@@ -53,7 +53,7 @@ struct ToolDropdownMenu_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.secondary
-            ToolDropdownMenu()
+            ToolDropdownMenu(selectedTool: .constant(.angle))
                 .vTop()
         }
     }
@@ -65,7 +65,7 @@ extension ToolDropdownMenu{
         Text("\(toolType.rawValue)")
             .hCenter()
             .overlay(alignment: .leading) {
-                if toolType == selectedTools{
+                if toolType == selectedTool{
                     Image(systemName: "arrowtriangle.left.fill")
                         .matchedGeometryEffect(id: "CellIcon", in: animation)
                         .font(.system(size: 8))

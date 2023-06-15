@@ -7,13 +7,17 @@
 import SwiftUI
 
 struct ToolsView: View {
-    @State private var isTapTool: Bool = false
+    @ObservedObject var layerManager: VideoLayerManager
     var body: some View {
         HStack(alignment: .top, spacing: 0){
-            VStack(spacing: 16) {
-                removeButton
-                undoButton
+            
+            if !layerManager.isEmptyLayer{
+                VStack(spacing: 16) {
+                    removeButton
+                    undoButton
+                }
             }
+        
             Spacer()
             
             toolButtons
@@ -26,7 +30,7 @@ struct ToolsView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.secondary
-            ToolsView()
+            ToolsView(layerManager: VideoLayerManager())
                 .vTop()
         }
     }
@@ -34,26 +38,28 @@ struct ToolsView_Previews: PreviewProvider {
 
 extension ToolsView{
     
-    
-    
     private var removeButton: some View{
         Button {
-            
+            layerManager.removeAll()
         } label: {
             buttonLabel("trash.fill")
         }
     }
     
+    @ViewBuilder
     private var undoButton: some View{
-        Button {
-        } label: {
-            buttonLabel("arrow.uturn.backward")
-        }
+        if layerManager.undoIsActive{
+            Button {
+                layerManager.undo()
+            } label: {
+                buttonLabel("arrow.uturn.backward")
+            }
+       }
     }
     
     
     private var toolButtons: some View{
-        ToolDropdownMenu()
+        ToolDropdownMenu(selectedTool: $layerManager.selectedTool)
     }
     
     private func buttonLabel(_ image: String) -> some View{

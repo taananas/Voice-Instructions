@@ -293,8 +293,12 @@ extension ScreenRecorderManager{
             let audioTracks = try? await asset.loadTracks(withMediaType: .audio)
             
             let duration = try await asset.load(.duration)
-            let timeRange = CMTimeRangeMake(start: CMTime.zero, duration: duration)
+//            let newDuration: CMTime = .init(seconds: duration.seconds - 0.1, preferredTimescale: 1000)
+           
+            let timeRange = CMTimeRangeMake(start: .zero, duration: duration)
             
+            
+            print("duration:", duration.seconds, "lastTime:", lastTime.seconds)
             
             if let audioTracks, !audioTracks.isEmpty, let audioTrack = audioTracks.first,
                let compositionAudioTrack {
@@ -311,6 +315,7 @@ extension ScreenRecorderManager{
             lastTime = CMTimeAdd(lastTime, duration)
         }
 
+        print("TotalTime:", lastTime.seconds)
     }
 
 

@@ -9,7 +9,8 @@ import PhotosUI
 import AVKit
 
 struct EditorView: View {
-    @State var showLayer: Bool = false
+    @Environment(\.undoManager) var undoManager
+    @StateObject var layerManager = VideoLayerManager()
     @StateObject var playerManager = VideoPlayerManager(fromStorage: true)
     @StateObject var recorderManager = ScreenRecorderManager()
     var body: some View {
@@ -33,6 +34,9 @@ struct EditorView: View {
         .fullScreenCover(isPresented: $recorderManager.showPreview) {
             VideoPreview(url: recorderManager.finalURl.value)
         }
+        .onAppear{
+            layerManager.undoManager = undoManager
+        }
     }
 }
 
@@ -49,19 +53,13 @@ extension EditorView{
     
     
     private var playerLayers: some View{
-        ZStack{
-            PlayerRepresentable(player: playerManager.videoPlayer, videoSize: playerManager.video?.originalSize)
-                 .ignoresSafeArea()
-            if showLayer{
-                DrawVideoLayer(playerManager: playerManager)
-            }
-            
-        }
+        MainLayerView(playerManager: playerManager)
+            .environmentObject(layerManager)
         .overlay(alignment: .bottom) {
             bottomControlsView
         }
         .overlay(alignment: .top) {
-            ToolsView()
+            ToolsView(layerManager: layerManager)
                 .padding(.top, 30)
         }
     }

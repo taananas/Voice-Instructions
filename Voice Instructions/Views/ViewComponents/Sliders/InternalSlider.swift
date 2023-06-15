@@ -118,7 +118,8 @@ struct InternalSlider<V>: View where V : BinaryFloatingPoint, V.Stride : BinaryF
         }
     
         self.ratio = ratio
-        self.value = V(bounds.upperBound - bounds.lowerBound) * V(ratio)
+        let newValue = V(bounds.upperBound - bounds.lowerBound) * V(ratio)
+        self.value = round(newValue * 1000) / 1000
     }
 }
 struct StickerSliderView_Previews: PreviewProvider {

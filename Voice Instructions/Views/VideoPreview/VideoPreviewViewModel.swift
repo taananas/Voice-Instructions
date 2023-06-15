@@ -93,7 +93,6 @@ extension VideoPreviewViewModel{
     /// Crop video time for range
     func cropTimeVideo(from url: URL, range: ClosedRange<Double>) async -> AVAssetExportSession{
         
-        let manager = FileManager.default
         let asset = AVAsset(url: url)
         
         let outputURL = URL.documentsDirectory.appending(path: "\(UUID().uuidString).mp4")
