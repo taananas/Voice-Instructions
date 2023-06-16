@@ -63,3 +63,27 @@ extension View{
 }
 
 
+struct MaskOptionallyViewModifier<C>: ViewModifier where C: View {
+
+    var isActive: Bool
+    @ViewBuilder var view: C
+    
+    func body(content: Content) -> some View {
+        if isActive{
+            content
+                .mask {
+                    view
+                }
+        }else{
+            content
+        }
+    }
+}
+
+extension View{
+    
+    func maskOptionally<Mask>(isActive: Bool, @ViewBuilder mask: () -> Mask) -> some View where Mask : View{
+        self
+            .modifier(MaskOptionallyViewModifier(isActive: isActive, view: mask))
+    }
+}

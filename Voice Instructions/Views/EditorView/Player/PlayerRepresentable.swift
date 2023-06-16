@@ -10,7 +10,6 @@ import AVKit
 struct PlayerRepresentable: UIViewControllerRepresentable {
     
     var player: AVPlayer
-    var videoSize: CGSize?
     
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let view = AVPlayerViewController()
@@ -18,18 +17,8 @@ struct PlayerRepresentable: UIViewControllerRepresentable {
         view.showsPlaybackControls = false
 
         view.allowsVideoFrameAnalysis = false
-    
         
-        guard let videoSize else {
-            view.videoGravity = .resizeAspect
-            return view
-        }
-        
-        if videoSize.width > videoSize.height{
-            view.videoGravity = .resizeAspect
-        }else{
-            view.videoGravity = .resizeAspectFill
-        }
+        view.videoGravity = .resizeAspect
         
         return view
     }
