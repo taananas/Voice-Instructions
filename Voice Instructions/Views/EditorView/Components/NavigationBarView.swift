@@ -7,25 +7,36 @@
 import SwiftUI
 
 struct NavigationBarView: View {
+    @ObservedObject var layerManager: VideoLayerManager
     @ObservedObject var recorderManager: ScreenRecorderManager
     @ObservedObject var playerManager: VideoPlayerManager
     @State private var isPresentedAlert: Bool = false
     var body: some View {
-        HStack{
-            closeButton
-                .hLeading()
-                .overlay {
-                    HStack(spacing: 30) {
-                        if recorderManager.recorderIsActive{
-                            stopButton
+        ZStack(alignment: .top){
+            HStack{
+                closeButton
+                    .hLeading()
+                    .overlay(alignment: .center) {
+                        HStack(spacing: 30) {
+                            if recorderManager.recorderIsActive{
+                                stopButton
+                            }
+                            micButton
                         }
-                        micButton
                     }
-                }
+            }
+            .padding(.horizontal, 18)
+            .padding(.bottom, 20)
+            .background(Color.black.opacity(0.25))
+            HStack(alignment: .top) {
+                UndoButtons(layerManager: layerManager)
+                    .padding(.top, 70)
+                Spacer()
+                ToolDropdownMenu(selectedTool: $layerManager.selectedTool, selectedColor: $layerManager.selectedColor)
+                    .hTrailing()
+            }
+            .padding(.horizontal, 18)
         }
-        .padding(.horizontal, 18)
-        .padding(16)
-        .background(Color.black.opacity(0.25))
         .alert("Remove video", isPresented: $isPresentedAlert) {
             Button("Cancel", role: .cancel, action: {})
             Button("Remove", role: .destructive, action: playerManager.removeVideo)
@@ -41,7 +52,7 @@ struct NavigationBarView_Previews: PreviewProvider {
             Color.secondary.ignoresSafeArea()
         }
         .safeAreaInset(edge: .top, spacing: 0) {
-            NavigationBarView(recorderManager: ScreenRecorderManager(), playerManager: VideoPlayerManager())
+            NavigationBarView(layerManager: VideoLayerManager(), recorderManager: ScreenRecorderManager(), playerManager: VideoPlayerManager())
         }
     }
 }

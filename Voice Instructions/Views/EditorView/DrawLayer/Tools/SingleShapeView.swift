@@ -7,9 +7,6 @@
 import SwiftUI
 
 struct SingleShapeView: View {
-    @State private var width: CGFloat = 100
-    @State private var height: CGFloat = 100
-    @State private var location: CGPoint
     @GestureState private var startLocation: CGPoint? = nil
     @State private var angle: Angle = .degrees(0)
     @Binding var shapeModel: DragShape
@@ -17,7 +14,6 @@ struct SingleShapeView: View {
     
     init(shapeModel: Binding<DragShape>, onSelected: @escaping () -> Void){
         self._shapeModel = shapeModel
-        self._location = State(wrappedValue: shapeModel.wrappedValue.startLocation)
         self.onSelected = onSelected
     }
     
@@ -32,23 +28,13 @@ struct SingleShapeView: View {
                         .frame(width: 36, height: 36)
                         .contentShape(Circle())
                         .offset(x: 18, y: 18)
-                        .gesture(sizeDrag)
+                        .gesture(sizeDragForShape)
                 }
             }
-//            .overlay(alignment: .bottom) {
-//                if shapeModel.isActive{
-//                    Rectangle()
-//                        .rotation(.degrees(45))
-//                        .stroke(shapeModel.color, style: .init(lineWidth: 3, dash: [5]))
-//                        .frame(width: 30, height: 30)
-//                        .contentShape(Circle())
-//                        .offset(y: 15)
-//                        .gesture(rotateDrag)
-//                }
-//            }
+
             .rotationEffect(angle, anchor: .bottomLeading)
-            .frame(width: width, height: height)
-            .position(location)
+            .frame(width: shapeModel.size.width, height: shapeModel.size.height)
+            .position(shapeModel.location)
             .gesture(locationDrag)
             .onTapGesture {
                 if !shapeModel.isActive{
@@ -62,7 +48,7 @@ struct SingleShapeView: View {
         Group{
             if shapeModel.type == .circle{
                 Circle().stroke(lineWidth: 5)
-            }else{
+            }else if shapeModel.type == .rectangle{
                 Rectangle().stroke(lineWidth: 5)
             }
         }
@@ -72,21 +58,21 @@ struct SingleShapeView: View {
         DragGesture()
             .onChanged { value in
                 if !shapeModel.isActive {return}
-                var newLocation = startLocation ?? location
+                var newLocation = startLocation ?? shapeModel.location
                 newLocation.x += value.translation.width
                 newLocation.y += value.translation.height
-                self.location = newLocation
+                shapeModel.location = newLocation
             }.updating($startLocation) { (value, startLocation, transaction) in
                 if !shapeModel.isActive {return}
-                startLocation = startLocation ?? location
+                startLocation = startLocation ?? shapeModel.location
             }
     }
     
-    private var sizeDrag: some Gesture{
+    private var sizeDragForShape: some Gesture{
         DragGesture()
             .onChanged { value in
-                width = max(0, width + value.translation.width)
-                height = max(0, height + value.translation.height)
+                shapeModel.size.width = max(10,    shapeModel.size.width + value.translation.width)
+                shapeModel.size.height = max(10,    shapeModel.size.height + value.translation.height)
             }
     }
     
@@ -104,28 +90,6 @@ struct SingleShapeView: View {
 
 struct SingleShapeView_Previews: PreviewProvider {
     static var previews: some View {
-        SingleShapeView(shapeModel: .constant(.init(type: .circle, startLocation: .init(x: 100, y: 100), color: .red))){}
-    }
-}
-
-
-struct DragShape: Identifiable{
-    
-    var id: UUID = UUID()
-    var isActive = true
-    var type: ShapeType
-    var startLocation: CGPoint
-    var color: Color
-    
-    init(type: ShapeType, startLocation: CGPoint, color: Color) {
-        self.type = type
-        self.startLocation = startLocation
-        self.color = color
-    }
-    
-    
-    enum ShapeType: Int {
-        
-        case circle, rectangle
+        SingleShapeView(shapeModel: .constant(.init(type: .circle, location: .init(x: 100, y: 100), color: .red, size: .init(width: 100, height: 100)))){}
     }
 }

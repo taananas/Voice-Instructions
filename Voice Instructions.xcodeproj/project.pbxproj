@@ -11,6 +11,8 @@
 		5A27D56D2A39B64200D8E862 /* InternalSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56C2A39B64200D8E862 /* InternalSlider.swift */; };
 		5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */; };
 		5A27D5712A39CCF200D8E862 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D5702A39CCF200D8E862 /* UIImage.swift */; };
+		5A2BE9802A3C985D00D53E14 /* SingleLineShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */; };
+		5A2BE9822A3CA69500D53E14 /* DragShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BE9812A3CA69500D53E14 /* DragShape.swift */; };
 		5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */; };
 		5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A62A31BF6E00FD1132 /* ContentView.swift */; };
 		5A3D09A92A31BF6F00FD1132 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A3D09A82A31BF6F00FD1132 /* Assets.xcassets */; };
@@ -42,7 +44,7 @@
 		5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */; };
 		5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */; };
 		5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */; };
-		5AEA54CF2A33672800BA1D9A /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CE2A33672800BA1D9A /* ToolsView.swift */; };
+		5AEA54CF2A33672800BA1D9A /* UndoButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CE2A33672800BA1D9A /* UndoButtons.swift */; };
 		5AEA54D12A336C8600BA1D9A /* ToolDropdownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +53,8 @@
 		5A27D56C2A39B64200D8E862 /* InternalSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalSlider.swift; sourceTree = "<group>"; };
 		5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewViewModel.swift; sourceTree = "<group>"; };
 		5A27D5702A39CCF200D8E862 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLineShape.swift; sourceTree = "<group>"; };
+		5A2BE9812A3CA69500D53E14 /* DragShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragShape.swift; sourceTree = "<group>"; };
 		5A3D09A12A31BF6E00FD1132 /* Voice Instructions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Voice Instructions.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voice_InstructionsApp.swift; sourceTree = "<group>"; };
 		5A3D09A62A31BF6E00FD1132 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -83,7 +87,7 @@
 		5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawVideoLayer.swift; sourceTree = "<group>"; };
 		5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAsset.swift; sourceTree = "<group>"; };
 		5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
-		5AEA54CE2A33672800BA1D9A /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
+		5AEA54CE2A33672800BA1D9A /* UndoButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoButtons.swift; sourceTree = "<group>"; };
 		5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolDropdownMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,6 +187,7 @@
 			children = (
 				5A3D09C82A31C21000FD1132 /* Video.swift */,
 				5A3D09CA2A31C25800FD1132 /* VideoItem.swift */,
+				5A2BE9812A3CA69500D53E14 /* DragShape.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -248,7 +253,7 @@
 			children = (
 				5A3D09D92A31CB5200FD1132 /* VideoControlsView.swift */,
 				5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */,
-				5AEA54CE2A33672800BA1D9A /* ToolsView.swift */,
+				5AEA54CE2A33672800BA1D9A /* UndoButtons.swift */,
 				5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */,
 			);
 			path = Components;
@@ -269,6 +274,7 @@
 			children = (
 				5A4692762A3B2876007D97F8 /* ShapesLayerView.swift */,
 				5A4692782A3B3016007D97F8 /* FreeLineLayerView.swift */,
+				5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */,
 			);
 			path = Layers;
 			sourceTree = "<group>";
@@ -399,9 +405,10 @@
 				5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */,
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
 				5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */,
+				5A2BE9802A3C985D00D53E14 /* SingleLineShape.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
 				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
-				5AEA54CF2A33672800BA1D9A /* ToolsView.swift in Sources */,
+				5AEA54CF2A33672800BA1D9A /* UndoButtons.swift in Sources */,
 				5A3D09D22A31C6BA00FD1132 /* PlayerRepresentable.swift in Sources */,
 				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
 				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
@@ -425,6 +432,7 @@
 				5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */,
 				5A4692792A3B3016007D97F8 /* FreeLineLayerView.swift in Sources */,
 				5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */,
+				5A2BE9822A3CA69500D53E14 /* DragShape.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,
 				5A3D09BB2A31C08400FD1132 /* View.swift in Sources */,
 			);

@@ -86,4 +86,13 @@ extension View{
         self
             .modifier(MaskOptionallyViewModifier(isActive: isActive, view: mask))
     }
+    
+    @ViewBuilder
+    func positionOptionally(_ point: CGPoint?) -> some View{
+        if let point{
+            self.position(point)
+        }else{
+            self
+        }
+    }
 }

@@ -85,18 +85,16 @@ extension VideoLayerManager{
 extension VideoLayerManager{
     
     
-    func addShape(location: CGPoint){
-        if isActiveShape{
-            deactivateAllShape()
-            return
+    func addShape(value: DragGesture.Value){
+        let point = value.location
+        if value.translation.width + value.translation.height == 0{
+            addShapeWithUndo(point)
+        }else{
+            let width = abs(value.translation.width * 1.5)
+            let height = abs(value.translation.height * 1.5)
+            updateShape(width: width, height: height, point)
         }
-        let newShape = DragShape(type: .circle, startLocation: location, color: selectedColor)
-        undoManager?.registerUndo(withTarget: self) { manager in
-            manager.removeLastShape()
-        }
-        shapes.append(newShape)
     }
-    
     
     var isActiveShape: Bool{
         shapes.contains(where: {$0.isActive})
@@ -105,6 +103,30 @@ extension VideoLayerManager{
     func deactivateAllShape(){
         shapes.indices.forEach { index in
             shapes[index].isActive = false
+        }
+    }
+    
+    private func addShapeWithUndo(_ location: CGPoint){
+        if isActiveShape{
+            deactivateAllShape()
+            return
+        }
+        let newShape = DragShape(type: .line, location: location, color: selectedColor, size: .init(width: 50, height: 50), endLocation: location)
+        undoManager?.registerUndo(withTarget: self) { manager in
+            manager.removeLastShape()
+        }
+        shapes.append(newShape)
+    }
+    
+    private func updateShape(width: CGFloat, height: CGFloat, _ location: CGPoint){
+        guard !shapes.isEmpty else {return}
+
+        if shapes[shapes.count - 1].isShapeType {
+            if width > 10 && height > 10{
+                shapes[shapes.count - 1].size = .init(width: width, height: height)
+            }
+        }else{
+            shapes[shapes.count - 1].endLocation = location
         }
     }
     

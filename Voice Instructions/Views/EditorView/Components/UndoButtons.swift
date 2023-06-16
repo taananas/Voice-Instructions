@@ -1,28 +1,23 @@
 //
-//  ToolsView.swift
+//  UndoButtons.swift
 //  Voice Instructions
 //
 //
 
 import SwiftUI
 
-struct ToolsView: View {
+struct UndoButtons: View {
     @ObservedObject var layerManager: VideoLayerManager
     var body: some View {
-        HStack(alignment: .top, spacing: 0){
-            
+        Group{
             if !layerManager.isEmptyLayer{
                 VStack(spacing: 16) {
                     removeButton
                     undoButton
                 }
+                .hLeading()
             }
-        
-            Spacer()
-            
-            toolButtons
         }
-        .padding(.horizontal, 18)
     }
 }
 
@@ -30,13 +25,13 @@ struct ToolsView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.secondary
-            ToolsView(layerManager: VideoLayerManager())
+            UndoButtons(layerManager: VideoLayerManager())
                 .vTop()
         }
     }
 }
 
-extension ToolsView{
+extension UndoButtons{
     
     private var removeButton: some View{
         Button {
@@ -55,11 +50,6 @@ extension ToolsView{
                 buttonLabel("arrow.uturn.backward")
             }
        }
-    }
-    
-    
-    private var toolButtons: some View{
-        ToolDropdownMenu(selectedTool: $layerManager.selectedTool)
     }
     
     private func buttonLabel(_ image: String) -> some View{

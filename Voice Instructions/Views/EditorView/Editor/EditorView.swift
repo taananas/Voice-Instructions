@@ -28,9 +28,6 @@ struct EditorView: View {
             }
         }
         .onChange(of: playerManager.selectedItem, perform: setVideo)
-        .safeAreaInset(edge: .top, alignment: .center, spacing: 0){
-            navBarView
-        }
         .fullScreenCover(isPresented: $recorderManager.showPreview) {
             VideoPreview(url: recorderManager.finalURl.value)
         }
@@ -55,13 +52,12 @@ extension EditorView{
     private var playerLayers: some View{
         MainLayerView(playerManager: playerManager)
             .environmentObject(layerManager)
-        .overlay(alignment: .bottom) {
-            bottomControlsView
-        }
-        .overlay(alignment: .top) {
-            ToolsView(layerManager: layerManager)
-                .padding(.top, 30)
-        }
+            .overlay(alignment: .top) {
+                navBarView
+            }
+            .overlay(alignment: .bottom) {
+                bottomControlsView
+            }
     }
     
     private var pickerButton: some View{
@@ -80,7 +76,7 @@ extension EditorView{
     @ViewBuilder
     private var navBarView: some View{
         if playerManager.loadState == .loaded{
-            NavigationBarView(recorderManager: recorderManager, playerManager: playerManager)
+            NavigationBarView(layerManager: layerManager, recorderManager: recorderManager, playerManager: playerManager)
         }
     }
     

@@ -9,19 +9,31 @@ import SwiftUI
 struct FreeLineLayerView: View {
     @EnvironmentObject var layerManager: VideoLayerManager
     var body: some View {
-        Canvas { context, size in
-            for stroke in layerManager.strokes {
-                let path = Path(curving: stroke.points)
-                context.stroke(
-                    path,
-                    with: .color(stroke.color),
-                    style: StrokeStyle(lineWidth: stroke.width,
-                                       lineCap: .round, lineJoin: .round)
-                )
+        
+        
+        ZStack{
+            Color.white.opacity(0.0001)
+            
+            ForEach(layerManager.strokes.indices, id: \.self){index in
+            Path(curving: layerManager.strokes[index].points)
+                    .stroke(style: .init(lineWidth: 5, lineCap: .round, lineJoin: .round))
+                
             }
         }
+        
+//        Canvas { context, size in
+//            for stroke in layerManager.strokes {
+//                let path = Path(curving: stroke.points)
+//                context.stroke(
+//                    path,
+//                    with: .color(stroke.color),
+//                    style: StrokeStyle(lineWidth: stroke.width,
+//                                       lineCap: .round, lineJoin: .round)
+//                )
+//            }
+//        }
         .gesture(
-            DragGesture(minimumDistance: 0, coordinateSpace: .local)
+            DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     layerManager.addLine(value: value)
                 }
