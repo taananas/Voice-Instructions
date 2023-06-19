@@ -31,7 +31,7 @@ struct ShapesLayerView: View {
             /// freeLines
             ForEach(layerManager.strokes){ stroke in
                 Path(curving: stroke.points)
-                    .stroke(style: .init(lineWidth: 5, lineCap: .round, lineJoin: .round))
+                    .stroke(style: .init(lineWidth: stroke.width, lineCap: .round, lineJoin: .round))
                     .foregroundColor(stroke.color)
             }
             
@@ -46,9 +46,9 @@ struct ShapesLayerView: View {
                     }
                 }
         )
-        .onAppear{
-            layerManager.selectedTool = .rectangle
-        }
+//        .onAppear{
+//            layerManager.selectedTool = .rectangle
+//        }
     }
 }
 

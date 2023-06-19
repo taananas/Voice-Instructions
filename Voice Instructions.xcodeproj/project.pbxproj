@@ -14,6 +14,9 @@
 		5A2BE9802A3C985D00D53E14 /* SingleLineShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */; };
 		5A2BE9822A3CA69500D53E14 /* DragShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BE9812A3CA69500D53E14 /* DragShape.swift */; };
 		5A398EED2A40729F003FE261 /* ToolEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EEC2A40729F003FE261 /* ToolEnum.swift */; };
+		5A398EEF2A409A4D003FE261 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EEE2A409A4D003FE261 /* TimerView.swift */; };
+		5A398EF12A409C72003FE261 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EF02A409C72003FE261 /* Stroke.swift */; };
+		5A398EF32A409CF7003FE261 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EF22A409CF7003FE261 /* Path.swift */; };
 		5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */; };
 		5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A62A31BF6E00FD1132 /* ContentView.swift */; };
 		5A3D09A92A31BF6F00FD1132 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A3D09A82A31BF6F00FD1132 /* Assets.xcassets */; };
@@ -37,7 +40,6 @@
 		5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */; };
 		5A4692752A3B1119007D97F8 /* SingleShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4692742A3B1119007D97F8 /* SingleShapeView.swift */; };
 		5A4692772A3B2876007D97F8 /* ShapesLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4692762A3B2876007D97F8 /* ShapesLayerView.swift */; };
-		5A4692792A3B3016007D97F8 /* FreeLineLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4692782A3B3016007D97F8 /* FreeLineLayerView.swift */; };
 		5A46927B2A3B3B39007D97F8 /* VideoLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A46927A2A3B3B39007D97F8 /* VideoLayerManager.swift */; };
 		5A4692812A3B56AB007D97F8 /* MainLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4692802A3B56AB007D97F8 /* MainLayerView.swift */; };
 		5AE399502A385CB900DD4A17 /* ScreenRecorderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE3994F2A385CB900DD4A17 /* ScreenRecorderManager.swift */; };
@@ -57,6 +59,9 @@
 		5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLineShape.swift; sourceTree = "<group>"; };
 		5A2BE9812A3CA69500D53E14 /* DragShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragShape.swift; sourceTree = "<group>"; };
 		5A398EEC2A40729F003FE261 /* ToolEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolEnum.swift; sourceTree = "<group>"; };
+		5A398EEE2A409A4D003FE261 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		5A398EF02A409C72003FE261 /* Stroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
+		5A398EF22A409CF7003FE261 /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		5A3D09A12A31BF6E00FD1132 /* Voice Instructions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Voice Instructions.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voice_InstructionsApp.swift; sourceTree = "<group>"; };
 		5A3D09A62A31BF6E00FD1132 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,7 +86,6 @@
 		5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInfinity.swift; sourceTree = "<group>"; };
 		5A4692742A3B1119007D97F8 /* SingleShapeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleShapeView.swift; sourceTree = "<group>"; };
 		5A4692762A3B2876007D97F8 /* ShapesLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapesLayerView.swift; sourceTree = "<group>"; };
-		5A4692782A3B3016007D97F8 /* FreeLineLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeLineLayerView.swift; sourceTree = "<group>"; };
 		5A46927A2A3B3B39007D97F8 /* VideoLayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLayerManager.swift; sourceTree = "<group>"; };
 		5A4692802A3B56AB007D97F8 /* MainLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLayerView.swift; sourceTree = "<group>"; };
 		5AE3994F2A385CB900DD4A17 /* ScreenRecorderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecorderManager.swift; sourceTree = "<group>"; };
@@ -180,6 +184,7 @@
 				5A3D09CC2A31C40D00FD1132 /* UserDefaults.swift */,
 				5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */,
 				5A27D5702A39CCF200D8E862 /* UIImage.swift */,
+				5A398EF22A409CF7003FE261 /* Path.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -191,6 +196,7 @@
 				5A3D09CA2A31C25800FD1132 /* VideoItem.swift */,
 				5A2BE9812A3CA69500D53E14 /* DragShape.swift */,
 				5A398EEC2A40729F003FE261 /* ToolEnum.swift */,
+				5A398EF02A409C72003FE261 /* Stroke.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -276,8 +282,6 @@
 			isa = PBXGroup;
 			children = (
 				5A4692762A3B2876007D97F8 /* ShapesLayerView.swift */,
-				5A4692782A3B3016007D97F8 /* FreeLineLayerView.swift */,
-				5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */,
 			);
 			path = Layers;
 			sourceTree = "<group>";
@@ -285,7 +289,9 @@
 		5A46927D2A3B4624007D97F8 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */,
 				5A4692742A3B1119007D97F8 /* SingleShapeView.swift */,
+				5A398EEE2A409A4D003FE261 /* TimerView.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -411,12 +417,15 @@
 				5A2BE9802A3C985D00D53E14 /* SingleLineShape.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
 				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
+				5A398EEF2A409A4D003FE261 /* TimerView.swift in Sources */,
 				5AEA54CF2A33672800BA1D9A /* UndoButtons.swift in Sources */,
 				5A3D09D22A31C6BA00FD1132 /* PlayerRepresentable.swift in Sources */,
+				5A398EF12A409C72003FE261 /* Stroke.swift in Sources */,
 				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
 				5A3D09C72A31C1E700FD1132 /* VideoPlayerManager.swift in Sources */,
 				5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */,
 				5A27D5712A39CCF200D8E862 /* UIImage.swift in Sources */,
+				5A398EF32A409CF7003FE261 /* Path.swift in Sources */,
 				5AE399502A385CB900DD4A17 /* ScreenRecorderManager.swift in Sources */,
 				5A46927B2A3B3B39007D97F8 /* VideoLayerManager.swift in Sources */,
 				5A27D56B2A39B46A00D8E862 /* RangeSlider.swift in Sources */,
@@ -434,7 +443,6 @@
 				5A398EED2A40729F003FE261 /* ToolEnum.swift in Sources */,
 				5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */,
 				5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */,
-				5A4692792A3B3016007D97F8 /* FreeLineLayerView.swift in Sources */,
 				5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */,
 				5A2BE9822A3CA69500D53E14 /* DragShape.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,

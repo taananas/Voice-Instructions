@@ -15,7 +15,7 @@ struct SingleLineShape: View {
     var body: some View {
         
         LineShape(startPoint: shape.startLocation, endPoint: shape.endLocation, isArrow: shape.type == .arrow)
-            .stroke(shape.color, lineWidth: 4)
+            .stroke(shape.color, lineWidth: 3)
             .overlay {
                 if shape.isActive{
                     Circle()

@@ -64,9 +64,9 @@ struct SingleShapeView: View {
     private var shapeView: some View{
         Group{
             if shapeModel.type == .circle{
-                Circle().stroke(lineWidth: 5)
+                Circle().stroke(lineWidth: 3)
             }else if shapeModel.type == .rectangle{
-                Rectangle().stroke(lineWidth: 5)
+                Rectangle().stroke(lineWidth: 3)
             }
         }
     }

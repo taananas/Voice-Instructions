@@ -10,14 +10,9 @@ struct DrawVideoLayer: View {
     @EnvironmentObject var layerManager: VideoLayerManager
     var layerSize: CGSize = .zero
     var body: some View {
-        ZStack{
-            
-                
-            ShapesLayerView()
-           
-        }
-        .frame(width: layerSize.width, height: layerSize.height)
-        .disabled(!layerManager.isActiveTool)
+        ShapesLayerView()
+            .frame(width: layerSize.width, height: layerSize.height)
+            .disabled(!layerManager.isActiveTool)
     }
 }
 
