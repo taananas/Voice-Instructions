@@ -15,7 +15,7 @@ struct MainLayerView: View {
         GeometryReader { proxy in
             ZStack{
                 PlayerRepresentable(player: playerManager.videoPlayer)
-                DrawVideoLayer(layerSize: layerSize)
+                DrawVideoLayer(playerManager: playerManager, layerSize: layerSize)
                     .environmentObject(layerManager)
             }
             .mask {

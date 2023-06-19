@@ -109,7 +109,7 @@ struct SingleShapeView: View {
 struct SingleShapeView_Previews: PreviewProvider {
     static var previews: some View {
         
-        ShapesLayerView()
+        ShapesLayerView(playerManager: VideoPlayerManager())
             .environmentObject(VideoLayerManager())
 //        SingleShapeView(shapeModel: .constant(.init(type: .circle, location: .init(x: 100, y: 100), color: .red, size: .init(width: 100, height: 100)))){}
     }

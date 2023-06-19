@@ -18,6 +18,9 @@ class VideoLayerManager: ObservableObject {
     /// shapes circle and rectangle
     @Published var shapes = [DragShape]()
     
+    /// timers
+    @Published var timers = [TimerModel]()
+    
     var undoManager: UndoManager?
     
     
@@ -30,7 +33,7 @@ class VideoLayerManager: ObservableObject {
     }
     
     var isEmptyLayer: Bool{
-        strokes.isEmpty && shapes.isEmpty
+        strokes.isEmpty && shapes.isEmpty && timers.isEmpty
     }
     
     func undo() {
@@ -41,8 +44,17 @@ class VideoLayerManager: ObservableObject {
     func removeAll(){
         removeAllLines()
         removeAllShapes()
+        removeAllTimers()
     }
     
+    func deactivateAllObjects(){
+        shapes.indices.forEach { index in
+            shapes[index].deactivate()
+        }
+        timers.indices.forEach { index in
+            timers[index].deactivate()
+        }
+    }
 }
 
 //MARK: - Free line logic
@@ -105,17 +117,10 @@ extension VideoLayerManager{
     var isActiveShape: Bool{
         shapes.contains(where: {$0.isActive})
     }
-
-    func deactivateAllShape(){
-        shapes.indices.forEach { index in
-            shapes[index].isActive = false
-            shapes[index].isSelected = false
-        }
-    }
     
     private func addShapeWithUndo(_ location: CGPoint){
         if isActiveShape{
-            deactivateAllShape()
+            deactivateAllObjects()
             return
         }
         guard let type = selectedTool?.shapeType else {return}
@@ -145,5 +150,31 @@ extension VideoLayerManager{
     
     private func removeAllShapes(){
         shapes.removeAll()
+    }
+}
+
+//MARK: - Timers logic
+extension VideoLayerManager{
+    
+    func addTimer(value: DragGesture.Value, activateTime: Double){
+        let point = value.location
+        let timer = TimerModel(position: point, activateTime: activateTime, color: selectedColor)
+        undoManager?.registerUndo(withTarget: self) { manager in
+            manager.removeLastTimer()
+        }
+        timers.append(timer)
+    }
+    
+    func removeTimer(_ id: UUID){
+        timers.removeAll(where: {$0.id == id})
+    }
+    
+    private func removeLastTimer(){
+        guard !timers.isEmpty else {return}
+        timers.removeLast()
+    }
+    
+    private func removeAllTimers(){
+        timers.removeAll()
     }
 }

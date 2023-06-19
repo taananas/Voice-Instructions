@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct ShapesLayerView: View {
+    @ObservedObject var playerManager: VideoPlayerManager
     @EnvironmentObject var layerManager: VideoLayerManager
     var body: some View {
         ZStack{
@@ -18,11 +19,11 @@ struct ShapesLayerView: View {
                 if shape.wrappedValue.isShapeType{
                     
                     SingleShapeView(shapeModel: shape,
-                                    onSelected:  layerManager.deactivateAllShape,
+                                    onSelected:  layerManager.deactivateAllObjects,
                                     onDelete: layerManager.removeShape)
                 }else{
                     SingleLineShape(shape: shape,
-                                    onSelected:  layerManager.deactivateAllShape,
+                                    onSelected:  layerManager.deactivateAllObjects,
                                     onDelete: layerManager.removeShape)
                 }
             }
@@ -35,6 +36,11 @@ struct ShapesLayerView: View {
                     .foregroundColor(stroke.color)
             }
             
+            
+            ForEach($layerManager.timers) { timer in
+                TimerView(currentTime: playerManager.currentTime, timer: timer, onSelected: layerManager.deactivateAllObjects, onRemove: layerManager.removeTimer)
+            }
+            
         }
         .gesture(
             DragGesture(minimumDistance: 0)
@@ -45,17 +51,19 @@ struct ShapesLayerView: View {
                         layerManager.addShape(value: value)
                     }
                 }
+                .onEnded{ value in
+                    if layerManager.selectedTool == .timer{
+                        layerManager.addTimer(value: value, activateTime: playerManager.currentTime)
+                    }
+                }
         )
-//        .onAppear{
-//            layerManager.selectedTool = .rectangle
-//        }
     }
 }
 
 
 struct ShapesLayerView_Previews: PreviewProvider {
     static var previews: some View {
-        ShapesLayerView()
+        ShapesLayerView(playerManager: VideoPlayerManager())
             .environmentObject(VideoLayerManager())
     }
 }

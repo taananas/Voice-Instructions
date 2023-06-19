@@ -17,6 +17,7 @@
 		5A398EEF2A409A4D003FE261 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EEE2A409A4D003FE261 /* TimerView.swift */; };
 		5A398EF12A409C72003FE261 /* Stroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EF02A409C72003FE261 /* Stroke.swift */; };
 		5A398EF32A409CF7003FE261 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EF22A409CF7003FE261 /* Path.swift */; };
+		5A398EF52A40A490003FE261 /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A398EF42A40A490003FE261 /* TimerModel.swift */; };
 		5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */; };
 		5A3D09A72A31BF6E00FD1132 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09A62A31BF6E00FD1132 /* ContentView.swift */; };
 		5A3D09A92A31BF6F00FD1132 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A3D09A82A31BF6F00FD1132 /* Assets.xcassets */; };
@@ -62,6 +63,7 @@
 		5A398EEE2A409A4D003FE261 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		5A398EF02A409C72003FE261 /* Stroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stroke.swift; sourceTree = "<group>"; };
 		5A398EF22A409CF7003FE261 /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
+		5A398EF42A40A490003FE261 /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
 		5A3D09A12A31BF6E00FD1132 /* Voice Instructions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Voice Instructions.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3D09A42A31BF6E00FD1132 /* Voice_InstructionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voice_InstructionsApp.swift; sourceTree = "<group>"; };
 		5A3D09A62A31BF6E00FD1132 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				5A2BE9812A3CA69500D53E14 /* DragShape.swift */,
 				5A398EEC2A40729F003FE261 /* ToolEnum.swift */,
 				5A398EF02A409C72003FE261 /* Stroke.swift */,
+				5A398EF42A40A490003FE261 /* TimerModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -416,6 +419,7 @@
 				5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */,
 				5A2BE9802A3C985D00D53E14 /* SingleLineShape.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
+				5A398EF52A40A490003FE261 /* TimerModel.swift in Sources */,
 				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
 				5A398EEF2A409A4D003FE261 /* TimerView.swift in Sources */,
 				5AEA54CF2A33672800BA1D9A /* UndoButtons.swift in Sources */,

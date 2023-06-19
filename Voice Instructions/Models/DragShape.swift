@@ -37,6 +37,11 @@ struct DragShape: Identifiable{
         type == .circle || type == .rectangle
     }
     
+    mutating func deactivate(){
+        isActive = false
+        isSelected = false
+    }
+    
     enum ShapeType: Int {
         
         case line, arrow, circle, rectangle
