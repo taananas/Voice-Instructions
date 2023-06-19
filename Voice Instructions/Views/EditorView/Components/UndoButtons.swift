@@ -66,4 +66,17 @@ extension UndoButtons{
 
 enum ToolEnum: Int, CaseIterable{
     case arrow, line, angle, polyLine, circle, rectangle, timer
+    
+    
+    var shapeType: DragShape.ShapeType?{
+    
+        switch self {
+        case .arrow: return .arrow
+        case .line: return .line
+        case .circle: return .circle
+        case .rectangle: return .rectangle
+        default: return nil
+        }
+        
+    }
 }

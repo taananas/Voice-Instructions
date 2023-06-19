@@ -41,7 +41,9 @@ struct ShapesLayerView: View {
                     }
                 }
         )
-        
+        .onAppear{
+            layerManager.selectedTool = .arrow
+        }
     }
 }
 

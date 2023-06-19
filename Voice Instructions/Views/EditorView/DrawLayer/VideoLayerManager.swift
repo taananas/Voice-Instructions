@@ -111,7 +111,8 @@ extension VideoLayerManager{
             deactivateAllShape()
             return
         }
-        let newShape = DragShape(type: .line, location: location, color: selectedColor, size: .init(width: 50, height: 50), endLocation: location)
+        guard let type = selectedTool?.shapeType else {return}
+        let newShape = DragShape(type: type, location: location, color: selectedColor, size: .init(width: 50, height: 50), endLocation: location)
         undoManager?.registerUndo(withTarget: self) { manager in
             manager.removeLastShape()
         }

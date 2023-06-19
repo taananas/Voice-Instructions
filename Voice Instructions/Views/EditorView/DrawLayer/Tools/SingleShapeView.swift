@@ -56,15 +56,16 @@ struct SingleShapeView: View {
     
     private var locationDrag: some Gesture {
         DragGesture()
+            .updating($startLocation) { (value, startLocation, transaction) in
+                if !shapeModel.isActive {return}
+                startLocation = startLocation ?? shapeModel.location
+            }
             .onChanged { value in
                 if !shapeModel.isActive {return}
-                var newLocation = startLocation ?? shapeModel.location
+                var newLocation = startLocation ?? .zero
                 newLocation.x += value.translation.width
                 newLocation.y += value.translation.height
                 shapeModel.location = newLocation
-            }.updating($startLocation) { (value, startLocation, transaction) in
-                if !shapeModel.isActive {return}
-                startLocation = startLocation ?? shapeModel.location
             }
     }
     
