@@ -2,7 +2,6 @@
 //  DragShape.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 16.06.2023.
 //
 
 import SwiftUI

@@ -2,7 +2,6 @@
 //  SingleLineShape.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 16.06.2023.
 //
 
 import SwiftUI
@@ -101,30 +100,16 @@ struct LineShape: Shape {
         
         if isArrow{
             
-            // Рассчитываем угол между линией и осью X
             let angle = atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x)
-            let weight: CGFloat = 10
-            // Рассчитываем координаты вершин треугольника
-            let firstPoint = CGPoint(x: endPoint.x - 10 * cos(angle - .pi / 6), y: endPoint.y - 10 * sin(angle - .pi / 6))
-            let secondPoint = endPoint
-            let thirdPoint = CGPoint(x: endPoint.x - 10 * cos(angle + .pi / 6), y: endPoint.y - 10 * sin(angle + .pi / 6))
+            let arrowLength: CGFloat = 20
+            let arrowWidth: CGFloat = 4
 
-            // Добавляем треугольник в путь
-            path.addLine(to: firstPoint)
-            path.addLine(to: thirdPoint)
-            path.addLine(to: secondPoint)
+            let endPoint1 = CGPoint(x: endPoint.x - arrowLength * cos(angle) + arrowWidth * cos(angle + .pi/2), y: endPoint.y - arrowLength * sin(angle) + arrowWidth * sin(angle + .pi/2))
+            let endPoint2 = CGPoint(x: endPoint.x - arrowLength * cos(angle) + arrowWidth * cos(angle - .pi/2), y: endPoint.y - arrowLength * sin(angle) + arrowWidth * sin(angle - .pi/2))
 
-            
-//            let angle = atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x)
-//            let arrowLength: CGFloat = min(abs(endPoint.x - startPoint.x), abs(endPoint.y - startPoint.y))
-//            let arrowWidth: CGFloat = 8
-//
-//            let endPoint1 = CGPoint(x: endPoint.x - arrowLength * cos(angle) + arrowWidth * cos(angle + .pi/2), y: endPoint.y - arrowLength * sin(angle) + arrowWidth * sin(angle + .pi/2))
-//            let endPoint2 = CGPoint(x: endPoint.x - arrowLength * cos(angle) + arrowWidth * cos(angle - .pi/2), y: endPoint.y - arrowLength * sin(angle) + arrowWidth * sin(angle - .pi/2))
-//
-//            path.addLine(to: endPoint1)
-//            path.move(to: endPoint)
-//            path.addLine(to: endPoint2)
+            path.addLine(to: endPoint1)
+            path.move(to: endPoint)
+            path.addLine(to: endPoint2)
         }
 
         return path
