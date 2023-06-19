@@ -11,10 +11,12 @@ struct SingleShapeView: View {
     @State private var angle: Angle = .degrees(0)
     @Binding var shapeModel: DragShape
     let onSelected: () -> Void
+    let onDelete: (UUID) -> Void
     
-    init(shapeModel: Binding<DragShape>, onSelected: @escaping () -> Void){
+    init(shapeModel: Binding<DragShape>, onSelected: @escaping () -> Void, onDelete: @escaping (UUID) -> Void){
         self._shapeModel = shapeModel
         self.onSelected = onSelected
+        self.onDelete = onDelete
     }
     
     var body: some View {
@@ -31,9 +33,17 @@ struct SingleShapeView: View {
                         .gesture(sizeDragForShape)
                 }
             }
+            
 
             .rotationEffect(angle, anchor: .bottomLeading)
             .frame(width: shapeModel.size.width, height: shapeModel.size.height)
+            .overlay(alignment: .top) {
+                if shapeModel.isSelected{
+                    RemoveShapeButton {
+                        onDelete(shapeModel.id)
+                    }
+                }
+            }
             .position(shapeModel.location)
             .gesture(locationDrag)
             .onTapGesture {
@@ -42,6 +52,13 @@ struct SingleShapeView: View {
                     shapeModel.isActive = true
                 }
             }
+            .onLongPressGesture(minimumDuration: 1){
+                if !shapeModel.isSelected{
+                    onSelected()
+                    shapeModel.isSelected = true
+                }
+            }
+
     }
     
     private var shapeView: some View{
@@ -91,6 +108,29 @@ struct SingleShapeView: View {
 
 struct SingleShapeView_Previews: PreviewProvider {
     static var previews: some View {
-        SingleShapeView(shapeModel: .constant(.init(type: .circle, location: .init(x: 100, y: 100), color: .red, size: .init(width: 100, height: 100)))){}
+        
+        ShapesLayerView()
+            .environmentObject(VideoLayerManager())
+//        SingleShapeView(shapeModel: .constant(.init(type: .circle, location: .init(x: 100, y: 100), color: .red, size: .init(width: 100, height: 100)))){}
+    }
+}
+
+
+struct RemoveShapeButton: View{
+    let onPress: () -> Void
+    var body: some View{
+        Button {
+            onPress()
+        } label: {
+            Text("Delete")
+                .foregroundColor(.black)
+                .padding(10)
+                .background{
+                    Capsule()
+                        .fill(Color.white.opacity(0.9))
+                        .shadow(radius: 3)
+                }
+                .fixedSize()
+        }
     }
 }

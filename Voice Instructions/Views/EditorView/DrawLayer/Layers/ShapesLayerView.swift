@@ -16,18 +16,23 @@ struct ShapesLayerView: View {
             ForEach($layerManager.shapes) { shape in
                 
                 if shape.wrappedValue.isShapeType{
-                    SingleShapeView(shapeModel: shape, onSelected:  layerManager.deactivateAllShape)
+                    
+                    SingleShapeView(shapeModel: shape,
+                                    onSelected:  layerManager.deactivateAllShape,
+                                    onDelete: layerManager.removeShape)
                 }else{
-                    SingleLineShape(shape: shape, onSelected:  layerManager.deactivateAllShape)
+                    SingleLineShape(shape: shape,
+                                    onSelected:  layerManager.deactivateAllShape,
+                                    onDelete: layerManager.removeShape)
                 }
             }
             
             
             /// freeLines
-            ForEach(layerManager.strokes.indices, id: \.self){index in
-                Path(curving: layerManager.strokes[index].points)
+            ForEach(layerManager.strokes){ stroke in
+                Path(curving: stroke.points)
                     .stroke(style: .init(lineWidth: 5, lineCap: .round, lineJoin: .round))
-                    .foregroundColor(layerManager.strokes[index].color)
+                    .foregroundColor(stroke.color)
             }
             
         }
@@ -36,13 +41,13 @@ struct ShapesLayerView: View {
                 .onChanged { value in
                     if layerManager.selectedTool == .polyLine{
                         layerManager.addLine(value: value)
-                    }else{
+                    }else if layerManager.selectedTool?.isShapeTool ?? false{
                         layerManager.addShape(value: value)
                     }
                 }
         )
         .onAppear{
-            layerManager.selectedTool = .arrow
+            layerManager.selectedTool = .rectangle
         }
     }
 }

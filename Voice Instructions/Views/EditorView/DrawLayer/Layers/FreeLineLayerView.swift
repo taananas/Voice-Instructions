@@ -49,7 +49,8 @@ struct FreeLineLayerView_Previews: PreviewProvider {
 }
 
 
-struct Stroke {
+struct Stroke: Identifiable {
+    var id: UUID = UUID()
     var points = [CGPoint]()
     var color = Color.red
     var width = 5.0

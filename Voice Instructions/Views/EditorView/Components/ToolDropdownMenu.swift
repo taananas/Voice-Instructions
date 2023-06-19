@@ -104,13 +104,16 @@ extension ToolDropdownMenu{
     }
     
     private func toolCell(_ toolType: ToolEnum) -> some View{
-        Text("\(toolType.rawValue)")
+        Image(systemName: toolType.image)
+            .font(.title3.bold())
+            .foregroundColor(toolType.iconColor)
+            .padding(.vertical, 4)
             .hCenter()
             .overlay(alignment: .leading) {
                 if toolType == selectedTool{
                     Image(systemName: "arrowtriangle.left.fill")
                         .matchedGeometryEffect(id: "CellIcon", in: animation)
-                        .font(.system(size: 8))
+                        .font(.system(size: 10))
                 }
             }
     }

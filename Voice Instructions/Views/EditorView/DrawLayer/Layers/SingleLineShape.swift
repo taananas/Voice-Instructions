@@ -11,6 +11,7 @@ struct SingleLineShape: View {
     @State var location: CGPoint? = nil
     @Binding var shape: DragShape
     let onSelected: () -> Void
+    let onDelete: (UUID) -> Void
     var body: some View {
         
         LineShape(startPoint: shape.startLocation, endPoint: shape.endLocation, isArrow: shape.type == .arrow)
@@ -30,6 +31,14 @@ struct SingleLineShape: View {
                         .gesture(dragForPoint(isStartPoint: false))
                 }
             }
+            .overlay(alignment: .topTrailing) {
+                if shape.isSelected{
+                    RemoveShapeButton {
+                        onDelete(shape.id)
+                    }
+                    .position(shape.endLocation)
+                }
+            }
             .positionOptionally(location)
             .padding(10)
             .gesture(locationDrag)
@@ -37,6 +46,12 @@ struct SingleLineShape: View {
                 if !shape.isActive{
                     onSelected()
                     shape.isActive = true
+                }
+            }
+            .onLongPressGesture(minimumDuration: 1){
+                if !shape.isSelected{
+                    onSelected()
+                    shape.isSelected = true
                 }
             }
     }
@@ -50,8 +65,8 @@ struct SingleLineShape_Previews: PreviewProvider {
 //            .environmentObject(VideoLayerManager())
         
         VStack {
-            SingleLineShape(shape: .constant(.init(type: .line, location: .init(x: 50, y: 450), color: .red, endLocation: .init(x: 100, y: 100)))){}
-            SingleLineShape(shape: .constant(.init(type: .arrow, location: .init(x: 50, y: 250), color: .red, endLocation: .init(x: 100, y: 100)))){}
+            SingleLineShape(shape: .constant(.init(type: .line, location: .init(x: 50, y: 450), color: .red, endLocation: .init(x: 100, y: 100))), onSelected: {}, onDelete: {_ in})
+            SingleLineShape(shape: .constant(.init(type: .arrow, location: .init(x: 50, y: 250), color: .red, endLocation: .init(x: 100, y: 100))), onSelected: {}, onDelete: {_ in})
         }
     }
 }

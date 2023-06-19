@@ -87,13 +87,19 @@ extension VideoLayerManager{
     
     func addShape(value: DragGesture.Value){
         let point = value.location
-        if value.translation.width + value.translation.height == 0{
-            addShapeWithUndo(point)
-        }else{
-            let width = abs(value.translation.width * 1.5)
-            let height = abs(value.translation.height * 1.5)
+        
+        let width = abs(value.translation.width * 1.5)
+        let height = abs(value.translation.height * 1.5)
+        
+        if width + height > 0{
             updateShape(width: width, height: height, point)
+        }else{
+            addShapeWithUndo(point)
         }
+    }
+    
+    func removeShape(_ id: UUID){
+        shapes.removeAll(where: {$0.id == id})
     }
     
     var isActiveShape: Bool{
@@ -103,6 +109,7 @@ extension VideoLayerManager{
     func deactivateAllShape(){
         shapes.indices.forEach { index in
             shapes[index].isActive = false
+            shapes[index].isSelected = false
         }
     }
     
@@ -112,7 +119,7 @@ extension VideoLayerManager{
             return
         }
         guard let type = selectedTool?.shapeType else {return}
-        let newShape = DragShape(type: type, location: location, color: selectedColor, size: .init(width: 50, height: 50), endLocation: location)
+        let newShape = DragShape(type: type, location: location, color: selectedColor, size: .init(width: 20, height: 20), endLocation: location)
         undoManager?.registerUndo(withTarget: self) { manager in
             manager.removeLastShape()
         }
@@ -121,13 +128,13 @@ extension VideoLayerManager{
     
     private func updateShape(width: CGFloat, height: CGFloat, _ location: CGPoint){
         guard !shapes.isEmpty else {return}
-
-        if shapes[shapes.count - 1].isShapeType {
+        let index = shapes.count - 1
+        if shapes[index].isShapeType {
             if width > 10 && height > 10{
-                shapes[shapes.count - 1].size = .init(width: width, height: height)
+                shapes[index].size = .init(width: width, height: height)
             }
         }else{
-            shapes[shapes.count - 1].endLocation = location
+            shapes[index].endLocation = location
         }
     }
     
