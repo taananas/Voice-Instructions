@@ -7,7 +7,18 @@
 import SwiftUI
 
 
-struct DragShape: Identifiable{
+protocol LayerElement{
+    
+    var isActive: Bool { get set }
+    var isSelected: Bool { get set }
+    var location: CGPoint { get set }
+    var color: Color { get set }
+    var id: UUID { get set }
+    
+    mutating func deactivate()
+}
+
+struct DragShape: Identifiable, LayerElement{
     
     var id: UUID = UUID()
     var isActive = false

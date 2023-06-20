@@ -2,7 +2,6 @@
 //  TimerView.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 19.06.2023.
 //
 
 import SwiftUI
@@ -38,7 +37,7 @@ struct TimerView: View {
                 .offset(y: -46)
             }
         }
-        .position(timer.position)
+        .position(timer.location)
         .gesture(positionDrag)
         .onTapGesture {
             timer.setNewTime(currentTime)
@@ -55,8 +54,8 @@ struct TimerView: View {
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            TimerView(currentTime: 3.45, timer: .constant(.init(position: .init(x: 100, y: 100), activateTime: 2.34, color: .red)), onSelected: {}, onRemove: {_ in})
-            TimerView(currentTime: 3.45, timer: .constant(.init(position: .init(x: 150, y: 150), activateTime: 5.34, color: .green)), onSelected: {}, onRemove: {_ in})
+            TimerView(currentTime: 3.45, timer: .constant(.init(location: .init(x: 100, y: 100), activateTime: 2.34, color: .red)), onSelected: {}, onRemove: {_ in})
+            TimerView(currentTime: 3.45, timer: .constant(.init(location: .init(x: 150, y: 150), activateTime: 5.34, color: .green)), onSelected: {}, onRemove: {_ in})
         }
     }
 }
@@ -67,13 +66,13 @@ extension TimerView{
     private var positionDrag: some Gesture {
         DragGesture()
             .updating($startLocation) { (value, startLocation, transaction) in
-                startLocation = startLocation ?? timer.position
+                startLocation = startLocation ?? timer.location
             }
             .onChanged { value in
-                var newLocation = startLocation ?? timer.position
+                var newLocation = startLocation ?? timer.location
                 newLocation.x += value.translation.width
                 newLocation.y += value.translation.height
-                timer.position = newLocation
+                timer.location = newLocation
                 timer.isSelected = false
             }
     }

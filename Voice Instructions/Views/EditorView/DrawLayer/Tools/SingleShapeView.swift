@@ -25,19 +25,14 @@ struct SingleShapeView: View {
             .foregroundColor(shapeModel.color)
             .overlay(alignment: shapeModel.type == .circle ? .trailing : .bottomTrailing) {
                 if shapeModel.isActive{
-                    Circle()
-                        .stroke(shapeModel.color, style: .init(lineWidth: 3, dash: [5]))
-                        .frame(width: 36, height: 36)
-                        .contentShape(Circle())
+                    DragCircle(color: shapeModel.color)
                         .offset(x: 18, y: 18)
                         .gesture(sizeDragForShape)
                 }
             }
-            
-
             .rotationEffect(angle, anchor: .bottomLeading)
             .frame(width: shapeModel.size.width, height: shapeModel.size.height)
-            .overlay(alignment: .top) {
+            .overlay(alignment: .center) {
                 if shapeModel.isSelected{
                     RemoveShapeButton {
                         onDelete(shapeModel.id)
@@ -65,8 +60,10 @@ struct SingleShapeView: View {
         Group{
             if shapeModel.type == .circle{
                 Circle().stroke(lineWidth: 3)
+                    .contentShape(Circle())
             }else if shapeModel.type == .rectangle{
                 Rectangle().stroke(lineWidth: 3)
+                    .contentShape(Rectangle())
             }
         }
     }
@@ -132,5 +129,15 @@ struct RemoveShapeButton: View{
                 }
                 .fixedSize()
         }
+    }
+}
+
+struct DragCircle: View{
+    var color: Color
+    var body: some View{
+        Circle()
+            .stroke(color, style: .init(lineWidth: 3, dash: [5]))
+            .frame(width: 36, height: 36)
+            .contentShape(Circle())
     }
 }

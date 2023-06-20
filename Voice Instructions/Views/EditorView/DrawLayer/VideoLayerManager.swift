@@ -21,6 +21,9 @@ class VideoLayerManager: ObservableObject {
     /// timers
     @Published var timers = [TimerModel]()
     
+    ///angles
+    @Published var angles = [AngleModel]()
+    
     var undoManager: UndoManager?
     
     
@@ -33,7 +36,7 @@ class VideoLayerManager: ObservableObject {
     }
     
     var isEmptyLayer: Bool{
-        strokes.isEmpty && shapes.isEmpty && timers.isEmpty
+        strokes.isEmpty && shapes.isEmpty && timers.isEmpty && angles.isEmpty
     }
     
     func undo() {
@@ -45,14 +48,27 @@ class VideoLayerManager: ObservableObject {
         removeAllLines()
         removeAllShapes()
         removeAllTimers()
+        removeAllAngles()
+    }
+    
+    var isActiveAnyObject: Bool{
+        shapes.contains(where: {$0.isActive || $0.isSelected}) ||
+        timers.contains(where: {$0.isActive || $0.isSelected}) ||
+        angles.contains(where: {$0.isActive || $0.isSelected})
     }
     
     func deactivateAllObjects(){
+        
+        guard isActiveAnyObject else {return}
+        
         shapes.indices.forEach { index in
             shapes[index].deactivate()
         }
         timers.indices.forEach { index in
             timers[index].deactivate()
+        }
+        angles.indices.forEach { index in
+            angles[index].deactivate()
         }
     }
 }
@@ -98,12 +114,14 @@ extension VideoLayerManager{
     
     
     func addShape(value: DragGesture.Value){
+        
         let point = value.location
         
         let width = abs(value.translation.width * 1.5)
         let height = abs(value.translation.height * 1.5)
+        let sum = width + height
         
-        if width + height > 0{
+        if sum > 0{
             updateShape(width: width, height: height, point)
         }else{
             addShapeWithUndo(point)
@@ -114,15 +132,7 @@ extension VideoLayerManager{
         shapes.removeAll(where: {$0.id == id})
     }
     
-    var isActiveShape: Bool{
-        shapes.contains(where: {$0.isActive})
-    }
-    
     private func addShapeWithUndo(_ location: CGPoint){
-        if isActiveShape{
-            deactivateAllObjects()
-            return
-        }
         guard let type = selectedTool?.shapeType else {return}
         let newShape = DragShape(type: type, location: location, color: selectedColor, size: .init(width: 20, height: 20), endLocation: location)
         undoManager?.registerUndo(withTarget: self) { manager in
@@ -158,7 +168,7 @@ extension VideoLayerManager{
     
     func addTimer(value: DragGesture.Value, activateTime: Double){
         let point = value.location
-        let timer = TimerModel(position: point, activateTime: activateTime, color: selectedColor)
+        let timer = TimerModel(location: point, activateTime: activateTime, color: selectedColor)
         undoManager?.registerUndo(withTarget: self) { manager in
             manager.removeLastTimer()
         }
@@ -176,5 +186,31 @@ extension VideoLayerManager{
     
     private func removeAllTimers(){
         timers.removeAll()
+    }
+}
+
+//MARK: - Angles logic
+extension VideoLayerManager{
+    
+    func addAngle(value: DragGesture.Value){
+        let point = value.location
+        let angle = AngleModel(location: point, color: selectedColor)
+        undoManager?.registerUndo(withTarget: self) { manager in
+            manager.removeLastAngle()
+        }
+        angles.append(angle)
+    }
+    
+    func removeAngle(_ id: UUID){
+        angles.removeAll(where: {$0.id == id})
+    }
+    
+    private func removeLastAngle(){
+        guard !angles.isEmpty else {return}
+        angles.removeLast()
+    }
+    
+    private func removeAllAngles(){
+        angles.removeAll()
     }
 }

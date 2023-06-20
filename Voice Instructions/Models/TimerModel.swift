@@ -2,14 +2,15 @@
 //  TimerModel.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 19.06.2023.
 //
 
 import SwiftUI
 
-struct TimerModel: Identifiable{
+struct TimerModel: Identifiable, LayerElement{
+    
     var id: UUID = UUID()
-    var position: CGPoint
+    var isActive: Bool = false
+    var location: CGPoint
     var isSelected: Bool = false
     var activateTime: Double
     var color: Color
@@ -20,6 +21,7 @@ struct TimerModel: Identifiable{
     
     mutating func deactivate(){
         isSelected = false
+        isActive = false
     }
 }
 

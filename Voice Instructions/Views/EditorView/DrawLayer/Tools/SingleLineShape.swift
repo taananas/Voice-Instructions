@@ -18,15 +18,11 @@ struct SingleLineShape: View {
             .stroke(shape.color, lineWidth: 3)
             .overlay {
                 if shape.isActive{
-                    Circle()
-                        .stroke(shape.color, style: .init(lineWidth: 3, dash: [5]))
-                        .frame(width: 20, height: 20)
+                    DragCircle(color: shape.color)
                         .position(shape.startLocation)
                         .gesture(dragForPoint(isStartPoint: true))
                     
-                    Circle()
-                        .stroke(shape.color, style: .init(lineWidth: 3, dash: [5]))
-                        .frame(width: 20, height: 20)
+                    DragCircle(color: shape.color)
                         .position(shape.endLocation)
                         .gesture(dragForPoint(isStartPoint: false))
                 }
@@ -39,7 +35,6 @@ struct SingleLineShape: View {
                     .position(shape.endLocation)
                 }
             }
-            .positionOptionally(location)
             .padding(10)
             .gesture(locationDrag)
             .onTapGesture {

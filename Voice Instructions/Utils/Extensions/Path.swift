@@ -2,7 +2,6 @@
 //  Path.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 19.06.2023.
 //
 
 import Foundation
