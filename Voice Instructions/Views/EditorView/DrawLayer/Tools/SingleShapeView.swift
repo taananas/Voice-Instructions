@@ -60,10 +60,8 @@ struct SingleShapeView: View {
         Group{
             if shapeModel.type == .circle{
                 Circle().stroke(lineWidth: 3)
-                    .contentShape(Circle())
             }else if shapeModel.type == .rectangle{
                 Rectangle().stroke(lineWidth: 3)
-                    .contentShape(Rectangle())
             }
         }
     }

@@ -57,6 +57,7 @@ struct ShapesLayerView: View {
                     }
                 }
                 .onEnded{ value in
+                    layerManager.selectedShape = nil
                     if layerManager.isActiveAnyObject{
                         layerManager.deactivateAllObjects()
                         return

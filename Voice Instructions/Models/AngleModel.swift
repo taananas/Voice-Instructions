@@ -12,7 +12,7 @@ struct AngleModel: Identifiable, LayerElement{
     var id: UUID = UUID()
     var location: CGPoint
     var isSelected: Bool = false
-    var isActive: Bool = false
+    var isActive: Bool = true
     var color: Color = .red
     var endPointFirstLine: CGPoint = .init(x: 200, y: 200)
     var endPointSecondLine: CGPoint = .init(x: 200, y: 50)

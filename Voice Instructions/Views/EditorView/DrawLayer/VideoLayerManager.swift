@@ -17,6 +17,7 @@ class VideoLayerManager: ObservableObject {
     
     /// shapes circle and rectangle
     @Published var shapes = [DragShape]()
+    @Published var selectedShape: DragShape?
     
     /// timers
     @Published var timers = [TimerModel]()
@@ -121,10 +122,10 @@ extension VideoLayerManager{
         let height = abs(value.translation.height * 1.5)
         let sum = width + height
         
-        if sum > 0{
-            updateShape(width: width, height: height, point)
-        }else{
+        if sum > 0, selectedShape == nil{
             addShapeWithUndo(point)
+        }else{
+            updateShape(width: width, height: height, point)
         }
     }
     
@@ -135,6 +136,7 @@ extension VideoLayerManager{
     private func addShapeWithUndo(_ location: CGPoint){
         guard let type = selectedTool?.shapeType else {return}
         let newShape = DragShape(type: type, location: location, color: selectedColor, size: .init(width: 20, height: 20), endLocation: location)
+        self.selectedShape = newShape
         undoManager?.registerUndo(withTarget: self) { manager in
             manager.removeLastShape()
         }
@@ -142,8 +144,7 @@ extension VideoLayerManager{
     }
     
     private func updateShape(width: CGFloat, height: CGFloat, _ location: CGPoint){
-        guard !shapes.isEmpty else {return}
-        let index = shapes.count - 1
+        guard !shapes.isEmpty, let index = shapes.firstIndex(where: {$0.id == selectedShape?.id}) else {return}
         if shapes[index].isShapeType {
             if width > 10 && height > 10{
                 shapes[index].size = .init(width: width, height: height)

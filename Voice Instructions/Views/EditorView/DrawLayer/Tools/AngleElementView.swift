@@ -66,7 +66,6 @@ struct AngleElementView: View {
                     
                 }
         }
-       
         .positionOptionally(dragLocation)
         .gesture(locationDrag)
         .onTapGesture {
