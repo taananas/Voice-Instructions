@@ -8,7 +8,7 @@ import SwiftUI
 
 
 struct AngleModel: Identifiable, LayerElement{
-    
+
     var id: UUID = UUID()
     var location: CGPoint
     var isSelected: Bool = false
@@ -16,6 +16,9 @@ struct AngleModel: Identifiable, LayerElement{
     var color: Color = .red
     var endPointFirstLine: CGPoint = .init(x: 200, y: 200)
     var endPointSecondLine: CGPoint = .init(x: 200, y: 50)
+    var lineWeight: CGFloat{
+        isActive || isSelected ? 5 : 3
+    }
     
     func angleBetweenLines() -> CGFloat {
         let startPoint = location

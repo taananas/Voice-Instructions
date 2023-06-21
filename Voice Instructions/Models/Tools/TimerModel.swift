@@ -14,6 +14,9 @@ struct TimerModel: Identifiable, LayerElement{
     var isSelected: Bool = false
     var activateTime: Double
     var color: Color
+    var lineWeight: CGFloat{
+        isActive || isSelected ? 5 : 3
+    }
     
     mutating func setNewTime(_ time: Double){
         activateTime = time

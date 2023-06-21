@@ -14,6 +14,7 @@ protocol LayerElement{
     var location: CGPoint { get set }
     var color: Color { get set }
     var id: UUID { get set }
+    var lineWeight: CGFloat { get }
     
     mutating func deactivate()
 }
@@ -29,6 +30,9 @@ struct DragShape: Identifiable, LayerElement{
     var endLocation: CGPoint
     var size: CGSize = .zero
     var color: Color
+    var lineWeight: CGFloat{
+        isActive || isSelected ? 5 : 3
+    }
     
     init(type: ShapeType,
          location: CGPoint,

@@ -198,13 +198,8 @@
 		5A3D09B62A31C03B00FD1132 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				5A3D09C82A31C21000FD1132 /* Video.swift */,
-				5A3D09CA2A31C25800FD1132 /* VideoItem.swift */,
-				5A2BE9812A3CA69500D53E14 /* DragShape.swift */,
-				5A398EEC2A40729F003FE261 /* ToolEnum.swift */,
-				5A398EF02A409C72003FE261 /* Stroke.swift */,
-				5A398EF42A40A490003FE261 /* TimerModel.swift */,
-				5A6183BA2A41DD89002AEC0D /* AngleModel.swift */,
+				5AE97BFD2A42F598009A6FD9 /* Tools */,
+				5AE97BFC2A42F591009A6FD9 /* Video */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -320,6 +315,27 @@
 				5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */,
 			);
 			path = VideoPreview;
+			sourceTree = "<group>";
+		};
+		5AE97BFC2A42F591009A6FD9 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				5A3D09CA2A31C25800FD1132 /* VideoItem.swift */,
+				5A3D09C82A31C21000FD1132 /* Video.swift */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		5AE97BFD2A42F598009A6FD9 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				5A398EF02A409C72003FE261 /* Stroke.swift */,
+				5A398EEC2A40729F003FE261 /* ToolEnum.swift */,
+				5A398EF42A40A490003FE261 /* TimerModel.swift */,
+				5A6183BA2A41DD89002AEC0D /* AngleModel.swift */,
+				5A2BE9812A3CA69500D53E14 /* DragShape.swift */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 		5AEA54C62A33398500BA1D9A /* DrawLayer */ = {
