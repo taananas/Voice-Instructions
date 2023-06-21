@@ -33,7 +33,7 @@ struct ScrubbingBarView_Previews: PreviewProvider {
 extension ScrubbingBarView{
     private var imagesSection: some View{
         HStack(spacing: 0){
-            ForEach(1...8, id: \.self) { _ in
+            ForEach(1...10, id: \.self) { _ in
                 Image("scrubbingImage")
             }
         }
