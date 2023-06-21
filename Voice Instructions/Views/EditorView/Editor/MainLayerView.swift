@@ -13,18 +13,16 @@ struct MainLayerView: View {
     var body: some View {
     
         GeometryReader { proxy in
+            let newLayerSize = getSize(proxy)
             ZStack{
-                PlayerRepresentable(player: playerManager.videoPlayer)
-                DrawVideoLayer(playerManager: playerManager, layerSize: layerSize)
+                PlayerRepresentable(size: $layerSize, player: playerManager.videoPlayer)
+                DrawVideoLayer(playerManager: playerManager, layerSize: newLayerSize)
                     .environmentObject(layerManager)
             }
-            .mask {
+            .maskOptionally(isActive: layerSize != .zero) {
                 Rectangle()
-                    .frame(width: layerSize.width, height: layerSize.height)
+                    .frame(size: newLayerSize)
                     .blendMode(.destinationOver)
-            }
-            .onAppear{
-                setSize(proxy)
             }
         }
         .ignoresSafeArea()
@@ -40,18 +38,12 @@ struct MainLayerView_Previews: PreviewProvider {
 
 extension MainLayerView{
     
-    private func setSize(_ proxy: GeometryProxy){
-        let screenSize = proxy.size
-        guard let videoSize = playerManager.video?.originalSize else {return}
-
-        let widthScale = screenSize.width / videoSize.width
-        let heightScale = screenSize.height / videoSize.height
-        let scaleFactor = min(widthScale, heightScale)
-
-        let scaledWidth = videoSize.width * scaleFactor
-        let scaledHeight = videoSize.height * scaleFactor
-
-        layerSize = .init(width: scaledWidth, height: scaledHeight)
-
+    
+    private func getSize(_ proxy: GeometryProxy) -> CGSize{
+        .init(
+            width: layerSize.width > proxy.size.width ? proxy.size.width : layerSize.width,
+            height: layerSize.height > proxy.size.height ? proxy.size.height : layerSize.height
+        )
     }
 }
+

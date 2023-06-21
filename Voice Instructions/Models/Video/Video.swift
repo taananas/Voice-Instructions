@@ -13,17 +13,15 @@ struct Video: Identifiable, Codable{
     private var url: URL
     let originalDuration: Double
     var rangeDuration: ClosedRange<Double>
-    var originalSize: CGSize?
     
     var totalDuration: Double{
         rangeDuration.upperBound - rangeDuration.lowerBound
     }
     
-    init(url: URL, originalDuration: Double, originalSize: CGSize? = nil){
+    init(url: URL, originalDuration: Double){
         self.url = url
         self.originalDuration = originalDuration
         self.rangeDuration = 0...(originalDuration - 0.2)
-        self.originalSize = originalSize
     }
     
     init(url: URL) async{
@@ -31,7 +29,6 @@ struct Video: Identifiable, Codable{
         self.url = url
         self.originalDuration = (try? await asset.load(.duration).seconds) ?? 1
         self.rangeDuration = 0...(originalDuration - 0.2)
-        self.originalSize = await asset.naturalSize()
     }
     
     var fullPath: URL{

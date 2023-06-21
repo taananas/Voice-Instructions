@@ -17,7 +17,9 @@ struct VideoPreview: View {
             GeometryReader { proxy in
                 VStack(spacing: 0) {
                     if playerManager.loadState == .loaded{
-                        PlayerRepresentable(player: playerManager.videoPlayer)
+                        PlayerRepresentable(size: .constant(.zero), player: playerManager.videoPlayer)
+                    }else{
+                        Spacer()
                     }
                     controlsSection(proxy)
                 }
@@ -125,7 +127,7 @@ extension VideoPreview{
                     Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: (proxy.size.width - 64) / CGFloat(viewModel.thumbnailsImages.count), height: 70)
+                        .frame(height: 70)
                         .clipped()
                 }
             }

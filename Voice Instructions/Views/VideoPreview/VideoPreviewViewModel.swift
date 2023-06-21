@@ -61,10 +61,10 @@ extension VideoPreviewViewModel{
         
         let imagesCount = thumbnailCount(size)
         let asset = AVAsset(url: video.fullPath)
-        var offset: Float64 = 0
+        var offset: Int = 0
         for i in 0..<imagesCount{
-            let thumbnailImage = ThumbnailImage(image: asset.getImage(Int(offset)))
-            offset = Double(i) * (video.originalDuration / Double(imagesCount))
+            let thumbnailImage = ThumbnailImage(image: asset.getImage(offset))
+            offset = i * Int(video.originalDuration / Double(imagesCount))
             thumbnailsImages.append(thumbnailImage)
         }
     }

@@ -91,8 +91,7 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
                         let firstInit = (trackSize == .zero)
                         trackSize = $0
                         if firstInit {
-                            xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
-                            lastOffset = xOffset
+                            initOffset()
                         }
                     }
                 fill?()
@@ -147,6 +146,14 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
                 }
             }
         }
+        .onChange(of: trackSize) { _ in
+            initOffset()
+        }
+    }
+    
+    private func initOffset(){
+        xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
+        lastOffset = xOffset
     }
 }
 
