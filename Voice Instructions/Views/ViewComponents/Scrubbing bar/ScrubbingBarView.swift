@@ -13,19 +13,12 @@ struct ScrubbingBarView: View {
     let onChangeTime: (Double) -> Void
     @State private var lastOffset: CGFloat = .zero
     var body: some View {
-        
-        VStack {
-//            Text("\(time)")
-//                .foregroundColor(.white)
-//            Text("\(lastOffset)")
-//                .foregroundColor(.white)
-            InfinteHScrollView(alignment: .center, onChange: setTime){
-                imagesSection
-            }
-            .frame(height: 60)
-        .background(Color.clear)
+    
+        InfinityHScrollView(alignment: .center, onChange: setTime){
+            imagesSection
         }
-
+        .frame(height: 60)
+        .background(Color.clear)
     }
 }
 

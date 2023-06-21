@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct InfinteHScrollView<Content>: View where Content: View {
+struct InfinityHScrollView<Content>: View where Content: View {
     var alignment: HorizontalAlignment = .center
 
     @GestureState var dragOffset: CGFloat = 0.0
@@ -131,7 +131,7 @@ struct InfinteHScrollView_Previews: PreviewProvider {
     static var previews: some View {
         
         
-        InfinteHScrollView {
+        InfinityHScrollView {
             ForEach(0..<8, id: \.self) { index in
                 PersonView(index: index)
             }

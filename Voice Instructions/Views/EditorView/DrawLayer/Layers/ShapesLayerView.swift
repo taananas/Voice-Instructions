@@ -11,64 +11,24 @@ struct ShapesLayerView: View {
     @EnvironmentObject var layerManager: VideoLayerManager
     var body: some View {
         ZStack{
+
+            ///Needed to determine dragGesture
             Color.white.opacity(0.0001)
             
             /// shapes
-            ForEach($layerManager.shapes) { shape in
-
-                if shape.wrappedValue.isShapeType{
-
-                    SingleShapeView(shapeModel: shape,
-                                    onSelected:  layerManager.deactivateAllObjects,
-                                    onDelete: layerManager.removeShape)
-                }else{
-                    SingleLineShape(shape: shape,
-                                    onSelected:  layerManager.deactivateAllObjects,
-                                    onDelete: layerManager.removeShape)
-                }
-            }
+            shapesLayer
             
-            /// freeLines
-            ForEach(layerManager.strokes){ stroke in
-                Path(curving: stroke.points)
-                    .stroke(style: .init(lineWidth: stroke.width, lineCap: .round, lineJoin: .round))
-                    .foregroundColor(stroke.color)
-            }
+            /// polyLines
+            polyLineLayer
+            
+            /// angles
+            anglesLayer
 
-            ForEach($layerManager.angles){angle in
-                AngleElementView(angleModel: angle, onSelected: layerManager.deactivateAllObjects, onRemove: layerManager.removeAngle)
-            }
-
-            ForEach($layerManager.timers) { timer in
-                TimerView(currentTime: playerManager.currentTime, timer: timer, onSelected: layerManager.deactivateAllObjects, onRemove: layerManager.removeTimer)
-            }
+            /// timers
+            timersLayer
             
         }
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { value in
-        
-                    guard !layerManager.isActiveAnyObject else {return}
-                    
-                    if layerManager.selectedTool == .polyLine{
-                        layerManager.addLine(value: value)
-                    }else if layerManager.selectedTool?.isShapeTool ?? false{
-                        layerManager.addShape(value: value)
-                    }
-                }
-                .onEnded{ value in
-                    layerManager.selectedShape = nil
-                    if layerManager.isActiveAnyObject{
-                        layerManager.deactivateAllObjects()
-                        return
-                    }
-                    if layerManager.selectedTool == .timer{
-                        layerManager.addTimer(value: value, activateTime: playerManager.currentTime)
-                    }else if layerManager.selectedTool == .angle{
-                        layerManager.addAngle(value: value)
-                    }
-                }
-        )
+        .gesture(dragGesture)
     }
 }
 
@@ -81,4 +41,49 @@ struct ShapesLayerView_Previews: PreviewProvider {
 }
 
 
+extension ShapesLayerView{
+    
+    private var shapesLayer: some View{
+        ForEach($layerManager.shapes) { shape in
 
+            if shape.wrappedValue.isShapeType{
+
+                SingleShapeView(shapeModel: shape,
+                                onSelected:  layerManager.deactivateAllObjects,
+                                onDelete: layerManager.removeShape)
+            }else{
+                SingleLineShape(shape: shape,
+                                onSelected:  layerManager.deactivateAllObjects,
+                                onDelete: layerManager.removeShape)
+            }
+        }
+    }
+    
+    private var polyLineLayer: some View{
+        ForEach(layerManager.strokes){ stroke in
+            Path(curving: stroke.points)
+                .stroke(style: .init(lineWidth: stroke.width, lineCap: .round, lineJoin: .round))
+                .foregroundColor(stroke.color)
+        }
+    }
+    
+    private var anglesLayer: some View{
+        ForEach($layerManager.angles){angle in
+            AngleElementView(angleModel: angle, onSelected: layerManager.deactivateAllObjects, onRemove: layerManager.removeAngle)
+        }
+    }
+    
+    private var timersLayer: some View{
+        ForEach($layerManager.timers) { timer in
+            TimerView(currentTime: playerManager.currentTime, timer: timer, onSelected: layerManager.deactivateAllObjects, onRemove: layerManager.removeTimer)
+        }
+    }
+    
+    private var dragGesture: some Gesture{
+        DragGesture(minimumDistance: 0)
+            .onChanged(layerManager.onChangeDragLayer)
+            .onEnded{
+                layerManager.onEndedDragLayer(value: $0, currentTime: playerManager.currentTime)
+            }
+    }
+}

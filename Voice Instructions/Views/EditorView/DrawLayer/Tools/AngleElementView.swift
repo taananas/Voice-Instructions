@@ -31,13 +31,13 @@ struct AngleElementView: View {
     var body: some View {
         ZStack{
             LineShape(startPoint: angleModel.location, endPoint: angleModel.endPointFirstLine, isArrow: false)
-                .stroke(angleModel.color, lineWidth: 3)
+                .stroke(angleModel.color, lineWidth: angleModel.lineWeight)
                 .overlay {
                     dragView(isFirstLine: true)
                 }
             
             LineShape(startPoint: angleModel.location, endPoint: angleModel.endPointSecondLine, isArrow: false)
-                .stroke(angleModel.color, lineWidth: 3)
+                .stroke(angleModel.color, lineWidth: angleModel.lineWeight)
                 .overlay {
                     dragView(isFirstLine: false)
                 }
