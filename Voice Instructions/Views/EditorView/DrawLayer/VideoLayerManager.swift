@@ -17,7 +17,7 @@ class VideoLayerManager: ObservableObject {
     
     /// shapes circle and rectangle
     @Published var shapes = [DragShape]()
-    @Published var selectedShape: DragShape?
+    private var currentShape: DragShape?
     
     /// timers
     @Published var timers = [TimerModel]()
@@ -40,71 +40,97 @@ class VideoLayerManager: ObservableObject {
         strokes.isEmpty && shapes.isEmpty && timers.isEmpty && angles.isEmpty
     }
     
+    /// undo method
+    /// delete the last change
     func undo() {
         objectWillChange.send()
         undoManager?.undo()
     }
     
+    /// Adding an shape object to a layer when onChanged gesture
+    func onChangeDragLayer(value: DragGesture.Value){
+        guard !isActiveAnyObject else {return}
+        if selectedTool == .polyLine{
+            createOrUpdatePolyLine(value)
+        }else if selectedTool?.isShapeTool ?? false{
+            createOrUpdateShape(value)
+        }
+    }
+    
+    /// Adding an shape object to a layer when onEnded gesture
+    /// Deactivate all objects if needed
+    /// Reset selected shape
+    func onEndedDragLayer(value: DragGesture.Value, currentTime: Double){
+        currentShape = nil
+        if isActiveAnyObject{
+            deactivateAllObjects()
+            return
+        }
+        if selectedTool == .timer{
+            addTimer(value, activateTime: currentTime)
+        }else if selectedTool == .angle{
+            addAngle(value)
+        }
+    }
+    
+    /// Delete all objects on layer
     func removeAll(){
-        removeAllLines()
+        removeAllPolyLines()
         removeAllShapes()
         removeAllTimers()
         removeAllAngles()
     }
     
+    /// At least one object in the layer is active
     var isActiveAnyObject: Bool{
         shapes.contains(where: {$0.isActive || $0.isSelected}) ||
         timers.contains(where: {$0.isActive || $0.isSelected}) ||
         angles.contains(where: {$0.isActive || $0.isSelected})
     }
     
+    /// Deactivate all objects on the layer
     func deactivateAllObjects(){
-        
         guard isActiveAnyObject else {return}
-        
-        shapes.indices.forEach { index in
-            shapes[index].deactivate()
-        }
-        timers.indices.forEach { index in
-            timers[index].deactivate()
-        }
-        angles.indices.forEach { index in
-            angles[index].deactivate()
-        }
+        shapes.indices.forEach({shapes[$0].deactivate()})
+        timers.indices.forEach({timers[$0].deactivate()})
+        angles.indices.forEach({angles[$0].deactivate()})
     }
 }
 
-//MARK: - Free line logic
+//MARK: - PolyLine logic
 
 extension VideoLayerManager{
     
-    func addLine(value: DragGesture.Value){
+    /// Create or update a polyLine
+    private func createOrUpdatePolyLine(_ value: DragGesture.Value){
         let point = value.location
+        
         if value.translation.width + value.translation.height == 0{
-            addLineWithUndo()
+            addPolyLineWithUndo()
         }else{
-            updatePoints(point)
+            updatePolyLinePoints(point)
         }
     }
     
-    private func removeAllLines(){
+    private func removeAllPolyLines(){
         strokes.removeAll()
     }
     
-    private func addLineWithUndo(){
+    /// Add polyLine and register undo action
+    private func addPolyLineWithUndo(){
         undoManager?.registerUndo(withTarget: self) { manager in
-            manager.removeLastLine()
+            manager.removeLastPolyLine()
         }
         strokes.append(Stroke(color: selectedColor))
     }
     
-    private func removeLastLine(){
+    private func removeLastPolyLine(){
         guard !strokes.isEmpty else {return}
         strokes.removeLast()
     }
     
-    
-    private func updatePoints(_ point: CGPoint){
+    /// Update last polyLine points
+    private func updatePolyLinePoints(_ point: CGPoint){
         guard !strokes.isEmpty else {return}
         strokes[strokes.count - 1].points.append(point)
     }
@@ -113,8 +139,8 @@ extension VideoLayerManager{
 //MARK: - Shapes logic
 extension VideoLayerManager{
     
-    
-    func addShape(value: DragGesture.Value){
+    /// Create or update a shape (lines, rectangle circle, arrow)
+    private func createOrUpdateShape(_ value: DragGesture.Value){
         
         let point = value.location
         
@@ -122,7 +148,7 @@ extension VideoLayerManager{
         let height = abs(value.translation.height * 1.5)
         let sum = width + height
         
-        if sum > 0, selectedShape == nil{
+        if sum > 0, currentShape == nil{
             addShapeWithUndo(point)
         }else{
             updateShape(width: width, height: height, point)
@@ -133,18 +159,24 @@ extension VideoLayerManager{
         shapes.removeAll(where: {$0.id == id})
     }
     
+    /// Add shape and register undo action
     private func addShapeWithUndo(_ location: CGPoint){
         guard let type = selectedTool?.shapeType else {return}
-        let newShape = DragShape(type: type, location: location, color: selectedColor, size: .init(width: 20, height: 20), endLocation: location)
-        self.selectedShape = newShape
+        let newShape = DragShape(type: type,
+                                 location: location,
+                                 color: selectedColor,
+                                 size: .init(width: 20, height: 20),
+                                 endLocation: location)
+        self.currentShape = newShape
         undoManager?.registerUndo(withTarget: self) { manager in
             manager.removeLastShape()
         }
         shapes.append(newShape)
     }
     
+    /// Update shape if needed
     private func updateShape(width: CGFloat, height: CGFloat, _ location: CGPoint){
-        guard !shapes.isEmpty, let index = shapes.firstIndex(where: {$0.id == selectedShape?.id}) else {return}
+        guard !shapes.isEmpty, let index = shapes.firstIndex(where: {$0.id == currentShape?.id}) else {return}
         if shapes[index].isShapeType {
             if width > 10 && height > 10{
                 shapes[index].size = .init(width: width, height: height)
@@ -167,7 +199,8 @@ extension VideoLayerManager{
 //MARK: - Timers logic
 extension VideoLayerManager{
     
-    func addTimer(value: DragGesture.Value, activateTime: Double){
+    /// Add timer for activate time
+    private func addTimer(_ value: DragGesture.Value, activateTime: Double){
         let point = value.location
         let timer = TimerModel(location: point, activateTime: activateTime, color: selectedColor)
         undoManager?.registerUndo(withTarget: self) { manager in
@@ -193,7 +226,8 @@ extension VideoLayerManager{
 //MARK: - Angles logic
 extension VideoLayerManager{
     
-    func addAngle(value: DragGesture.Value){
+    /// Create and angle in layer
+    private func addAngle(_ value: DragGesture.Value){
         let point = value.location
         let angle = AngleModel(location: point, color: selectedColor)
         undoManager?.registerUndo(withTarget: self) { manager in
