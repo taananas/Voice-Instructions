@@ -39,7 +39,6 @@
 		5A3D09DC2A31CB6400FD1132 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */; };
 		5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */; };
 		5A3D09E52A31E22900FD1132 /* ScrubbingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */; };
-		5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */; };
 		5A4692752A3B1119007D97F8 /* SingleShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4692742A3B1119007D97F8 /* SingleShapeView.swift */; };
 		5A4692772A3B2876007D97F8 /* ShapesLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4692762A3B2876007D97F8 /* ShapesLayerView.swift */; };
 		5A46927B2A3B3B39007D97F8 /* VideoLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A46927A2A3B3B39007D97F8 /* VideoLayerManager.swift */; };
@@ -88,7 +87,6 @@
 		5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfinityScrollViewData.swift; sourceTree = "<group>"; };
 		5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubbingBarView.swift; sourceTree = "<group>"; };
-		5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInfinity.swift; sourceTree = "<group>"; };
 		5A4692742A3B1119007D97F8 /* SingleShapeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleShapeView.swift; sourceTree = "<group>"; };
 		5A4692762A3B2876007D97F8 /* ShapesLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapesLayerView.swift; sourceTree = "<group>"; };
 		5A46927A2A3B3B39007D97F8 /* VideoLayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLayerManager.swift; sourceTree = "<group>"; };
@@ -276,7 +274,6 @@
 			children = (
 				5A3D09DE2A31D3A700FD1132 /* InfinityScrollViewData.swift */,
 				5A3D09E42A31E22900FD1132 /* ScrubbingBarView.swift */,
-				5A3D09E92A31FB1E00FD1132 /* TestInfinity.swift */,
 			);
 			path = "Scrubbing bar";
 			sourceTree = "<group>";
@@ -464,7 +461,6 @@
 				5A4692812A3B56AB007D97F8 /* MainLayerView.swift in Sources */,
 				5A4692752A3B1119007D97F8 /* SingleShapeView.swift in Sources */,
 				5AE399532A3878AE00DD4A17 /* VideoPreview.swift in Sources */,
-				5A3D09EA2A31FB1E00FD1132 /* TestInfinity.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
 				5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */,
 				5A398EED2A40729F003FE261 /* ToolEnum.swift in Sources */,

@@ -104,11 +104,13 @@ extension VideoControlsView{
                     .foregroundColor(.white)
                     .overlay {
                         Text(playerManager.currentTime.stringFromTimeInterval())
+                            .font(.system(size: 14))
                             .fixedSize()
                             .foregroundColor(.white)
                             .padding(.vertical, 2)
-                            .padding(.horizontal, 5)
-                            .background(Material.ultraThinMaterial, in: Capsule())
+                            .padding(.horizontal, 4)
+                            .monospaced()
+                            .background(Color.black.opacity(0.25), in: Capsule())
                             .offset(y: -30)
                     }
             }, thumbSize:
@@ -145,7 +147,7 @@ extension VideoControlsView{
         }
         .padding(.vertical, 10)
         .frame(width: 50)
-        .background(Material.ultraThinMaterial, in: Capsule())
+        .background(Color.black.opacity(0.25), in: Capsule())
         .offset(y: -120)
         .padding(.horizontal, 9)
     }
