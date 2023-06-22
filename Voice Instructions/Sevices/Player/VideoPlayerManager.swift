@@ -63,6 +63,7 @@ final class VideoPlayerManager: ObservableObject{
     /// Play or pause video from range
     func action(_ range: ClosedRange<Double>){
         self.currentDurationRange = range
+        print("range", range)
         if isPlaying{
             pause()
         }else{
@@ -111,8 +112,6 @@ final class VideoPlayerManager: ObservableObject{
         if let currentDurationRange{
             if currentTime >= currentDurationRange.upperBound{
                 seek(currentDurationRange.lowerBound)
-            }else{
-                seek(videoPlayer.currentTime().seconds)
             }
         }
         videoPlayer.play()

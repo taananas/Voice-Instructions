@@ -10,11 +10,11 @@ struct RangedSliderView<T: View>: View {
     let currentValue: Binding<ClosedRange<Double>>?
     let sliderBounds: ClosedRange<Double>
     let step: Double
-    let onEndChange: () -> Void
+    let onChange: ((Bool) -> Void)?
     var thumbView: T
         
-    init(value: Binding<ClosedRange<Double>>?, bounds: ClosedRange<Double>, step: Double = 1, onEndChange: @escaping () -> Void, @ViewBuilder thumbView: () -> T) {
-        self.onEndChange = onEndChange
+    init(value: Binding<ClosedRange<Double>>?, bounds: ClosedRange<Double>, step: Double = 1, onChange: ((Bool) -> Void)? = nil, @ViewBuilder thumbView: () -> T) {
+        self.onChange = onChange
         self.step = step
         self.currentValue = value
         self.sliderBounds = bounds
@@ -58,6 +58,7 @@ struct RangedSliderView<T: View>: View {
                 let leftThumbPoint = CGPoint(x: leftThumbLocation, y: sliderViewYCenter)
                 thumbSlider(height: sliderSize.height, position: leftThumbPoint, isLeftThumb: true)
                     .highPriorityGesture(DragGesture().onChanged { dragValue in
+                        onChange?(true)
                         let dragLocation = dragValue.location
                         let xThumbOffset = min(max(0, dragLocation.x), sliderSize.width)
                         
@@ -68,7 +69,7 @@ struct RangedSliderView<T: View>: View {
                             currentValue?.wrappedValue = newValue...(currentValue?.wrappedValue.upperBound ?? 1)
                         }
                     }.onEnded({ _ in
-                        onEndChange()
+                        onChange?(false)
                     }))
                 
                 
@@ -76,6 +77,9 @@ struct RangedSliderView<T: View>: View {
                 // Right Thumb Handle
                 thumbSlider(height: sliderSize.height, position: CGPoint(x: rightThumbLocation, y: sliderViewYCenter), isLeftThumb: false)
                     .highPriorityGesture(DragGesture().onChanged { dragValue in
+                        
+                        onChange?(true)
+                        
                         let dragLocation = dragValue.location
                         let xThumbOffset = min(max(CGFloat(leftThumbLocation), dragLocation.x), sliderSize.width)
                         
@@ -89,7 +93,7 @@ struct RangedSliderView<T: View>: View {
                             currentValue?.wrappedValue = (currentValue?.wrappedValue.lowerBound ?? 0)...newValue
                         }
                     }.onEnded({ _ in
-                        onEndChange()
+                        onChange?(false)
                     }))
                 lineBetweenThumbs(height: 2, from: leftThumbPoint, to: CGPoint(x: rightThumbLocation, y: sliderViewYCenter))
                     .offset(y: sliderViewYCenter - 1)
@@ -109,8 +113,8 @@ struct RangedSliderView<T: View>: View {
     }
     
     @ViewBuilder func thumbSlider(height: CGFloat, position: CGPoint, isLeftThumb: Bool) -> some View {
-        let time = isLeftThumb ? currentValue?.wrappedValue.lowerBound.formatterTimeString() :
-        currentValue?.wrappedValue.upperBound.formatterTimeString()
+        let time = isLeftThumb ? currentValue?.wrappedValue.lowerBound.humanReadableShortTime() :
+        currentValue?.wrappedValue.upperBound.humanReadableShortTime()
      
         let width: CGFloat = 18
         VStack(spacing: 0) {
@@ -149,14 +153,11 @@ struct RangeSliderView_Previews: PreviewProvider {
 fileprivate struct TestSliderView: View{
     @State private var value: ClosedRange<Double> = 0...5
     var body: some View{
-        RangedSliderView(value: $value, bounds: 1...100, onEndChange: {}, thumbView: {
+        RangedSliderView(value: $value, bounds: 1...100, onChange: {_ in}, thumbView: {
             
             
             Rectangle()
                 .blendMode(.destinationOut)
-            InternalSlider(value: .constant(40), in: 10...100, height: 70, width: 6, step: 0.1) {
-                
-            }
             
         })
             .frame(height: 70)

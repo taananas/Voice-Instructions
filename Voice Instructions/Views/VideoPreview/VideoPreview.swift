@@ -7,27 +7,33 @@
 import SwiftUI
 
 struct VideoPreview: View {
-    @State var rangeDuration: ClosedRange<Double> = 0...1
     @Environment(\.dismiss) private var dismiss
+    @State private var rangeDuration: ClosedRange<Double>
     @StateObject private var viewModel = VideoPreviewViewModel()
     @StateObject private var playerManager = VideoPlayerManager()
-    var url: URL?
+    private var video: Video?
+    
+    init(video: Video?){
+        self.video = video
+        self._rangeDuration = State(wrappedValue: video?.rangeDuration ?? 0...1)
+    }
+
     var body: some View {
         ZStack{
-            GeometryReader { proxy in
-                VStack(spacing: 0) {
-                    if playerManager.loadState == .loaded{
-                        PlayerRepresentable(size: .constant(.zero), player: playerManager.videoPlayer)
-                    }else{
-                        Spacer()
+            if let video{
+                GeometryReader { proxy in
+                    VStack(spacing: 0) {
+                        if playerManager.loadState == .loaded{
+                            PlayerRepresentable(size: .constant(.zero), player: playerManager.videoPlayer)
+                        }else{
+                            Spacer()
+                        }
+                        controlsSection(proxy)
                     }
-                    controlsSection(proxy)
-                }
-                .task {
-                    guard let url else {return}
-                    let video = await viewModel.setVideo(url: url, size: proxy.size)
-                    playerManager.loadVideo(video)
-                    self.rangeDuration = video.rangeDuration
+                    .onAppear{
+                        viewModel.setVideo(video: video, size: proxy.size)
+                        playerManager.loadVideo(video)
+                    }
                 }
             }
             if viewModel.showLoader{
@@ -38,18 +44,12 @@ struct VideoPreview: View {
             header
         }
         .preferredColorScheme(.dark)
-        .onChange(of: rangeDuration.lowerBound) { newValue in
-            playerManager.seek(newValue)
-        }
-        .onChange(of: rangeDuration.upperBound) { newValue in
-            playerManager.seek(newValue)
-        }
     }
 }
 
 struct VideoPreview_Previews: PreviewProvider {
     static var previews: some View {
-        VideoPreview()
+        VideoPreview(video: nil)
     }
 }
 
@@ -62,19 +62,17 @@ extension VideoPreview{
     
     private func controlsSection(_ proxy: GeometryProxy) -> some View{
         VStack{
-            if let video = viewModel.video {
-                
-                ZStack{
-                    thumbnailsImagesSection(proxy)
-                    RangedSliderView(value: $rangeDuration, bounds: video.rangeDuration, onEndChange: {}, thumbView: {
-                        Rectangle()
-                            .blendMode(.destinationOut)
-                        InternalSlider(value: $playerManager.currentTime, in: rangeDuration, height: 70, width: 6, step: 0.01) {
-                            playerManager.seek(playerManager.currentTime)
-                        }
-                    })
-                }
-                .frame(height: 70)
+            
+            Text(playerManager.currentTime.humanReadableLongTime())
+            
+            if let video = viewModel.video, playerManager.loadState == .loaded {
+                VideoTrimBarView(videoRange: video.rangeDuration,
+                                 thumbnailsImages: viewModel.thumbnailsImages,
+                                 editedRange: $rangeDuration,
+                                 currentTime: $playerManager.currentTime,
+                                 onTapTrim: {
+                    playerManager.action(rangeDuration)
+                }, seek: playerManager.seek)
                 .padding(.horizontal)
                 .padding(.top)
             }
@@ -149,3 +147,4 @@ extension VideoPreview{
         .background(Color(uiColor: .systemGray5), in: RoundedRectangle(cornerRadius: 10))
     }
 }
+

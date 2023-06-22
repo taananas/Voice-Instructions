@@ -32,6 +32,8 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
     // to know it in order to compute its insets in the track overlay.
     let thumbSize: CGSize
     
+    let isAnimate: Bool
+    
     // x offset of the thumb from the track left-hand side
     @State private var xOffset: CGFloat = 0
     // last moved offset, used to decide if sliding has started
@@ -51,7 +53,8 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
          track: @escaping () -> Track,
          fill: (() -> Fill)?,
          thumb: @escaping () -> Thumb,
-         thumbSize: CGSize) {
+         thumbSize: CGSize,
+         isAnimate: Bool = true) {
         _value = value
         self.bounds = bounds
         self.step = step
@@ -62,6 +65,7 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
         self.fill = fill
         self.thumb = thumb
         self.thumbSize = thumbSize
+        self.isAnimate = isAnimate
     }
     
     // where does the current value sit, percentage-wise, in the provided bounds
@@ -98,7 +102,7 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
                 // `fill` changes both its position and frame as its
                 // anchor point is in its middle (at (0.5, 0.5)).
                     .position(x: fillWidth - trackSize.width / 2, y: trackSize.height / 2)
-                    .frame(width: fillWidth, height: trackSize.height)
+                    .frame(width: abs(fillWidth), height: trackSize.height)
             }
             // make sure the entire ZStack is the same size as `track`
             .frame(width: trackSize.width, height: trackSize.height)
@@ -139,11 +143,10 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
         }
         // manually set the height of the entire view to account for thumb height
         .frame(height: max(trackSize.height, thumbSize.height))
+        .animation(isAnimate && !isChange ? .linear : nil, value: xOffset)
         .onChange(of: value) { _ in
             if !isChange{
-                withAnimation(.linear) {
-                    xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
-                }
+                xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
             }
         }
         .onChange(of: trackSize) { _ in
@@ -192,7 +195,7 @@ struct CustomSlider_Previews: PreviewProvider {
         VStack{
             Text("Custom slider: \(value)")
             CustomSlider(value: $value,
-                         in: 0...255,
+                         in: 10...255,
                          minimumValueLabel: Text("Min"),
                          maximumValueLabel: Text("Max"),
                          onEditingChanged: { started in

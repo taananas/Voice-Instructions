@@ -103,7 +103,7 @@ extension VideoControlsView{
                 Circle()
                     .foregroundColor(.white)
                     .overlay {
-                        Text(playerManager.currentTime.stringFromTimeInterval())
+                        Text(playerManager.currentTime.humanReadableLongTime())
                             .font(.system(size: 14))
                             .fixedSize()
                             .foregroundColor(.white)

@@ -29,7 +29,7 @@ struct EditorView: View {
         }
         .onChange(of: playerManager.selectedItem, perform: setVideo)
         .fullScreenCover(isPresented: $recorderManager.showPreview) {
-            VideoPreview(url: recorderManager.finalURl.value)
+            VideoPreview(video: recorderManager.finalVideo.value)
         }
         .onAppear{
             layerManager.undoManager = undoManager

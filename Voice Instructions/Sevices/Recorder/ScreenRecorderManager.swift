@@ -14,7 +14,7 @@ class ScreenRecorderManager: ObservableObject{
     @Published var recorderIsActive: Bool = false
     @Published var showPreview: Bool = false
     @Published private(set) var isRecord: Bool = false
-    private(set) var finalURl = CurrentValueSubject<URL?, Never>(nil)
+    private(set) var finalVideo = CurrentValueSubject<Video?, Never>(nil)
     private(set) var videoURLs = [URL]()
     
     private let recorder = RPScreenRecorder.shared()
@@ -96,7 +96,7 @@ class ScreenRecorderManager: ObservableObject{
         videoURLs.forEach { url in
             fileManager.removeFileIfExists(for: url)
         }
-        if let finalURl = finalURl.value{
+        if let finalURl = finalVideo.value?.fullPath{
             fileManager.removeFileIfExists(for: finalURl)
         }
         videoURLs = []
@@ -158,10 +158,10 @@ class ScreenRecorderManager: ObservableObject{
     
     /// Subscription to create a video
     private func startCreatorSubs(){
-        finalURl
+        finalVideo
             .receive(on: RunLoop.main)
-            .sink { url in
-                guard url != nil else {return}
+            .sink { video in
+                guard video != nil else {return}
                 self.showPreview = true
             }
             .store(in: cancelBag)
@@ -206,8 +206,8 @@ class ScreenRecorderManager: ObservableObject{
             
             if fileManager.fileExists(atPath: exportUrl.path) {
                 
-                ///save url
-                self.finalURl.send(exportUrl)
+                ///create video
+                self.createVideo(exportUrl)
                 
                 self.videoURLs.append(exportUrl)
                 /// will need video trimming later on
@@ -218,6 +218,13 @@ class ScreenRecorderManager: ObservableObject{
         }
     }
     
+    
+    private func createVideo(_ url: URL){
+        Task{
+            let video = await Video(url: url)
+            finalVideo.send(video)
+        }
+    }
 }
 
 
@@ -319,54 +326,54 @@ extension ScreenRecorderManager{
     }
 
 
-    /// Crop video size
-    func cropVideo( _ outputFileUrl: URL) async {
-
-        let videoAsset: AVAsset = AVAsset(url: outputFileUrl)
-        
-        do{
-            guard let clipVideoTrack = try await videoAsset.loadTracks(withMediaType: .video).first else {return}
-            let naturalSize = try await clipVideoTrack.load(.naturalSize)
-            let croppedSize = CGSize(width: naturalSize.width - 200, height: naturalSize.height - 400)
-            let duration = try await videoAsset.load(.duration)
-            
-            let videoComposition = AVMutableVideoComposition()
-            videoComposition.renderSize = croppedSize
-            videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
-            
-            let transformer = AVMutableVideoCompositionLayerInstruction( assetTrack: clipVideoTrack)
-            
-            let t1 = CGAffineTransform(translationX: -200, y: -100)
-            let t2 = CGAffineTransform(scaleX: 1.0, y: 1.0)
-            transformer.setTransform(t1.concatenating(t2), at: CMTime.zero)
-            let instruction = AVMutableVideoCompositionInstruction()
-            
-            instruction.timeRange = CMTimeRangeMake(start: .zero, duration: duration)
-            
-            instruction.layerInstructions = [transformer]
-            videoComposition.instructions = [instruction]
-            
-            // Export
-            let exporter = AVAssetExportSession(asset: videoAsset, presetName: AVAssetExportPresetHighestQuality)!
-            let croppedOutputFileUrl = URL.documentsDirectory.appending(path: "recordFinished.mp4")
-            FileManager.default.removeFileIfExists(for: croppedOutputFileUrl)
-            exporter.videoComposition = videoComposition
-            exporter.outputURL = croppedOutputFileUrl
-            exporter.outputFileType = .mp4
-            
-            await exporter.export()
-            
-            if exporter.status == .completed {
-                self.finalURl.send(croppedOutputFileUrl)
-                FileManager.default.removeFileIfExists(for: outputFileUrl)
-            }else if let error = exporter.error{
-                print(error.localizedDescription)
-            }
-            
-        }catch{
-            print(error.localizedDescription)
-        }
-    }
+//    /// Crop video size
+//    func cropVideo( _ outputFileUrl: URL) async {
+//
+//        let videoAsset: AVAsset = AVAsset(url: outputFileUrl)
+//
+//        do{
+//            guard let clipVideoTrack = try await videoAsset.loadTracks(withMediaType: .video).first else {return}
+//            let naturalSize = try await clipVideoTrack.load(.naturalSize)
+//            let croppedSize = CGSize(width: naturalSize.width - 200, height: naturalSize.height - 400)
+//            let duration = try await videoAsset.load(.duration)
+//
+//            let videoComposition = AVMutableVideoComposition()
+//            videoComposition.renderSize = croppedSize
+//            videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
+//
+//            let transformer = AVMutableVideoCompositionLayerInstruction( assetTrack: clipVideoTrack)
+//
+//            let t1 = CGAffineTransform(translationX: -200, y: -100)
+//            let t2 = CGAffineTransform(scaleX: 1.0, y: 1.0)
+//            transformer.setTransform(t1.concatenating(t2), at: CMTime.zero)
+//            let instruction = AVMutableVideoCompositionInstruction()
+//
+//            instruction.timeRange = CMTimeRangeMake(start: .zero, duration: duration)
+//
+//            instruction.layerInstructions = [transformer]
+//            videoComposition.instructions = [instruction]
+//
+//            // Export
+//            let exporter = AVAssetExportSession(asset: videoAsset, presetName: AVAssetExportPresetHighestQuality)!
+//            let croppedOutputFileUrl = URL.documentsDirectory.appending(path: "recordFinished.mp4")
+//            FileManager.default.removeFileIfExists(for: croppedOutputFileUrl)
+//            exporter.videoComposition = videoComposition
+//            exporter.outputURL = croppedOutputFileUrl
+//            exporter.outputFileType = .mp4
+//
+//            await exporter.export()
+//
+//            if exporter.status == .completed {
+//                self.finalURl.send(croppedOutputFileUrl)
+//                FileManager.default.removeFileIfExists(for: outputFileUrl)
+//            }else if let error = exporter.error{
+//                print(error.localizedDescription)
+//            }
+//
+//        }catch{
+//            print(error.localizedDescription)
+//        }
+//    }
     
     
 }

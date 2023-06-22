@@ -12,18 +12,17 @@ import Photos
 
 class VideoPreviewViewModel: ObservableObject{
     
-    @Published var video: Video?
+    var video: Video?
     @Published private(set) var thumbnailsImages = [ThumbnailImage]()
     @Published var showLoader: Bool = false
    
     
-    @MainActor
-    func setVideo(url: URL, size: CGSize) async -> Video{
-        let video = await Video(url: url)
+
+    func setVideo(video: Video, size: CGSize){
         self.video = video
         setThumbnailImages(size, video: video)
-        return video
     }
+    
     
     
     /// Save
@@ -76,15 +75,7 @@ extension VideoPreviewViewModel{
         return Int(ceil(num))
     }
     
-    struct ThumbnailImage: Identifiable{
-        var id: UUID = UUID()
-        var image: UIImage?
-        
-        
-        init(image: UIImage? = nil) {
-            self.image = image?.resize(to: .init(width: 150, height: 150))
-        }
-    }
+
 }
 
 extension VideoPreviewViewModel{
@@ -116,3 +107,15 @@ extension VideoPreviewViewModel{
 }
     
 
+struct ThumbnailImage: Identifiable{
+    var id: UUID = UUID()
+    var image: UIImage?
+    
+    
+    init(image: UIImage? = nil) {
+        self.image = image?.resize(to: .init(width: 150, height: 150))
+    }
+    
+    static let mock = [ThumbnailImage(image: .checkmark), ThumbnailImage(image: .checkmark), ThumbnailImage(image: .checkmark)]
+
+}

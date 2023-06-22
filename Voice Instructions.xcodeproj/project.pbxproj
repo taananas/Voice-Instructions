@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A0EBA5F2A446EBC00D28A49 /* VideoTrimBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0EBA5E2A446EBC00D28A49 /* VideoTrimBarView.swift */; };
 		5A27D56B2A39B46A00D8E862 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */; };
-		5A27D56D2A39B64200D8E862 /* InternalSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56C2A39B64200D8E862 /* InternalSlider.swift */; };
 		5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */; };
 		5A27D5712A39CCF200D8E862 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D5702A39CCF200D8E862 /* UIImage.swift */; };
 		5A2BE9802A3C985D00D53E14 /* SingleLineShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */; };
@@ -54,8 +54,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A0EBA5E2A446EBC00D28A49 /* VideoTrimBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimBarView.swift; sourceTree = "<group>"; };
 		5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
-		5A27D56C2A39B64200D8E862 /* InternalSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalSlider.swift; sourceTree = "<group>"; };
 		5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewViewModel.swift; sourceTree = "<group>"; };
 		5A27D5702A39CCF200D8E862 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		5A2BE97F2A3C985D00D53E14 /* SingleLineShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLineShape.swift; sourceTree = "<group>"; };
@@ -216,7 +216,6 @@
 			children = (
 				5A3D09DB2A31CB6400FD1132 /* CustomSlider.swift */,
 				5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */,
-				5A27D56C2A39B64200D8E862 /* InternalSlider.swift */,
 			);
 			path = Sliders;
 			sourceTree = "<group>";
@@ -310,6 +309,7 @@
 			children = (
 				5AE399522A3878AE00DD4A17 /* VideoPreview.swift */,
 				5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */,
+				5A0EBA5E2A446EBC00D28A49 /* VideoTrimBarView.swift */,
 			);
 			path = VideoPreview;
 			sourceTree = "<group>";
@@ -431,7 +431,6 @@
 			files = (
 				5A3D09CB2A31C25800FD1132 /* VideoItem.swift in Sources */,
 				5A3D09DC2A31CB6400FD1132 /* CustomSlider.swift in Sources */,
-				5A27D56D2A39B64200D8E862 /* InternalSlider.swift in Sources */,
 				5A4692772A3B2876007D97F8 /* ShapesLayerView.swift in Sources */,
 				5A3D09CF2A31C44E00FD1132 /* VideoStorageService.swift in Sources */,
 				5A3D09BF2A31C0D500FD1132 /* FileManager.swift in Sources */,
@@ -443,6 +442,7 @@
 				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
 				5A398EEF2A409A4D003FE261 /* TimerView.swift in Sources */,
 				5AEA54CF2A33672800BA1D9A /* UndoButtons.swift in Sources */,
+				5A0EBA5F2A446EBC00D28A49 /* VideoTrimBarView.swift in Sources */,
 				5A3D09D22A31C6BA00FD1132 /* PlayerRepresentable.swift in Sources */,
 				5A398EF12A409C72003FE261 /* Stroke.swift in Sources */,
 				5A3D09CD2A31C40D00FD1132 /* UserDefaults.swift in Sources */,
