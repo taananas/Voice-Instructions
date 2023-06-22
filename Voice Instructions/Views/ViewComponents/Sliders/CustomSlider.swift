@@ -79,17 +79,17 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
     }
     
     var body: some View {
-        // the HStack orders minimumValueLabel, the slider and maximumValueLabel horizontally
+
         HStack {
             minimumValueLabel
             
             // Represent the custom slider. ZStack overlays `fill` on top of `track`,
             // while the `thumb` is in their `overlay`.
-            ZStack {
+            ZStack(alignment: .leading) {
                 track()
                 // get the size of the track at runtime as it
                 // defines all the other functionality
-                    .measureSize {
+                    .getSize {
                         // if this is the first time trackSize is computed,
                         // update the offset to reflect the current `value`
                         let firstInit = (trackSize == .zero)
@@ -101,7 +101,6 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
                 fill?()
                 // `fill` changes both its position and frame as its
                 // anchor point is in its middle (at (0.5, 0.5)).
-                    .position(x: fillWidth - trackSize.width / 2, y: trackSize.height / 2)
                     .frame(width: abs(fillWidth), height: trackSize.height)
             }
             // make sure the entire ZStack is the same size as `track`
@@ -146,42 +145,19 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
         .animation(isAnimate && !isChange ? .linear : nil, value: xOffset)
         .onChange(of: value) { _ in
             if !isChange{
-                xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
+                initOffset()
             }
         }
         .onChange(of: trackSize) { _ in
-            initOffset()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05){
+                initOffset()
+            }
         }
     }
     
     private func initOffset(){
         xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
         lastOffset = xOffset
-    }
-}
-
-
-struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-    
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
-    }
-}
-
-struct MeasureSizeModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content.background(GeometryReader { geometry in
-            Color.clear.preference(key: SizePreferenceKey.self,
-                                   value: geometry.size)
-        })
-    }
-}
-
-extension View {
-    func measureSize(perform action: @escaping (CGSize) -> Void) -> some View {
-        self.modifier(MeasureSizeModifier())
-            .onPreferenceChange(SizePreferenceKey.self, perform: action)
     }
 }
 
