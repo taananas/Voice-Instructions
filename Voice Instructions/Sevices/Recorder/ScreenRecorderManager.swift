@@ -14,6 +14,7 @@ class ScreenRecorderManager: ObservableObject{
     @Published var recorderIsActive: Bool = false
     @Published var showPreview: Bool = false
     @Published private(set) var isRecord: Bool = false
+    @Published private(set) var showLoader: Bool = false
     private(set) var finalVideo = CurrentValueSubject<Video?, Never>(nil)
     private(set) var videoURLs = [URL]()
     
@@ -119,16 +120,19 @@ class ScreenRecorderManager: ObservableObject{
     /// Stop
     /// If we record stop and create video otherwise we create a video
     func stop(){
+        showLoader = true
         if recorder.isRecording{
             recorder.stopCapture { (error) in
                 if let error{
                     print(error.localizedDescription)
                     self.isRecord = false
+                    self.showLoader = false
                     return
                 }
                 guard let videoInput = self.videoInput,
                       let assetWriter = self.assetWriter else {
                     self.isRecord = false
+                    self.showLoader = false
                     return
                 }
                 
@@ -162,6 +166,7 @@ class ScreenRecorderManager: ObservableObject{
             .receive(on: RunLoop.main)
             .sink { video in
                 guard video != nil else {return}
+                self.showLoader = false
                 self.showPreview = true
             }
             .store(in: cancelBag)

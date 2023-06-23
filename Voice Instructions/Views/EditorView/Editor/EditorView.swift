@@ -26,6 +26,7 @@ struct EditorView: View {
             case.failed:
                 Text("Error")
             }
+            loaderView
         }
         .onChange(of: playerManager.selectedItem, perform: setVideo)
         .fullScreenCover(isPresented: $recorderManager.showPreview) {
@@ -94,4 +95,21 @@ extension EditorView{
             await playerManager.loadVideoItem(item)
          }
      }
+    
+    @ViewBuilder
+    private var loaderView: some View{
+        if recorderManager.showLoader{
+            ZStack{
+                Color.black.opacity(0.2)
+                VStack{
+                    ProgressView()
+                        .scaleEffect(1.5)
+                        .tint(.black)
+                }
+                .frame(width: 100, height: 100)
+                .background(Color(uiColor: .systemGray))
+                .cornerRadius(12)
+            }
+        }
+    }
 }
