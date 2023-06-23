@@ -44,6 +44,7 @@
 		5A46927B2A3B3B39007D97F8 /* VideoLayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A46927A2A3B3B39007D97F8 /* VideoLayerManager.swift */; };
 		5A4692812A3B56AB007D97F8 /* MainLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4692802A3B56AB007D97F8 /* MainLayerView.swift */; };
 		5A6183BB2A41DD89002AEC0D /* AngleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6183BA2A41DD89002AEC0D /* AngleModel.swift */; };
+		5A7B134D2A45EBDB0001D8E9 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7B134C2A45EBDB0001D8E9 /* UIDevice.swift */; };
 		5AE399502A385CB900DD4A17 /* ScreenRecorderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE3994F2A385CB900DD4A17 /* ScreenRecorderManager.swift */; };
 		5AE399532A3878AE00DD4A17 /* VideoPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE399522A3878AE00DD4A17 /* VideoPreview.swift */; };
 		5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */; };
@@ -92,6 +93,7 @@
 		5A46927A2A3B3B39007D97F8 /* VideoLayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLayerManager.swift; sourceTree = "<group>"; };
 		5A4692802A3B56AB007D97F8 /* MainLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLayerView.swift; sourceTree = "<group>"; };
 		5A6183BA2A41DD89002AEC0D /* AngleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleModel.swift; sourceTree = "<group>"; };
+		5A7B134C2A45EBDB0001D8E9 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		5AE3994F2A385CB900DD4A17 /* ScreenRecorderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecorderManager.swift; sourceTree = "<group>"; };
 		5AE399522A3878AE00DD4A17 /* VideoPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreview.swift; sourceTree = "<group>"; };
 		5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawVideoLayer.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */,
 				5A27D5702A39CCF200D8E862 /* UIImage.swift */,
 				5A398EF22A409CF7003FE261 /* Path.swift */,
+				5A7B134C2A45EBDB0001D8E9 /* UIDevice.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 				5A2BE9822A3CA69500D53E14 /* DragShape.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,
 				5A3D09BB2A31C08400FD1132 /* View.swift in Sources */,
+				5A7B134D2A45EBDB0001D8E9 /* UIDevice.swift in Sources */,
 				5A398EF72A4194DE003FE261 /* AngleElementView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

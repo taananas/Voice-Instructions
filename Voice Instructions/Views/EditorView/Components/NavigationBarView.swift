@@ -11,6 +11,10 @@ struct NavigationBarView: View {
     @ObservedObject var recorderManager: ScreenRecorderManager
     @ObservedObject var playerManager: VideoPlayerManager
     @State private var isPresentedAlert: Bool = false
+    
+    private var isIPad: Bool{
+        UIDevice.current.isIPad
+    }
     var body: some View {
         ZStack(alignment: .top){
             HStack{
@@ -25,6 +29,7 @@ struct NavigationBarView: View {
                         }
                     }
             }
+            .padding(.top, isIPad ? 40 : 0)
             .padding(.horizontal, 18)
             .padding(.bottom, 20)
             .background(Color.black.opacity(0.25))
@@ -33,6 +38,7 @@ struct NavigationBarView: View {
                     .padding(.top, 70)
                 Spacer()
                 ToolDropdownMenu(selectedTool: $layerManager.selectedTool, selectedColor: $layerManager.selectedColor)
+                    .padding(.top, isIPad ? 32 : 0)
                     .hTrailing()
             }
             .padding(.horizontal, 18)
