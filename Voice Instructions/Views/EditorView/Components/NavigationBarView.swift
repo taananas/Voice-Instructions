@@ -63,6 +63,8 @@ extension NavigationBarView{
         Button {
             if recorderManager.recorderIsActive{
                 recorderManager.removeAll()
+                layerManager.removeAll()
+                layerManager.selectedTool = nil
             }else{
                 isPresentedAlert.toggle()
             }

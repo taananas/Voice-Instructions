@@ -97,33 +97,6 @@ extension View{
     }
 }
 
-
-extension View{
-    
-    func readSize(_ size: @escaping (CGSize) -> Void) -> some View{
-        background {
-            GeometryReader { proxy in
-                Color.clear
-                    .preference(key: ViewSizeKey.self, value: proxy.size)
-            }
-            .onPreferenceChange(ViewSizeKey.self) { newValue in
-                DispatchQueue.main.async {
-                    size(newValue)
-                }
-            }
-        }
-    }
-    
-}
-
-struct ViewSizeKey: PreferenceKey{
-    
-    static var defaultValue: CGSize = .zero
-    
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
-}
-
-
 // A View wrapper to make the modifier easier to use
 extension View {
     func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
