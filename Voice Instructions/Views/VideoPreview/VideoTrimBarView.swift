@@ -99,8 +99,13 @@ extension VideoTrimBarView{
             }, thumb: {
                 Capsule()
                     .foregroundColor(.red)
-                // .padding(.horizontal, 5)
-            }, thumbSize: CGSize(width: 8, height: size.height),
+                    .overlay(alignment: .top) {
+                        Image(systemName: "arrowtriangle.down.fill")
+                            .foregroundColor(.red)
+                            .font(.system(size: 10))
+                            .offset(y: -11)
+                    }
+            }, thumbSize: CGSize(width: 6, height: size.height),
             
             isAnimate: !isChangeTrimSlider)
     }

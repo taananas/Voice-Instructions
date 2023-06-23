@@ -9,15 +9,17 @@ import SwiftUI
 struct RangedSliderView<T: View>: View {
     let currentValue: Binding<ClosedRange<Double>>?
     let sliderBounds: ClosedRange<Double>
+    let cornerRadius: CGFloat
     let step: Double
     let onChange: ((Bool) -> Void)?
     var thumbView: T
         
-    init(value: Binding<ClosedRange<Double>>?, bounds: ClosedRange<Double>, step: Double = 1, onChange: ((Bool) -> Void)? = nil, @ViewBuilder thumbView: () -> T) {
+    init(value: Binding<ClosedRange<Double>>?, bounds: ClosedRange<Double>, step: Double = 1, cornerRadius: CGFloat = 8, onChange: ((Bool) -> Void)? = nil, @ViewBuilder thumbView: () -> T) {
         self.onChange = onChange
         self.step = step
         self.currentValue = value
         self.sliderBounds = bounds
+        self.cornerRadius = cornerRadius
         self.thumbView = thumbView()
     }
     
@@ -31,7 +33,7 @@ struct RangedSliderView<T: View>: View {
     @ViewBuilder private func sliderView(sliderSize: CGSize) -> some View {
         let sliderViewYCenter = sliderSize.height / 2
         ZStack(alignment: .bottom) {
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(Color(.systemGray5).opacity(0.75))
                 .frame(height: sliderSize.height)
             ZStack {
@@ -119,16 +121,16 @@ struct RangedSliderView<T: View>: View {
         let width: CGFloat = 18
         VStack(spacing: 0) {
             
-            CustomCorner(corners: isLeftThumb ? [.bottomLeft, .topLeft] : [.topRight, .bottomRight], radius: 5)
+            CustomCorner(corners: isLeftThumb ? [.bottomLeft, .topLeft] : [.topRight, .bottomRight], radius: cornerRadius)
                 .frame(width: width, height: height)
                 .foregroundColor(.red)
                 .shadow(color: Color.black.opacity(0.16), radius: 8, x: 0, y: 2)
                 .contentShape(Rectangle())
                 .overlay(alignment: .top){
                     Text(time ?? "")
-                        .font(.callout)
+                        .font(.callout.bold())
                         .fixedSize()
-                        .offset(y: -20)
+                        .offset(y: -28)
                 }
                 .overlay(alignment: .center) {
                     Capsule()

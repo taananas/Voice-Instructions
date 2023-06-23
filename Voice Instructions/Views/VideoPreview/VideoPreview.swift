@@ -63,8 +63,6 @@ extension VideoPreview{
     private func controlsSection(_ proxy: GeometryProxy) -> some View{
         VStack{
             
-            Text(playerManager.currentTime.humanReadableLongTime())
-            
             if let video = viewModel.video, playerManager.loadState == .loaded {
                 VideoTrimBarView(videoRange: video.rangeDuration,
                                  thumbnailsImages: viewModel.thumbnailsImages,
