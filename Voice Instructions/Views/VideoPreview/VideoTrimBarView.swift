@@ -2,7 +2,6 @@
 //  VideoTrimBarView.swift
 //  Voice Instructions
 //
-//  Created by Bogdan Zykov on 22.06.2023.
 //
 
 import SwiftUI

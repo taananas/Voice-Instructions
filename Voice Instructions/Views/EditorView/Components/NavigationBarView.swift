@@ -35,7 +35,7 @@ struct NavigationBarView: View {
             .background(Color.black.opacity(0.25))
             HStack(alignment: .top) {
                 UndoButtons(layerManager: layerManager)
-                    .padding(.top, 70)
+                    .padding(.top, isIPad ? 110 : 70)
                 Spacer()
                 ToolDropdownMenu(selectedTool: $layerManager.selectedTool, selectedColor: $layerManager.selectedColor)
                     .padding(.top, isIPad ? 32 : 0)

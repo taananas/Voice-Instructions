@@ -28,12 +28,15 @@ struct EditorView: View {
             }
             loaderView
         }
-        .onChange(of: playerManager.selectedItem, perform: setVideo)
         .fullScreenCover(isPresented: $recorderManager.showPreview) {
             VideoPreview(video: recorderManager.finalVideo.value)
         }
+        .onChange(of: playerManager.selectedItem, perform: setVideo)
         .onAppear{
             layerManager.undoManager = undoManager
+        }
+        .onRotate { _ in
+            playerManager.pause()
         }
     }
 }

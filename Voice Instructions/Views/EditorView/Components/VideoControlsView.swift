@@ -19,7 +19,9 @@ struct VideoControlsView: View {
             HStack(spacing: 16) {
                 ScrubbingBarView(duration: playerManager.video?.totalDuration ?? 60, time: $playerManager.currentTime, onChangeTime: seek)
                     .padding(.horizontal, 40)
-                
+                    .onTapGesture {
+                        playerManager.action()
+                    }
             }
             .padding(.horizontal, 18)
             .overlay {
