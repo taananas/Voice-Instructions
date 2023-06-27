@@ -72,12 +72,7 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
     private var percentage: Value {
         1 - (bounds.upperBound - value) / (bounds.upperBound - bounds.lowerBound)
     }
-    
-    // how wide the should the fill view be
-    private var fillWidth: CGFloat {
-        trackSize.width * CGFloat(percentage)
-    }
-    
+
     var body: some View {
 
         HStack {
@@ -101,7 +96,7 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
                 fill?()
                 // `fill` changes both its position and frame as its
                 // anchor point is in its middle (at (0.5, 0.5)).
-                    .frame(width: abs(fillWidth), height: trackSize.height)
+                    .frame(width: xOffset + thumbSize.width, height: trackSize.height)
             }
             // make sure the entire ZStack is the same size as `track`
             .frame(width: trackSize.width, height: trackSize.height)
@@ -163,11 +158,17 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
 
 
 struct CustomSlider_Previews: PreviewProvider {
-    
-    private static let thumbRadius: CGFloat = 30
-    @State static private var value = 100.0
-    
+
     static var previews: some View {
+        TextSliderView()
+    }
+}
+
+
+struct TextSliderView: View{
+    private let thumbRadius: CGFloat = 30
+    @State private var value = 100.0
+    var body: some View{
         VStack{
             Text("Custom slider: \(value)")
             CustomSlider(value: $value,
@@ -179,7 +180,7 @@ struct CustomSlider_Previews: PreviewProvider {
             }, track: {
                 Capsule()
                     .foregroundColor(.init(red: 0.9, green: 0.9, blue: 0.9))
-                    .frame(width: 200, height: 5)
+                    .frame(width: 300, height: 5)
             }, fill: {
                 Capsule()
                     .foregroundColor(.blue)
@@ -193,5 +194,3 @@ struct CustomSlider_Previews: PreviewProvider {
         .background(Color.black)
     }
 }
-
-
