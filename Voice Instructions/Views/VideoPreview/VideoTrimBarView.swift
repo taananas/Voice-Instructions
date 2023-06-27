@@ -42,6 +42,7 @@ struct VideoTrimBarView: View {
                     Rectangle()
                         .blendMode(.destinationOut)
                     timeSlider(size: proxy.size)
+                        .opacity(isChangeTrimSlider ? 0 : 1)
                 }
             })
         }
