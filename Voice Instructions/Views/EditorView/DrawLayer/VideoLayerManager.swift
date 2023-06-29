@@ -8,6 +8,9 @@ import SwiftUI
 
 class VideoLayerManager: ObservableObject {
    
+    ///Video layer size
+    @Published var layerSize: CGSize = .zero
+    
     ///Selected color for tool
     @Published var selectedColor: Color = .red
     @Published var selectedTool: ToolEnum?

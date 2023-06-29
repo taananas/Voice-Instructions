@@ -93,7 +93,8 @@ extension NavigationBarView{
     
     private var stopButton: some View{
         Button {
-            recorderManager.stop()
+            playerManager.pause()
+            recorderManager.stop(videoFrameSize: layerManager.layerSize)
         } label: {
             buttonLabel("stop.fill", foregroundColor: .red)
         }

@@ -9,6 +9,7 @@ import ReplayKit
 import Photos
 import Combine
 
+
 class ScreenRecorderManager: ObservableObject{
     
     @Published var recorderIsActive: Bool = false
@@ -119,7 +120,7 @@ class ScreenRecorderManager: ObservableObject{
     
     /// Stop
     /// If we record stop and create video otherwise we create a video
-    func stop(){
+    func stop(videoFrameSize: CGSize){
         showLoader = true
         if recorder.isRecording{
             recorder.stopCapture { (error) in
@@ -149,13 +150,13 @@ class ScreenRecorderManager: ObservableObject{
                     }
                     
                     Task {
-                        await self.createVideo(self.videoURLs)
+                        await self.createVideo(self.videoURLs, baseSize: videoFrameSize)
                     }
                 }
             }
         }else{
             Task {
-                await self.createVideo(self.videoURLs)
+                await self.createVideo(self.videoURLs, baseSize: videoFrameSize)
             }
         }
     }
@@ -175,7 +176,7 @@ class ScreenRecorderManager: ObservableObject{
     
     /// Create video
     /// Merge and render videos
-    private func createVideo(_ urls: [URL]) async {
+    private func createVideo(_ urls: [URL], baseSize: CGSize) async {
         guard !urls.isEmpty else {
             return
         }
@@ -204,19 +205,24 @@ class ScreenRecorderManager: ObservableObject{
         
         exporter?.outputURL = exportUrl
         exporter?.outputFileType = .mp4
+        exporter?.shouldOptimizeForNetworkUse = false
 
         await exporter?.export()
 
         if exporter?.status == .completed {
             
             if fileManager.fileExists(atPath: exportUrl.path) {
+                /// CropVideo
+                let finishVideoUrl = try? await cropVideoWithGivenSize(
+                    url: exportUrl,
+                    baseSize:
+                            .init(width: baseSize.width * UIScreen.main.scale, height: baseSize.height * UIScreen.main.scale))
                 
-                ///create video
-                self.createVideo(exportUrl)
-                
-                self.videoURLs.append(exportUrl)
-                /// will need video trimming later on
-               //await cropVideo(exportUrl)
+                if let finishVideoUrl{
+                    ///create video
+                    self.createVideo(finishVideoUrl)
+                    self.videoURLs.append(finishVideoUrl)
+                }
             }
         }else if let error = exporter?.error{
             print(error.localizedDescription)
@@ -305,7 +311,6 @@ extension ScreenRecorderManager{
             let audioTracks = try? await asset.loadTracks(withMediaType: .audio)
             
             let duration = try await asset.load(.duration)
-//            let newDuration: CMTime = .init(seconds: duration.seconds - 0.1, preferredTimescale: 1000)
            
             let timeRange = CMTimeRangeMake(start: .zero, duration: duration)
             
@@ -328,6 +333,90 @@ extension ScreenRecorderManager{
         }
 
         print("TotalTime:", lastTime.seconds)
+    }
+    
+    
+
+    /// Calculate video frame (center it)
+    func cropVideoWithGivenSize(url: URL, baseSize cropSize: CGSize) async throws -> URL?{
+        
+        let asset = AVAsset(url: url)
+        
+        /// Create your context and filter
+        /// I'll use metal context and CIFilter
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let cropFilter = CIFilter(name: "CICrop"),
+              let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {return nil}
+        
+        let context = CIContext(mtlDevice: device, options: [.workingColorSpace : NSNull()])
+        
+        /// Original video size
+        let videoSize = try await videoTrack.load(.naturalSize)
+        print("videoSize", videoSize)
+        print("cropSize", cropSize)
+        
+        /// Create a mutable video composition configured to apply Core Image filters to each video frame of the specified asset.
+        let composition = AVMutableVideoComposition(asset: asset, applyingCIFiltersWithHandler: { request in
+            
+            /// Compute scale and corrective aspect ratio
+            let scaleX = cropSize.width / videoSize.width
+            let scaleY = cropSize.height / videoSize.height
+            let rate = max(scaleX, scaleY)
+            let width = videoSize.width * rate
+            let height = videoSize.height * rate
+            let targetSize = CGSize(width: width, height: height)
+            
+            /// Handle video frame (CIImage)
+            let outputImage = request.sourceImage
+            
+            /// Define your crop rect here
+            /// I would like to crop video from it's center
+            let cropRect = CGRect(
+                x: (targetSize.width - cropSize.width) / 2,
+                y: (targetSize.height - cropSize.height) / 2,
+                width: cropSize.width,
+                height: cropSize.height
+            )
+            
+            /// Add the .sourceImage (a CIImage) from the request to the filter.
+            cropFilter.setValue(outputImage, forKey: kCIInputImageKey)
+            /// Specify cropping rectangle with converting it to CIVector
+            cropFilter.setValue(CIVector(cgRect: cropRect), forKey: "inputRectangle")
+            
+            /// Move the cropped image to the origin of the video frame. When you resize the frame (step 4) it will resize from the origin.
+            let imageAtOrigin = cropFilter.outputImage!.transformed(
+                by: CGAffineTransform(translationX: -cropRect.origin.x, y: -cropRect.origin.y)
+            )
+            
+            request.finish(with: imageAtOrigin, context: context)
+        })
+        
+        /// Update composition render size
+        composition.renderSize = cropSize
+        
+        let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+        let exportUrl = URL.documentsDirectory.appending(path: "preview_record.mp4")
+        fileManager.removeFileIfExists(for: exportUrl)
+        
+        exporter?.videoComposition = composition
+        exporter?.outputURL = exportUrl
+        exporter?.outputFileType = .mp4
+        exporter?.shouldOptimizeForNetworkUse = false
+        
+        await exporter?.export()
+        
+        if exporter?.status == .completed {
+            
+            if fileManager.fileExists(atPath: exportUrl.path) {
+                /// Remove old video url
+                fileManager.removeFileIfExists(for: url)
+                return exportUrl
+            }
+        }else if let error = exporter?.error{
+            throw error
+        }
+        
+        return nil
     }
 
 

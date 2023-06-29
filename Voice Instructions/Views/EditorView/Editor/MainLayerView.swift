@@ -9,17 +9,17 @@ import SwiftUI
 struct MainLayerView: View {
     @ObservedObject var playerManager: VideoPlayerManager
     @EnvironmentObject var layerManager: VideoLayerManager
-    @State private var layerSize: CGSize = .zero
+
     var body: some View {
     
         GeometryReader { proxy in
             let newLayerSize = getSize(proxy)
             ZStack{
-                PlayerRepresentable(size: $layerSize, player: playerManager.videoPlayer)
+                PlayerRepresentable(size: $layerManager.layerSize, player: playerManager.videoPlayer)
                 DrawVideoLayer(playerManager: playerManager, layerSize: newLayerSize)
                     .environmentObject(layerManager)
             }
-            .maskOptionally(isActive: layerSize != .zero) {
+            .maskOptionally(isActive: layerManager.layerSize != .zero) {
                 Rectangle()
                     .frame(size: newLayerSize)
                     .blendMode(.destinationOver)
@@ -41,8 +41,8 @@ extension MainLayerView{
     
     private func getSize(_ proxy: GeometryProxy) -> CGSize{
         .init(
-            width: layerSize.width > proxy.size.width ? proxy.size.width : layerSize.width,
-            height: layerSize.height > proxy.size.height ? proxy.size.height : layerSize.height
+            width: layerManager.layerSize.width > proxy.size.width ? proxy.size.width : layerManager.layerSize.width,
+            height: layerManager.layerSize.height > proxy.size.height ? proxy.size.height : layerManager.layerSize.height
         )
     }
 }
