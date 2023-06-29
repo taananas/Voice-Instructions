@@ -21,14 +21,14 @@ struct Video: Identifiable, Codable{
     init(url: URL, originalDuration: Double){
         self.url = url
         self.originalDuration = originalDuration
-        self.rangeDuration = 0...(originalDuration - 0.2)
+        self.rangeDuration = 0...originalDuration
     }
     
     init(url: URL) async{
         let asset =  AVAsset(url: url)
         self.url = url
         self.originalDuration = (try? await asset.load(.duration).seconds) ?? 1
-        self.rangeDuration = 0...(originalDuration - 0.2)
+        self.rangeDuration = 0...originalDuration
     }
     
     var fullPath: URL{

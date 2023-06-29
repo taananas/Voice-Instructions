@@ -28,6 +28,7 @@ final class VideoPlayerManager: ObservableObject{
     private var currentDurationRange: ClosedRange<Double>?
     private var isSeekInProgress: Bool = false
     private let videoStorageService = VideoStorageService.shared
+    private var isReachedEndTime: Bool = false
     
     deinit {
         removeTimeObserver()
@@ -78,7 +79,6 @@ final class VideoPlayerManager: ObservableObject{
                 guard let self = self else {return}
                 switch status {
                 case .playing:
-                    print("playing")
                     self.startTimer()
                     self.isPlaying = true
                 case .paused:
@@ -106,36 +106,33 @@ final class VideoPlayerManager: ObservableObject{
 
     /// Play for rate and durationRange
     private func play(_ rate: Float?){
-        
         AVAudioSession.sharedInstance().configurePlaybackSession()
-        
-        if let currentDurationRange{
-            if currentTime >= currentDurationRange.upperBound{
-                seek(currentDurationRange.lowerBound)
-            }
+        if isReachedEndTime{
+            seek(currentDurationRange?.lowerBound ?? 0)
+            isReachedEndTime = false
+        }else{
+            seek(currentTime)
         }
+        
         videoPlayer.play()
         
         if let rate{
             self.rate = rate
             videoPlayer.rate = rate
         }
-
-        if isPlaying{
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: videoPlayer.currentItem, queue: .main) { _ in
-                self.playerDidFinishPlaying()
-            }
-        }
     }
      
     /// Seek video time
      func seek(_ seconds: Double){
-         if isSeekInProgress{return}
+         if isSeekInProgress{ return }
          pause()
          isSeekInProgress = true
          videoPlayer.seek(to: CMTimeMakeWithSeconds(seconds, preferredTimescale: 600), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) {[weak self] isFinished in
              guard let self = self else {return}
              if isFinished{
+                 if seconds.rounded(toPlaces: 2) >= currentDurationRange?.upperBound ?? 0{
+                     isReachedEndTime = true
+                 }
                  self.isSeekInProgress = false
              }else{
                  self.seek(seconds)
@@ -151,15 +148,12 @@ final class VideoPlayerManager: ObservableObject{
     /// Start video timer
     private func startTimer() {
         
-        let interval = CMTimeMake(value: 1, timescale: 10)
+        let interval = CMTimeMake(value: 1, timescale: 100)
         timeObserver = videoPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self else { return }
             if self.isPlaying{
+
                 let time = time.seconds
-                
-                if let currentDurationRange = self.currentDurationRange, time >= currentDurationRange.upperBound{
-                    self.pause()
-                }
 
                 switch self.scrubState {
                 case .reset:
@@ -173,15 +167,19 @@ final class VideoPlayerManager: ObservableObject{
         }
     }
     
-    /// Did finish action seek to zero
-    private func playerDidFinishPlaying() {
-        seek(currentDurationRange?.lowerBound ?? 0)
-    }
-    
+ 
     /// Remove all time observers
     private func removeTimeObserver(){
         if let timeObserver = timeObserver {
             videoPlayer.removeTimeObserver(timeObserver)
+        }
+    }
+    /// Set did finish playing observer
+    private func setDidFinishPlayingObserver(){
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: videoPlayer.currentItem, queue: .main) { [weak self] _ in
+            guard let self = self else {return}
+            self.pause()
+            self.isReachedEndTime = true
         }
     }
     
@@ -207,11 +205,14 @@ extension VideoPlayerManager{
                 
                 print("AVPlayer set url:", item.url.absoluteString)
                 
+                self.setDidFinishPlayingObserver()
+                
                 /// save video to storage
                 self.save()
                 
                 loadState = .loaded
                 
+                try await Task.sleep(for: .milliseconds(500))
                 ///play
                 self.action()
                 
@@ -252,6 +253,7 @@ extension VideoPlayerManager{
             self.videoPlayer = AVPlayer(url: video.fullPath)
             self.currentDurationRange = video.rangeDuration
             self.startControlStatusSubscriptions()
+            self.setDidFinishPlayingObserver()
             self.loadState = .loaded
         }
         
