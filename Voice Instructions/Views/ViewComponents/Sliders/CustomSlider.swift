@@ -96,7 +96,7 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
                 fill?()
                 // `fill` changes both its position and frame as its
                 // anchor point is in its middle (at (0.5, 0.5)).
-                    .frame(width: xOffset + thumbSize.width, height: trackSize.height)
+                    .frame(width: abs(xOffset) + abs(thumbSize.width), height: trackSize.height)
             }
             // make sure the entire ZStack is the same size as `track`
             .frame(width: trackSize.width, height: trackSize.height)
