@@ -90,7 +90,7 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
                         let firstInit = (trackSize == .zero)
                         trackSize = $0
                         if firstInit {
-                            initOffset()
+                            initOffset(isAnimation: false)
                         }
                     }
                 fill?()
@@ -137,21 +137,22 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
         }
         // manually set the height of the entire view to account for thumb height
         .frame(height: max(trackSize.height, thumbSize.height))
-        .animation(isAnimate && !isChange ? .linear : nil, value: xOffset)
         .onChange(of: value) { _ in
             if !isChange{
-                initOffset()
+                initOffset(isAnimation: true)
             }
         }
         .onChange(of: trackSize) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05){
-                initOffset()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15){
+                initOffset(isAnimation: false)
             }
         }
     }
     
-    private func initOffset(){
-        xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
+    private func initOffset(isAnimation: Bool){
+        withAnimation(isAnimation ? .linear : nil){
+            xOffset = (trackSize.width - thumbSize.width) * CGFloat(percentage)
+        }
         lastOffset = xOffset
     }
 }
