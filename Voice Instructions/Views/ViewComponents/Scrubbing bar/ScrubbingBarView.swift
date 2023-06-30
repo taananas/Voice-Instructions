@@ -7,14 +7,13 @@
 import SwiftUI
 
 struct ScrubbingBarView: View {
-    let significanceValue: CGFloat = 1000
-    var duration: CGFloat = 12
+    var duration: CGFloat
     @Binding var time: Double
     let onChangeTime: (Double) -> Void
     @State private var lastOffset: CGFloat = .zero
     var body: some View {
     
-        InfinityHScrollView(alignment: .center, onChange: setTime){
+        InfinityHScrollView(alignment: .center, onChange: onChange, onEnded: onEnded){
             imagesSection
         }
         .frame(height: 60)
@@ -39,15 +38,26 @@ extension ScrubbingBarView{
         }
     }
     
-    private func setTime(dragOffset: CGFloat, totalOffset: CGFloat){
+    private func onChange(dragOffset: CGFloat){
+        updateTime(dragValue: dragOffset, dragDuration: 0)
+    }
+    
+    private func onEnded(dragValue: CGFloat, dragDuration: CGFloat){
+        updateTime(dragValue: dragValue, dragDuration: dragDuration)
+    }
+    
+    private func updateTime(dragValue: CGFloat, dragDuration: CGFloat){
         
-        let maxOffset = duration * 3
-        let offset = max(min((totalOffset + dragOffset), maxOffset), -maxOffset) / significanceValue
-        let ratio = offset / maxOffset
-        let valueTime = time + duration * ratio
-        let newTime = max(min(valueTime, duration), 0)
+        let isAnimation = dragDuration >= 0.55
+        let increaseValue = isAnimation ? 1.5 : 0.005
         
-        time = (newTime * 100).rounded() / 100
+        if lastOffset > dragValue{
+            time = max(time - increaseValue, 0)
+        }else{
+            time = min(time + increaseValue, duration)
+        }
+        
+        lastOffset = dragValue
         
         onChangeTime(time)
     }
@@ -59,7 +69,11 @@ struct TestView: View{
     var body: some View{
         ZStack{
             Color.black
-            ScrubbingBarView(time: $time, onChangeTime: {_ in})
+            VStack {
+                Text(time.humanReadableLongTime())
+                    .foregroundColor(.white)
+                ScrubbingBarView(duration: 15, time: $time, onChangeTime: {_ in})
+            }
         }
     }
 }

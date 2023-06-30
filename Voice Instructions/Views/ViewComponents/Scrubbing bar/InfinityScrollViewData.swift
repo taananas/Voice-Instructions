@@ -16,9 +16,8 @@ struct InfinityHScrollView<Content>: View where Content: View {
 
     @State private var contentMultiplier = 2
 
-    @State private var isDragging = true
-
-    var onChange: ((CGFloat, CGFloat) -> Void)?
+    var onChange: ((CGFloat) -> Void)?
+    var onEnded: ((CGFloat, CGFloat) -> Void)?
 
     @ViewBuilder var content: () -> Content
     
@@ -42,10 +41,12 @@ struct InfinityHScrollView<Content>: View where Content: View {
                             let projectedWidth = dragValue.predictedEndTranslation.width
                             xOffset = xOffset + width
                             let duration = projectedWidth / (4 * width)
-                            withAnimation(.easeOut(duration: duration)) {
-                                xOffset = xOffset + (projectedWidth - width)
-                            }
+                            let dragValue = (projectedWidth - width)
                             
+                            withAnimation(.easeOut(duration: duration)) {
+                                xOffset = xOffset + dragValue
+                            }
+                            onEnded?(dragValue, duration)
                         })
                 )
                 .onChange(of: contentMultiplier) { newValue in
@@ -72,10 +73,7 @@ struct InfinityHScrollView<Content>: View where Content: View {
                 Spacer()
             }
             .onChange(of: dragOffset) { newValue in
-                onChange?(newValue, 0)
-            }
-            .onChange(of: xOffset) { newValue in
-                onChange?(0, newValue)
+                onChange?(newValue)
             }
         }
     }
