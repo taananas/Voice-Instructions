@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5A0EBA5F2A446EBC00D28A49 /* VideoTrimBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0EBA5E2A446EBC00D28A49 /* VideoTrimBarView.swift */; };
+		5A1DEBB72A52B90A00C85EF9 /* TopLayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1DEBB62A52B90A00C85EF9 /* TopLayerControlsView.swift */; };
+		5A1DEBB92A52C1A200C85EF9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1DEBB82A52C1A200C85EF9 /* Constants.swift */; };
 		5A27D56B2A39B46A00D8E862 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */; };
 		5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */; };
 		5A27D5712A39CCF200D8E862 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A27D5702A39CCF200D8E862 /* UIImage.swift */; };
@@ -49,13 +51,15 @@
 		5AE399532A3878AE00DD4A17 /* VideoPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE399522A3878AE00DD4A17 /* VideoPreview.swift */; };
 		5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */; };
 		5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */; };
-		5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */; };
+		5AEA54CD2A335F4500BA1D9A /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CC2A335F4400BA1D9A /* TopBarView.swift */; };
 		5AEA54CF2A33672800BA1D9A /* UndoButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54CE2A33672800BA1D9A /* UndoButtons.swift */; };
 		5AEA54D12A336C8600BA1D9A /* ToolDropdownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5A0EBA5E2A446EBC00D28A49 /* VideoTrimBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimBarView.swift; sourceTree = "<group>"; };
+		5A1DEBB62A52B90A00C85EF9 /* TopLayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLayerControlsView.swift; sourceTree = "<group>"; };
+		5A1DEBB82A52C1A200C85EF9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5A27D56A2A39B46A00D8E862 /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		5A27D56E2A39CA0400D8E862 /* VideoPreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewViewModel.swift; sourceTree = "<group>"; };
 		5A27D5702A39CCF200D8E862 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -98,7 +102,7 @@
 		5AE399522A3878AE00DD4A17 /* VideoPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreview.swift; sourceTree = "<group>"; };
 		5AEA54C82A3339B400BA1D9A /* DrawVideoLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawVideoLayer.swift; sourceTree = "<group>"; };
 		5AEA54CA2A33579F00BA1D9A /* AVAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAsset.swift; sourceTree = "<group>"; };
-		5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
+		5AEA54CC2A335F4400BA1D9A /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		5AEA54CE2A33672800BA1D9A /* UndoButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoButtons.swift; sourceTree = "<group>"; };
 		5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolDropdownMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -175,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				5A3D09B52A31C02500FD1132 /* Extensions */,
+				5A1DEBB82A52C1A200C85EF9 /* Constants.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -264,9 +269,10 @@
 			isa = PBXGroup;
 			children = (
 				5A3D09D92A31CB5200FD1132 /* VideoControlsView.swift */,
-				5AEA54CC2A335F4400BA1D9A /* NavigationBarView.swift */,
+				5AEA54CC2A335F4400BA1D9A /* TopBarView.swift */,
 				5AEA54CE2A33672800BA1D9A /* UndoButtons.swift */,
 				5AEA54D02A336C8600BA1D9A /* ToolDropdownMenu.swift */,
+				5A1DEBB62A52B90A00C85EF9 /* TopLayerControlsView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -440,6 +446,7 @@
 				5A27D56F2A39CA0400D8E862 /* VideoPreviewViewModel.swift in Sources */,
 				5A2BE9802A3C985D00D53E14 /* SingleLineShape.swift in Sources */,
 				5A3D09BD2A31C0B000FD1132 /* AVAudioSession.swift in Sources */,
+				5A1DEBB72A52B90A00C85EF9 /* TopLayerControlsView.swift in Sources */,
 				5A398EF52A40A490003FE261 /* TimerModel.swift in Sources */,
 				5A6183BB2A41DD89002AEC0D /* AngleModel.swift in Sources */,
 				5A3D09DF2A31D3A700FD1132 /* InfinityScrollViewData.swift in Sources */,
@@ -466,9 +473,10 @@
 				5AE399532A3878AE00DD4A17 /* VideoPreview.swift in Sources */,
 				5A3D09A52A31BF6E00FD1132 /* Voice_InstructionsApp.swift in Sources */,
 				5AEA54C92A3339B400BA1D9A /* DrawVideoLayer.swift in Sources */,
+				5A1DEBB92A52C1A200C85EF9 /* Constants.swift in Sources */,
 				5A398EED2A40729F003FE261 /* ToolEnum.swift in Sources */,
 				5A3D09C12A31C0E900FD1132 /* Double.swift in Sources */,
-				5AEA54CD2A335F4500BA1D9A /* NavigationBarView.swift in Sources */,
+				5AEA54CD2A335F4500BA1D9A /* TopBarView.swift in Sources */,
 				5AEA54CB2A33579F00BA1D9A /* AVAsset.swift in Sources */,
 				5A2BE9822A3CA69500D53E14 /* DragShape.swift in Sources */,
 				5A3D09C32A31C0FC00FD1132 /* CancelBag.swift in Sources */,

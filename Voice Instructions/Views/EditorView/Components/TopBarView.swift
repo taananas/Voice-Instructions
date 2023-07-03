@@ -1,12 +1,12 @@
 //
-//  NavigationBarView.swift
+//  TopBarView.swift
 //  Voice Instructions
 //
 //
 
 import SwiftUI
 
-struct NavigationBarView: View {
+struct TopBarView: View {
     @ObservedObject var layerManager: VideoLayerManager
     @ObservedObject var recorderManager: ScreenRecorderManager
     @ObservedObject var playerManager: VideoPlayerManager
@@ -30,18 +30,9 @@ struct NavigationBarView: View {
                     }
             }
             .padding(.top, isIPad ? 40 : 0)
-            .padding(.horizontal, 18)
+            .padding(.horizontal, Constants.horizontalPrimaryPadding)
             .padding(.bottom, 20)
             .background(Color.black.opacity(0.25))
-            HStack(alignment: .top) {
-                UndoButtons(layerManager: layerManager)
-                    .padding(.top, isIPad ? 110 : 70)
-                Spacer()
-                ToolDropdownMenu(selectedTool: $layerManager.selectedTool, selectedColor: $layerManager.selectedColor)
-                    .padding(.top, isIPad ? 32 : 0)
-                    .hTrailing()
-            }
-            .padding(.horizontal, 18)
         }
         .alert("Remove video", isPresented: $isPresentedAlert) {
             Button("Cancel", role: .cancel, action: {})
@@ -58,12 +49,12 @@ struct NavigationBarView_Previews: PreviewProvider {
             Color.secondary.ignoresSafeArea()
         }
         .safeAreaInset(edge: .top, spacing: 0) {
-            NavigationBarView(layerManager: VideoLayerManager(), recorderManager: ScreenRecorderManager(), playerManager: VideoPlayerManager())
+            TopBarView(layerManager: VideoLayerManager(), recorderManager: ScreenRecorderManager(), playerManager: VideoPlayerManager())
         }
     }
 }
 
-extension NavigationBarView{
+extension TopBarView{
     
     private var closeButton: some View{
         Button {

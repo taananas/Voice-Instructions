@@ -18,6 +18,7 @@ class ScreenRecorderManager: ObservableObject{
     @Published private(set) var showLoader: Bool = false
     private(set) var finalVideo = CurrentValueSubject<Video?, Never>(nil)
     private(set) var videoURLs = [URL]()
+    private var videoCounter: Int = 0
     
     private let recorder = RPScreenRecorder.shared()
     private var assetWriter: AVAssetWriter!
@@ -25,6 +26,7 @@ class ScreenRecorderManager: ObservableObject{
     private var audioMicInput: AVAssetWriterInput!
     private var cancelBag = CancelBag()
     private let fileManager = FileManager.default
+    
     
     init(){
         startCreatorSubs()
@@ -34,13 +36,10 @@ class ScreenRecorderManager: ObservableObject{
     /// setup AssetWriters
     /// save audio and video buffer
     func startRecoding(){
-        let name = "\(Date().ISO8601Format()).mp4"
-        let url = fileManager.temporaryDirectory.appendingPathComponent(name)
-        videoURLs.append(url)
-        setupAssetWriters(url)
         AVAudioSession.sharedInstance().playAndRecord()
         recorder.isMicrophoneEnabled = true
-        recorder.startCapture { (cmSampleBuffer, rpSampleBufferType, err) in
+        recorder.startCapture { [weak self] (cmSampleBuffer, rpSampleBufferType, err) in
+            guard let self = self else {return}
             if let err = err {
                 print(err.localizedDescription)
                 return
@@ -81,14 +80,23 @@ class ScreenRecorderManager: ObservableObject{
                     }
                 }
             }
-        } completionHandler: { error in
+        } completionHandler: { [weak self] error in
+            guard let self = self else {return}
             if let error {
                 print(error.localizedDescription)
             }else{
+                self.createFileAndSetupAssetWriters()
                 self.isRecord = true
                 self.recorderIsActive = true
             }
         }
+    }
+    
+    private func createFileAndSetupAssetWriters(){
+        let name = "\(Date().ISO8601Format()).mp4"
+        let url = fileManager.temporaryDirectory.appendingPathComponent(name)
+        videoURLs.append(url)
+        setupAssetWriters(url)
     }
     
     ///remove all video and reset state
@@ -102,6 +110,7 @@ class ScreenRecorderManager: ObservableObject{
             fileManager.removeFileIfExists(for: finalURl)
         }
         videoURLs = []
+        resetVideoCounter()
     }
     
     /// Pause
@@ -150,13 +159,13 @@ class ScreenRecorderManager: ObservableObject{
                     }
                     
                     Task {
-                        await self.createVideo(self.videoURLs, baseSize: videoFrameSize)
+                        await self.createVideoIfNeeded(self.videoURLs, baseSize: videoFrameSize)
                     }
                 }
             }
         }else{
             Task {
-                await self.createVideo(self.videoURLs, baseSize: videoFrameSize)
+                await self.createVideoIfNeeded(self.videoURLs, baseSize: videoFrameSize)
             }
         }
     }
@@ -173,11 +182,20 @@ class ScreenRecorderManager: ObservableObject{
             .store(in: cancelBag)
     }
     
+    private var isNotAddedNew: Bool{
+        finalVideo.value != nil && videoCounter == videoURLs.count
+    }
+    
     
     /// Create video
     /// Merge and render videos
-    private func createVideo(_ urls: [URL], baseSize: CGSize) async {
+    private func createVideoIfNeeded(_ urls: [URL], baseSize: CGSize) async {
         guard !urls.isEmpty else {
+            return
+        }
+        
+        if isNotAddedNew{
+            finalVideo.send(finalVideo.value)
             return
         }
         
@@ -221,7 +239,10 @@ class ScreenRecorderManager: ObservableObject{
                 if let finishVideoUrl{
                     ///create video
                     self.createVideo(finishVideoUrl)
-                    self.videoURLs.append(finishVideoUrl)
+                    /// append original non croped video
+                    self.videoURLs.append(exportUrl)
+                    
+                    self.videoCounter = videoURLs.count
                 }
             }
         }else if let error = exporter?.error{
@@ -235,6 +256,10 @@ class ScreenRecorderManager: ObservableObject{
             let video = await Video(url: url)
             finalVideo.send(video)
         }
+    }
+    
+    func resetVideoCounter(){
+        videoCounter = 0
     }
 }
 
@@ -351,48 +376,52 @@ extension ScreenRecorderManager{
         let context = CIContext(mtlDevice: device, options: [.workingColorSpace : NSNull()])
         
         /// Original video size
-        let videoSize = try await videoTrack.load(.naturalSize)
-        print("videoSize", videoSize)
+        let originalSize = try await videoTrack.load(.naturalSize)
+        let duration = try await asset.load(.duration)
+        
+//
+//        // Compute scale and corrective aspect ratio
+//        let scaleX = cropSize.width / originalSize.width
+//        let scaleY = cropSize.height / originalSize.height
+//        let rate = max(scaleX, scaleY)
+//        let width = originalSize.width * rate
+//        let height = originalSize.height * rate
+//        let targetSize = CGSize(width: width, height: height)
+        
+        /// Define your crop rect here
+        /// I would like to crop video from it's center
+        let cropRect = CGRect(
+            x: (originalSize.width - cropSize.width) / 2,
+            y: (originalSize.height - cropSize.height) / 2,
+            width: cropSize.width,
+            height: cropSize.height
+        ).integral
+
         print("cropSize", cropSize)
+        print("Old video size", originalSize)
+
         
         /// Create a mutable video composition configured to apply Core Image filters to each video frame of the specified asset.
         let composition = AVMutableVideoComposition(asset: asset, applyingCIFiltersWithHandler: { request in
-            
-            /// Compute scale and corrective aspect ratio
-            let scaleX = cropSize.width / videoSize.width
-            let scaleY = cropSize.height / videoSize.height
-            let rate = max(scaleX, scaleY)
-            let width = videoSize.width * rate
-            let height = videoSize.height * rate
-            let targetSize = CGSize(width: width, height: height)
-            
+
             /// Handle video frame (CIImage)
             let outputImage = request.sourceImage
-            
-            /// Define your crop rect here
-            /// I would like to crop video from it's center
-            let cropRect = CGRect(
-                x: (targetSize.width - cropSize.width) / 2,
-                y: (targetSize.height - cropSize.height) / 2,
-                width: cropSize.width,
-                height: cropSize.height
-            )
-            
+
             /// Add the .sourceImage (a CIImage) from the request to the filter.
             cropFilter.setValue(outputImage, forKey: kCIInputImageKey)
             /// Specify cropping rectangle with converting it to CIVector
             cropFilter.setValue(CIVector(cgRect: cropRect), forKey: "inputRectangle")
-            
+
             /// Move the cropped image to the origin of the video frame. When you resize the frame (step 4) it will resize from the origin.
-            let imageAtOrigin = cropFilter.outputImage!.transformed(
-                by: CGAffineTransform(translationX: -cropRect.origin.x, y: -cropRect.origin.y)
+            let imageAtOrigin = cropFilter.outputImage!
+                .transformed(
+                    by: CGAffineTransform(translationX: -cropRect.origin.x, y: -cropRect.origin.y)
             )
-            
             request.finish(with: imageAtOrigin, context: context)
         })
         
         /// Update composition render size
-        composition.renderSize = cropSize
+        composition.renderSize = cropRect.size
         
         let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
         let exportUrl = URL.documentsDirectory.appending(path: "preview_record.mp4")
@@ -406,10 +435,7 @@ extension ScreenRecorderManager{
         await exporter?.export()
         
         if exporter?.status == .completed {
-            
             if fileManager.fileExists(atPath: exportUrl.path) {
-                /// Remove old video url
-                fileManager.removeFileIfExists(for: url)
                 return exportUrl
             }
         }else if let error = exporter?.error{
@@ -419,55 +445,146 @@ extension ScreenRecorderManager{
         return nil
     }
 
+    
 
-//    /// Crop video size
-//    func cropVideo( _ outputFileUrl: URL) async {
-//
-//        let videoAsset: AVAsset = AVAsset(url: outputFileUrl)
-//
-//        do{
-//            guard let clipVideoTrack = try await videoAsset.loadTracks(withMediaType: .video).first else {return}
-//            let naturalSize = try await clipVideoTrack.load(.naturalSize)
-//            let croppedSize = CGSize(width: naturalSize.width - 200, height: naturalSize.height - 400)
-//            let duration = try await videoAsset.load(.duration)
-//
-//            let videoComposition = AVMutableVideoComposition()
-//            videoComposition.renderSize = croppedSize
-//            videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
-//
-//            let transformer = AVMutableVideoCompositionLayerInstruction( assetTrack: clipVideoTrack)
-//
-//            let t1 = CGAffineTransform(translationX: -200, y: -100)
-//            let t2 = CGAffineTransform(scaleX: 1.0, y: 1.0)
-//            transformer.setTransform(t1.concatenating(t2), at: CMTime.zero)
-//            let instruction = AVMutableVideoCompositionInstruction()
-//
-//            instruction.timeRange = CMTimeRangeMake(start: .zero, duration: duration)
-//
-//            instruction.layerInstructions = [transformer]
-//            videoComposition.instructions = [instruction]
-//
-//            // Export
-//            let exporter = AVAssetExportSession(asset: videoAsset, presetName: AVAssetExportPresetHighestQuality)!
-//            let croppedOutputFileUrl = URL.documentsDirectory.appending(path: "recordFinished.mp4")
-//            FileManager.default.removeFileIfExists(for: croppedOutputFileUrl)
-//            exporter.videoComposition = videoComposition
-//            exporter.outputURL = croppedOutputFileUrl
-//            exporter.outputFileType = .mp4
-//
-//            await exporter.export()
-//
-//            if exporter.status == .completed {
-//                self.finalURl.send(croppedOutputFileUrl)
-//                FileManager.default.removeFileIfExists(for: outputFileUrl)
-//            }else if let error = exporter.error{
-//                print(error.localizedDescription)
-//            }
-//
-//        }catch{
-//            print(error.localizedDescription)
-//        }
-//    }
+    enum Orientation {
+        case up, down, right, left
+    }
+    
+    func orientation(for track: AVAssetTrack) async -> Orientation{
+        
+        guard let t = try? await track.load(.preferredTransform) else{
+            return .down
+        }
+        
+        if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0) {             // Portrait
+            return .up
+        } else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0) {      // PortraitUpsideDown
+            return .down
+        } else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {       // LandscapeRight
+            return .right
+        } else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {     // LandscapeLeft
+            return .left
+        } else {
+            return .up
+        }
+    }
     
     
 }
+
+extension Double {
+    
+     var radians: Double {
+         .pi * self / 180
+    }
+}
+
+
+
+
+
+
+//func cropVideoWithGivenSize(url: URL, baseSize cropSize: CGSize) async throws -> URL?{
+//
+//    let asset = AVAsset(url: url)
+//
+//    /// Create your context and filter
+//    /// I'll use metal context and CIFilter
+//    guard let device = MTLCreateSystemDefaultDevice(),
+//          let cropFilter = CIFilter(name: "CICrop"),
+//          let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {return nil}
+//
+//    let context = CIContext(mtlDevice: device, options: [.workingColorSpace : NSNull()])
+//
+//    /// Original video size
+//    let originalSize = try await videoTrack.load(.naturalSize)
+//    let duration = try await asset.load(.duration)
+//
+//    // Compute scale and corrective aspect ratio
+//    let scaleX = cropSize.width / originalSize.width
+//    let scaleY = cropSize.height / originalSize.height
+//    let rate = max(scaleX, scaleY)
+//    let width = originalSize.width * rate
+//    let height = originalSize.height * rate
+//    let targetSize = CGSize(width: width, height: height)
+//
+//
+//    print("cropSize", cropSize)
+//    print("Old video size", originalSize)
+//    //print("New video size", cropRect.size)
+//
+//        let composition = AVMutableComposition()
+//
+//        let trackOrientation = await orientation(for: videoTrack)
+//        let transformer = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack)
+//        let videoComposition = AVMutableVideoComposition()
+//
+//
+//        videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
+//
+//
+//        var finalTransform: CGAffineTransform = CGAffineTransform.identity
+//        let cropRect = CGRect(
+//            x: (originalSize.width - cropSize.width) / 2,
+//            y: (originalSize.height - cropSize.height) / 2,
+//            width: cropSize.width,
+//            height: cropSize.height
+//        ).integral
+//
+//        let cropOffX: CGFloat = cropRect.origin.x
+//        let cropOffY: CGFloat = cropRect.origin.y
+//
+//        videoComposition.renderSize = cropRect.size
+//
+//        switch trackOrientation {
+//        case .up:
+//            finalTransform = finalTransform
+//                .translatedBy(x: originalSize.height - cropOffX, y: 0 - cropOffY)
+//                .rotated(by: CGFloat(90.0.radians))
+//        case .down:
+//            finalTransform = finalTransform
+//                .translatedBy(x: 0 - cropOffX, y: originalSize.width - cropOffY)
+//                .rotated(by: CGFloat(-90.0.radians))
+//        case .right:
+//            finalTransform = finalTransform.translatedBy(x: 0 - cropOffX, y: 0 - cropOffY)
+//        case .left:
+//            finalTransform = finalTransform
+//                .translatedBy(x: originalSize.width - cropOffX, y: originalSize.height - cropOffY)
+//                .rotated(by: CGFloat(-180.0.radians))
+//        }
+//
+//
+//
+//        let instruction = AVMutableVideoCompositionInstruction()
+//        instruction.timeRange = CMTimeRange(start: .zero, duration: duration)
+//
+//        transformer.setTransform(finalTransform, at: .zero)
+//        instruction.layerInstructions = [transformer]
+//        videoComposition.instructions = [instruction]
+//
+//
+//
+//
+//
+//    let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+//    let exportUrl = URL.documentsDirectory.appending(path: "preview_record.mp4")
+//    fileManager.removeFileIfExists(for: exportUrl)
+//
+//    exporter?.videoComposition = videoComposition
+//    exporter?.outputURL = exportUrl
+//    exporter?.outputFileType = .mp4
+//    exporter?.shouldOptimizeForNetworkUse = false
+//
+//    await exporter?.export()
+//
+//    if exporter?.status == .completed {
+//        if fileManager.fileExists(atPath: exportUrl.path) {
+//            return exportUrl
+//        }
+//    }else if let error = exporter?.error{
+//        throw error
+//    }
+//
+//    return nil
+//}

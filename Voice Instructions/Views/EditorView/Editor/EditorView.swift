@@ -37,6 +37,7 @@ struct EditorView: View {
         }
         .onRotate { _ in
             playerManager.pause()
+            recorderManager.resetVideoCounter()
         }
     }
 }
@@ -54,14 +55,19 @@ extension EditorView{
     
     
     private var playerLayers: some View{
-        MainLayerView(playerManager: playerManager)
-            .environmentObject(layerManager)
-            .overlay(alignment: .top) {
-                navBarView
-            }
-            .overlay(alignment: .bottom) {
-                bottomControlsView
-            }
+        VStack(spacing: 0) {
+            navBarView
+            MainLayerView(playerManager: playerManager)
+                .environmentObject(layerManager)
+                .padding(.horizontal, Constants.toolWidth + Constants.horizontalPrimaryPadding)
+                .padding(.bottom, Constants.bottomVideoPadding)
+            bottomControlsView
+        }
+        .overlay {
+            TopLayerControlsView(layerManager: layerManager, playerManager: playerManager)
+                .padding(.vertical, 20)
+                .padding(.top)
+        }
     }
     
     private var pickerButton: some View{
@@ -74,13 +80,13 @@ extension EditorView{
 
 }
 
-// safeAreaInset content
+
 extension EditorView{
     
     @ViewBuilder
     private var navBarView: some View{
         if playerManager.loadState == .loaded{
-            NavigationBarView(layerManager: layerManager, recorderManager: recorderManager, playerManager: playerManager)
+            TopBarView(layerManager: layerManager, recorderManager: recorderManager, playerManager: playerManager)
         }
     }
     

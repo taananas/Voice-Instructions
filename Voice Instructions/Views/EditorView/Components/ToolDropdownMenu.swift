@@ -14,6 +14,11 @@ struct ToolDropdownMenu: View {
     @Binding var selectedColor: Color
     @Namespace private var animation
     let colors: [Color] = [.red, .yellow, .green, .cyan, .blue, .white]
+    
+    var onOpen: ((Bool) -> Void)?
+    
+    private let buttonWidth: CGFloat = Constants.toolWidth
+    
     var body: some View {
     
         HStack(alignment: .top){
@@ -23,6 +28,9 @@ struct ToolDropdownMenu: View {
             toolView
         }
         .animation(.spring(), value: isOpenColor)
+        .onChange(of: isOpenTool) { newValue in
+            onOpen?(newValue)
+        }
     }
 }
 
@@ -72,7 +80,7 @@ extension ToolDropdownMenu{
                 chevronDownButton
             }
         }
-        .frame(width: 50)
+        .frame(width: buttonWidth)
         .padding(.vertical, 15)
         .background{
             Capsule()
@@ -84,7 +92,7 @@ extension ToolDropdownMenu{
     }
     
     private var toolColor: some View{
-        VStack{
+        HStack{
             ForEach(colors, id: \.self) { color in
                 Circle()
                     .fill(color)
@@ -95,8 +103,8 @@ extension ToolDropdownMenu{
                     }
             }
         }
-        .frame(width: 50)
-        .padding(.vertical, 15)
+        .frame(height: buttonWidth)
+        .padding(.horizontal, 15)
         .background{
             Capsule()
                 .fill(Color.black.opacity(0.25))
