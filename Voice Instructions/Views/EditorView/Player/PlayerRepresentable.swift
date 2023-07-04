@@ -39,6 +39,10 @@ struct PlayerRepresentable: UIViewControllerRepresentable {
             parent.view.addObserver(self, forKeyPath: keyPath, options: .new, context: nil)
         }
         
+        deinit{
+            parent.view.removeObserver(self, forKeyPath: keyPath)
+        }
+        
         ///Predefine the observer and set a new video frame size
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
             if keyPath == keyPath {
