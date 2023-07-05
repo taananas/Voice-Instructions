@@ -84,6 +84,13 @@ class VideoLayerManager: ObservableObject {
         removeAllAngles()
     }
     
+    /// Reset all states
+    func resetAll(){
+        removeAll()
+        selectedTool = nil
+        selectedColor = .red
+    }
+    
     /// At least one object in the layer is active
     var isActiveAnyObject: Bool{
         shapes.contains(where: {$0.isActive || $0.isSelected}) ||

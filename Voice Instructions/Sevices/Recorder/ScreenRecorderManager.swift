@@ -102,8 +102,11 @@ class ScreenRecorderManager: ObservableObject{
     
 
     
-    ///remove all video and reset state
+    /// Remove all video and reset state
     func removeAll(){
+        if recorder.isRecording{
+            recorder.stopRecording()
+        }
         isRecord = false
         recorderIsActive = false
         videoURLs.forEach { url in

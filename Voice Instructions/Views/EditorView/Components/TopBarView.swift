@@ -23,6 +23,7 @@ struct TopBarView: View {
                     .overlay(alignment: .center) {
                         HStack(spacing: 30) {
                             if recorderManager.recorderIsActive{
+                                removeRecordButton
                                 stopButton
                             }
                             micButton
@@ -56,18 +57,26 @@ struct NavigationBarView_Previews: PreviewProvider {
 
 extension TopBarView{
     
+    @ViewBuilder
     private var closeButton: some View{
-        Button {
-            if recorderManager.recorderIsActive{
-                recorderManager.removeAll()
-                layerManager.removeAll()
-                layerManager.selectedTool = nil
-            }else{
+        if !recorderManager.recorderIsActive{
+            Button {
                 isPresentedAlert.toggle()
+            } label: {
+                buttonLabel("xmark")
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var removeRecordButton: some View{
+        Button {
+            recorderManager.removeAll()
+            layerManager.resetAll()
         } label: {
             buttonLabel("xmark")
         }
+        .padding(.trailing, 30)
     }
     
     private var micButton: some View{
