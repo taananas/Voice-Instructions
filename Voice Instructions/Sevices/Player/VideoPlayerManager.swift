@@ -37,6 +37,7 @@ final class VideoPlayerManager: ObservableObject{
     init(fromStorage: Bool = false){
         
         if fromStorage{
+            loadState = .loading
             loadVideo(videoStorageService.load())
         }
     }
@@ -144,7 +145,7 @@ final class VideoPlayerManager: ObservableObject{
         videoPlayer.pause()
         play(rate)
     }
-    
+        
     /// Start video timer
     private func startTimer() {
         
@@ -270,8 +271,11 @@ extension VideoPlayerManager{
             FileManager.default.removeFileIfExists(for: video.fullPath)
             videoStorageService.remove()
             removeTimeObserver()
+            selectedItem = nil
+            currentTime = .zero
+            loadState = .unknown
             self.videoPlayer = .init()
-            self.loadState = .unknown
+            self.video = nil
         }
     }
 }
