@@ -99,6 +99,9 @@ class ScreenRecorderManager: ObservableObject{
         setupAssetWriters(url)
     }
     
+    
+
+    
     ///remove all video and reset state
     func removeAll(){
         isRecord = false
@@ -218,7 +221,7 @@ class ScreenRecorderManager: ObservableObject{
         
         
         let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)
-        let exportUrl =  URL.documentsDirectory.appending(path: "record.mp4")
+        let exportUrl = URL.documentsDirectory.appending(path: "record.mp4")
         fileManager.removeFileIfExists(for: exportUrl)
         
         exporter?.outputURL = exportUrl
@@ -230,10 +233,12 @@ class ScreenRecorderManager: ObservableObject{
         if exporter?.status == .completed {
             
             if fileManager.fileExists(atPath: exportUrl.path) {
+                
+                print("baseSize", baseSize)
                 /// CropVideo
-                let finishVideoUrl = try? await cropVideoWithGivenSize(
+                let finishVideoUrl = try? await rotateAndCrop(
                     url: exportUrl,
-                    baseSize:
+                    cropSize:
                             .init(width: baseSize.width * UIScreen.main.scale, height: baseSize.height * UIScreen.main.scale))
                 
                 if let finishVideoUrl{
@@ -360,74 +365,59 @@ extension ScreenRecorderManager{
         print("TotalTime:", lastTime.seconds)
     }
     
-    
 
-    /// Calculate video frame (center it)
-    func cropVideoWithGivenSize(url: URL, baseSize cropSize: CGSize) async throws -> URL?{
+    /// Rotate recorder video
+    /// Crop video for size
+    private func rotateAndCrop(url: URL, cropSize: CGSize) async throws -> URL?{
         
         let asset = AVAsset(url: url)
         
-        /// Create your context and filter
-        /// I'll use metal context and CIFilter
-        guard let device = MTLCreateSystemDefaultDevice(),
-              let cropFilter = CIFilter(name: "CICrop"),
-              let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {return nil}
-        
-        let context = CIContext(mtlDevice: device, options: [.workingColorSpace : NSNull()])
+        guard let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {return nil}
         
         /// Original video size
         let originalSize = try await videoTrack.load(.naturalSize)
         let duration = try await asset.load(.duration)
         
-//
-//        // Compute scale and corrective aspect ratio
-//        let scaleX = cropSize.width / originalSize.width
-//        let scaleY = cropSize.height / originalSize.height
-//        let rate = max(scaleX, scaleY)
-//        let width = originalSize.width * rate
-//        let height = originalSize.height * rate
-//        let targetSize = CGSize(width: width, height: height)
+        let videoComposition = AVMutableVideoComposition()
         
-        /// Define your crop rect here
-        /// I would like to crop video from it's center
+        /// New size and scale
+        let newVideoSize = CGSize(width: originalSize.height, height: originalSize.width)
+        let scaleX = newVideoSize.width / originalSize.width
+        let scaleY = newVideoSize.height / originalSize.height
+        
+        print("rotatedVideoSize", newVideoSize)
+        
+        
+        ///Crop size
         let cropRect = CGRect(
-            x: (originalSize.width - cropSize.width) / 2,
-            y: (originalSize.height - cropSize.height) / 2,
+            x: (newVideoSize.width - cropSize.width) / 2,
+            y: (newVideoSize.height - cropSize.height) / 2,
             width: cropSize.width,
             height: cropSize.height
         ).integral
-
-        print("cropSize", cropSize)
-        print("Old video size", originalSize)
-
         
-        /// Create a mutable video composition configured to apply Core Image filters to each video frame of the specified asset.
-        let composition = AVMutableVideoComposition(asset: asset, applyingCIFiltersWithHandler: { request in
-
-            /// Handle video frame (CIImage)
-            let outputImage = request.sourceImage
-
-            /// Add the .sourceImage (a CIImage) from the request to the filter.
-            cropFilter.setValue(outputImage, forKey: kCIInputImageKey)
-            /// Specify cropping rectangle with converting it to CIVector
-            cropFilter.setValue(CIVector(cgRect: cropRect), forKey: "inputRectangle")
-
-            /// Move the cropped image to the origin of the video frame. When you resize the frame (step 4) it will resize from the origin.
-            let imageAtOrigin = cropFilter.outputImage!
-                .transformed(
-                    by: CGAffineTransform(translationX: -cropRect.origin.x, y: -cropRect.origin.y)
-            )
-            request.finish(with: imageAtOrigin, context: context)
-        })
+        ///Transform video
+        let transformer = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack)
+        let transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+            .translatedBy(x: -cropRect.origin.x * scaleY, y: -cropRect.origin.y - 45)
+        transformer.setTransform(transform, at: .zero)
         
-        /// Update composition render size
-        composition.renderSize = cropRect.size
+        
+        ///Setup videoComposition
+        let instruction = AVMutableVideoCompositionInstruction()
+        instruction.timeRange = CMTimeRange(start: .zero, duration: duration)
+        instruction.layerInstructions = [transformer]
+        videoComposition.instructions = [instruction]
+        ///Set new crop rect size
+        videoComposition.renderSize = cropRect.size
+        videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
+        
         
         let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-        let exportUrl = URL.documentsDirectory.appending(path: "preview_record.mp4")
+        let exportUrl = URL.documentsDirectory.appending(path: "preview_video.mp4")
         fileManager.removeFileIfExists(for: exportUrl)
         
-        exporter?.videoComposition = composition
+        exporter?.videoComposition = videoComposition
         exporter?.outputURL = exportUrl
         exporter?.outputFileType = .mp4
         exporter?.shouldOptimizeForNetworkUse = false
@@ -436,155 +426,12 @@ extension ScreenRecorderManager{
         
         if exporter?.status == .completed {
             if fileManager.fileExists(atPath: exportUrl.path) {
+                fileManager.removeFileIfExists(for: url)
                 return exportUrl
             }
         }else if let error = exporter?.error{
             throw error
         }
-        
         return nil
     }
-
-    
-
-    enum Orientation {
-        case up, down, right, left
-    }
-    
-    func orientation(for track: AVAssetTrack) async -> Orientation{
-        
-        guard let t = try? await track.load(.preferredTransform) else{
-            return .down
-        }
-        
-        if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0) {             // Portrait
-            return .up
-        } else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0) {      // PortraitUpsideDown
-            return .down
-        } else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0) {       // LandscapeRight
-            return .right
-        } else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0) {     // LandscapeLeft
-            return .left
-        } else {
-            return .up
-        }
-    }
-    
-    
 }
-
-extension Double {
-    
-     var radians: Double {
-         .pi * self / 180
-    }
-}
-
-
-
-
-
-
-//func cropVideoWithGivenSize(url: URL, baseSize cropSize: CGSize) async throws -> URL?{
-//
-//    let asset = AVAsset(url: url)
-//
-//    /// Create your context and filter
-//    /// I'll use metal context and CIFilter
-//    guard let device = MTLCreateSystemDefaultDevice(),
-//          let cropFilter = CIFilter(name: "CICrop"),
-//          let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {return nil}
-//
-//    let context = CIContext(mtlDevice: device, options: [.workingColorSpace : NSNull()])
-//
-//    /// Original video size
-//    let originalSize = try await videoTrack.load(.naturalSize)
-//    let duration = try await asset.load(.duration)
-//
-//    // Compute scale and corrective aspect ratio
-//    let scaleX = cropSize.width / originalSize.width
-//    let scaleY = cropSize.height / originalSize.height
-//    let rate = max(scaleX, scaleY)
-//    let width = originalSize.width * rate
-//    let height = originalSize.height * rate
-//    let targetSize = CGSize(width: width, height: height)
-//
-//
-//    print("cropSize", cropSize)
-//    print("Old video size", originalSize)
-//    //print("New video size", cropRect.size)
-//
-//        let composition = AVMutableComposition()
-//
-//        let trackOrientation = await orientation(for: videoTrack)
-//        let transformer = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack)
-//        let videoComposition = AVMutableVideoComposition()
-//
-//
-//        videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
-//
-//
-//        var finalTransform: CGAffineTransform = CGAffineTransform.identity
-//        let cropRect = CGRect(
-//            x: (originalSize.width - cropSize.width) / 2,
-//            y: (originalSize.height - cropSize.height) / 2,
-//            width: cropSize.width,
-//            height: cropSize.height
-//        ).integral
-//
-//        let cropOffX: CGFloat = cropRect.origin.x
-//        let cropOffY: CGFloat = cropRect.origin.y
-//
-//        videoComposition.renderSize = cropRect.size
-//
-//        switch trackOrientation {
-//        case .up:
-//            finalTransform = finalTransform
-//                .translatedBy(x: originalSize.height - cropOffX, y: 0 - cropOffY)
-//                .rotated(by: CGFloat(90.0.radians))
-//        case .down:
-//            finalTransform = finalTransform
-//                .translatedBy(x: 0 - cropOffX, y: originalSize.width - cropOffY)
-//                .rotated(by: CGFloat(-90.0.radians))
-//        case .right:
-//            finalTransform = finalTransform.translatedBy(x: 0 - cropOffX, y: 0 - cropOffY)
-//        case .left:
-//            finalTransform = finalTransform
-//                .translatedBy(x: originalSize.width - cropOffX, y: originalSize.height - cropOffY)
-//                .rotated(by: CGFloat(-180.0.radians))
-//        }
-//
-//
-//
-//        let instruction = AVMutableVideoCompositionInstruction()
-//        instruction.timeRange = CMTimeRange(start: .zero, duration: duration)
-//
-//        transformer.setTransform(finalTransform, at: .zero)
-//        instruction.layerInstructions = [transformer]
-//        videoComposition.instructions = [instruction]
-//
-//
-//
-//
-//
-//    let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-//    let exportUrl = URL.documentsDirectory.appending(path: "preview_record.mp4")
-//    fileManager.removeFileIfExists(for: exportUrl)
-//
-//    exporter?.videoComposition = videoComposition
-//    exporter?.outputURL = exportUrl
-//    exporter?.outputFileType = .mp4
-//    exporter?.shouldOptimizeForNetworkUse = false
-//
-//    await exporter?.export()
-//
-//    if exporter?.status == .completed {
-//        if fileManager.fileExists(atPath: exportUrl.path) {
-//            return exportUrl
-//        }
-//    }else if let error = exporter?.error{
-//        throw error
-//    }
-//
-//    return nil
-//}
