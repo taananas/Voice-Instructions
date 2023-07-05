@@ -11,13 +11,21 @@ struct ScrubbingBarView: View {
     @Binding var time: Double
     let onChangeTime: (Double) -> Void
     @State private var lastOffset: CGFloat = .zero
+    let colors: [Color] = [.black, .black.opacity(0.7), .black.opacity(0.45), .clear]
     var body: some View {
     
-        InfinityHScrollView(alignment: .center, onChange: onChange, onEnded: onEnded){
-            imagesSection
+        ZStack {
+            InfinityHScrollView(alignment: .center, onChange: onChange, onEnded: onEnded){
+                imagesSection
+            }
+            HStack{
+                LinearGradient(colors: colors, startPoint: .leading, endPoint: .trailing)
+                Spacer()
+                LinearGradient(colors: colors, startPoint: .trailing, endPoint: .leading)
+            }
+            .allowsHitTesting(false)
         }
         .frame(height: 60)
-        .background(Color.clear)
     }
 }
 

@@ -290,7 +290,7 @@ extension ScreenRecorderManager{
         let compression: [String : Any] = [
             AVVideoAverageBitRateKey: bitsPerSecond,
             AVVideoProfileLevelKey: profileLevel,
-            AVVideoExpectedSourceFrameRateKey: 60
+            AVVideoExpectedSourceFrameRateKey: 30
         ]
         
         let videoOutputSettings: [String: Any] = [

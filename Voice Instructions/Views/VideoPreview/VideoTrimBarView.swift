@@ -33,7 +33,10 @@ struct VideoTrimBarView: View {
     
     var body: some View {
         ZStack{
-            thumbnailsImagesSection
+            GeometryReader { proxy in
+                thumbnailsImagesSection(weight: proxy.size.width)
+                    .vCenter()
+            }
             RangedSliderView(value: $editedRange,
                              bounds: videoRange,
                              onChange: onChangeTrimTime,
@@ -62,18 +65,18 @@ struct VideoTrimBarView_Previews: PreviewProvider {
 
 extension VideoTrimBarView{
     
-    private var thumbnailsImagesSection: some View{
+    private func thumbnailsImagesSection(weight: CGFloat) -> some View{
         HStack(spacing: 0){
             ForEach(thumbnailsImages) { trimData in
                 if let image = trimData.image{
                     Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .frame(width: weight / CGFloat(thumbnailsImages.count))
                         .clipped()
                 }
             }
         }
-        .cornerRadius(5)
         .onTapGesture {
            onTapTrim()
         }
