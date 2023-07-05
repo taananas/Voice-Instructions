@@ -108,9 +108,13 @@ extension VideoTrimBarView{
                             .font(.system(size: 10))
                             .offset(y: -11)
                     }
-            }, thumbSize: CGSize(width: 6, height: size.height),
-            
-            isAnimate: !isChangeTrimSlider)
+                    .overlay {
+                        Color.clear
+                            .frame(width: 50)
+                            .contentShape(Rectangle())
+                    }
+            }, thumbSize: CGSize(width: 6, height: size.height)
+        )
     }
     
     private func updateSeekAndTime(_ value: Double){

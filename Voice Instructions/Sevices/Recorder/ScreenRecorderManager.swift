@@ -63,7 +63,6 @@ class ScreenRecorderManager: ObservableObject{
                         
                         if self.assetWriter.status == AVAssetWriter.Status.writing {
                             if self.videoInput.isReadyForMoreMediaData {
-                                print("Writing a sample")
                                 if self.videoInput.append(cmSampleBuffer) == false {
                                     print("problem writing video")
                                 }
@@ -72,7 +71,6 @@ class ScreenRecorderManager: ObservableObject{
                         
                     case .audioMic:
                         if self.audioMicInput.isReadyForMoreMediaData {
-                            print("audioMic data added")
                             self.audioMicInput.append(cmSampleBuffer)
                         }
                         

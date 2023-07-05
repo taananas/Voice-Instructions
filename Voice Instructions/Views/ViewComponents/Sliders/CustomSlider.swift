@@ -139,13 +139,11 @@ where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Track: View
         .frame(height: max(trackSize.height, thumbSize.height))
         .onChange(of: value) { _ in
             if !isChange{
-                initOffset(isAnimation: true)
+                initOffset(isAnimation: isAnimate)
             }
         }
         .onChange(of: trackSize) { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15){
-                initOffset(isAnimation: false)
-            }
+            initOffset(isAnimation: false)
         }
     }
     
