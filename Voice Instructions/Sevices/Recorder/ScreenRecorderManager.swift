@@ -12,15 +12,30 @@ import Combine
 
 class ScreenRecorderManager: ObservableObject{
     
-    @Published var recorderIsActive: Bool = false
+    /// Show final video preview screen
     @Published var showPreview: Bool = false
+    
+    /// State recorder at least once tapped
+    @Published private(set) var recorderIsActive: Bool = false
+    
+    /// Recording state
     @Published private(set) var isRecord: Bool = false
+    
+    /// Loader state
     @Published private(set) var showLoader: Bool = false
+    
+    /// Finale video publisher
     private(set) var finalVideo = CurrentValueSubject<Video?, Never>(nil)
+    
+    /// All recorded videos urls for merged logic
     private(set) var videoURLs = [URL]()
+    
+    /// The number of finished videos needed to determine video rendering
     private var videoCounter: Int = 0
     
+    /// RPScreenRecorder class
     private let recorder = RPScreenRecorder.shared()
+    
     private var assetWriter: AVAssetWriter!
     private var videoInput: AVAssetWriterInput!
     private var audioMicInput: AVAssetWriterInput!

@@ -14,23 +14,45 @@ import SwiftUI
 /// A class for video management
 final class VideoPlayerManager: ObservableObject{
     
+    private(set) var videoPlayer = AVPlayer()
+    
+    /// PhotosPickerItem from PhotosPicker
     @Published var selectedItem: PhotosPickerItem?
+    
+    /// Current video time
     @Published var currentTime: Double = .zero
+    
+    /// Current video
     @Published var video: Video?
+    
+    /// Video load state
     @Published private(set) var loadState: LoadState = .unknown
+    
+    /// Player state
     @Published private(set) var isPlaying: Bool = false
     
-    var videoPlayer = AVPlayer()
-    
+    /// Video rate
     private var rate: Float = 1
+    
     private var cancelBag = CancelBag()
+    
+    /// Observers
     private var timeObserver: Any?
+    
+    /// Current duration range for trim time logic
     private var currentDurationRange: ClosedRange<Double>?
+    
+    /// Seek state
     private var isSeekInProgress: Bool = false
-    private let videoStorageService = VideoStorageService.shared
+    
+    /// Reached the end time of the video
     private var isReachedEndTime: Bool = false
     
-    deinit {
+    /// Storage video from userDefaults
+    private let videoStorageService = VideoStorageService.shared
+    
+    
+    deinit{
         removeTimeObserver()
     }
     
