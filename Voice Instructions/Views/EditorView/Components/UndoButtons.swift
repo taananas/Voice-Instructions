@@ -58,7 +58,7 @@ extension UndoButtons{
             .scaledToFit()
             .frame(width: 14, height: 14)
             .padding(12)
-            .background(Color.black.opacity(0.25), in: Circle())
+            .background(Color.toolBg, in: Circle())
             .foregroundColor(.white)
             .bold()
     }

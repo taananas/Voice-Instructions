@@ -11,14 +11,11 @@ struct TopLayerControlsView: View {
     @ObservedObject var playerManager: VideoPlayerManager
     @State private var selectedRate: EnumRate = .x1
     @State private var showRatePicker: Bool = false
-    private var isIPad: Bool{
-        UIDevice.current.isIPad
-    }
     var body: some View {
         ZStack{
             HStack(alignment: .top) {
                 UndoButtons(layerManager: layerManager)
-                    .padding(.top, isIPad ? 110 : 70)
+                    .padding(.top, 70)
                 Spacer()
                 ToolDropdownMenu(selectedTool: $layerManager.selectedTool, selectedColor: $layerManager.selectedColor, onOpen: closeRatePicker)
             }
@@ -42,7 +39,7 @@ struct TopLayerControlsView: View {
 struct TopLayerControlsView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
-            Color.white.ignoresSafeArea()
+            Color.black.ignoresSafeArea()
             TopLayerControlsView(layerManager: VideoLayerManager(), playerManager: VideoPlayerManager())
         }
       
@@ -78,8 +75,8 @@ extension TopLayerControlsView{
             }
         }
         .padding(.vertical, 10)
-        .frame(width: 45)
-        .background(Color.black.opacity(0.25), in: Capsule())
+        .frame(width: Constants.toolWidth)
+        .background(Color.toolBg, in: Capsule())
         .offset(y: -220)
     }
     

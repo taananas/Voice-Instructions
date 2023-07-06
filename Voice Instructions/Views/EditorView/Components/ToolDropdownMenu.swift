@@ -30,6 +30,9 @@ struct ToolDropdownMenu: View {
         .animation(.spring(), value: isOpenColor)
         .onChange(of: isOpenTool) { newValue in
             onOpen?(newValue)
+            if isOpenColor && !isOpenTool{
+                isOpenColor = false
+            }
         }
     }
 }
@@ -54,6 +57,7 @@ extension ToolDropdownMenu{
                 .onTapGesture {
                     if selectedTool != nil{
                         selectedTool = nil
+                        isOpenColor = false
                     }else{
                         isOpenTool.toggle()
                     }
@@ -84,7 +88,7 @@ extension ToolDropdownMenu{
         .padding(.vertical, 15)
         .background{
             Capsule()
-                .fill(Color.black.opacity(0.25))
+                .fill(Color.toolBg)
         }
         .foregroundColor(.white)
         .animation(.spring(), value: isOpenTool)
@@ -107,7 +111,7 @@ extension ToolDropdownMenu{
         .padding(.horizontal, 15)
         .background{
             Capsule()
-                .fill(Color.black.opacity(0.25))
+                .fill(Color.toolBg)
         }
     }
     

@@ -286,6 +286,8 @@ extension VideoPlayerManager{
             self.startControlStatusSubscriptions()
             self.setDidFinishPlayingObserver()
             self.loadState = .loaded
+        }else{
+            self.loadState = .unknown
         }
         
     }

@@ -21,10 +21,8 @@ struct EditorView: View {
                 ProgressView()
             case .loaded:
                 playerLayers
-            case .unknown:
+            case .unknown, .failed:
                 pickerButton
-            case.failed:
-                Text("Error")
             }
             loaderView
         }
@@ -34,10 +32,6 @@ struct EditorView: View {
         .onChange(of: playerManager.selectedItem, perform: setVideo)
         .onAppear{
             layerManager.undoManager = undoManager
-        }
-        .onRotate { _ in
-            playerManager.pause()
-            recorderManager.resetVideoCounter()
         }
     }
 }
