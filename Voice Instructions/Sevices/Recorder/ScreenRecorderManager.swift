@@ -106,7 +106,7 @@ class ScreenRecorderManager: ObservableObject{
     }
     
     private func createFileAndSetupAssetWriters(){
-        let name = "\(Date().ISO8601Format()).mp4"
+        let name = "record_\(Date().ISO8601Format()).mp4"
         let url = fileManager.temporaryDirectory.appendingPathComponent(name)
         videoURLs.append(url)
         setupAssetWriters(url)
@@ -237,7 +237,7 @@ class ScreenRecorderManager: ObservableObject{
         
         
         let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)
-        let exportUrl = URL.documentsDirectory.appending(path: "record.mp4")
+        let exportUrl = URL.documentsDirectory.appending(path: "merged_video.mp4")
         fileManager.removeFileIfExists(for: exportUrl)
         
         exporter?.outputURL = exportUrl
@@ -261,7 +261,7 @@ class ScreenRecorderManager: ObservableObject{
                     ///create video
                     self.createVideo(finishVideoUrl)
                     /// append original non croped video
-                    self.videoURLs.append(exportUrl)
+                    self.videoURLs.append(finishVideoUrl)
                     
                     self.videoCounter = videoURLs.count
                 }

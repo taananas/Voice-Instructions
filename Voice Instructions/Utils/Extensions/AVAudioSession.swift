@@ -15,7 +15,6 @@ extension AVAudioSession{
             try self.setCategory(.playAndRecord, mode: .default)
             try self.overrideOutputAudioPort(AVAudioSession.PortOverride.none)
             try self.setActive(true)
-          print("Successfully configured audio session.")
         } catch{
             print("Error while configuring audio session: \(error.localizedDescription)")
         }
@@ -28,7 +27,6 @@ extension AVAudioSession{
           try self.setCategory(.record, mode: .default)
           try self.overrideOutputAudioPort(AVAudioSession.PortOverride.none)
           try self.setActive(true)
-        print("Successfully configured audio session.")
       } catch{
           print("Error while configuring audio session: \(error.localizedDescription)")
       }
@@ -41,7 +39,6 @@ extension AVAudioSession{
             try self.setCategory(.playback, mode: .default)
             try self.overrideOutputAudioPort(.none)
             try self.setActive(true)
-            print("Successfully configured audio session.")
         } catch{
             print("Error while configuring audio session: \(error.localizedDescription)")
         }

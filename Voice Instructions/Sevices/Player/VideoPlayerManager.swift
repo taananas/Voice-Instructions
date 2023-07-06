@@ -87,7 +87,6 @@ final class VideoPlayerManager: ObservableObject{
     /// Play or pause video from range
     func action(_ range: ClosedRange<Double>){
         self.currentDurationRange = range
-        print("range", range)
         if isPlaying{
             pause()
         }else{
@@ -153,9 +152,7 @@ final class VideoPlayerManager: ObservableObject{
          videoPlayer.seek(to: CMTimeMakeWithSeconds(seconds, preferredTimescale: 600), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) {[weak self] isFinished in
              guard let self = self else {return}
              if isFinished{
-                 if seconds.rounded(toPlaces: 2) >= currentDurationRange?.upperBound ?? 0{
-                     isReachedEndTime = true
-                 }
+                 self.handleReachedEndTime(seconds, withPause: false)
                  self.isSeekInProgress = false
              }else{
                  self.seek(seconds)
@@ -177,6 +174,8 @@ final class VideoPlayerManager: ObservableObject{
             if self.isPlaying{
 
                 let time = time.seconds
+                
+                self.handleReachedEndTime(time, withPause: true)
 
                 switch self.scrubState {
                 case .reset:
@@ -190,6 +189,15 @@ final class VideoPlayerManager: ObservableObject{
         }
     }
     
+    /// Handle is reached end video time
+    private func handleReachedEndTime(_ time: Double, withPause: Bool){
+        if time.rounded(toPlaces: 2) >= currentDurationRange?.upperBound ?? 0{
+            isReachedEndTime = true
+            if withPause{
+                pause()
+            }
+        }
+    }
  
     /// Remove all time observers
     private func removeTimeObserver(){
