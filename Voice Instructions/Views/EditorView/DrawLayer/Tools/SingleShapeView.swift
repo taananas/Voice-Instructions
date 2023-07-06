@@ -53,7 +53,7 @@ struct SingleShapeView: View {
                     shapeModel.isSelected = true
                 }
             }
-
+        
     }
     
     private var shapeView: some View{
@@ -84,7 +84,7 @@ struct SingleShapeView: View {
     private var sizeDragForShape: some Gesture{
         DragGesture()
             .onChanged { value in
-                shapeModel.size.width = max(10,    shapeModel.size.width + value.translation.width)
+                shapeModel.size.width = max(10, shapeModel.size.width + value.translation.width)
                 shapeModel.size.height = max(10,    shapeModel.size.height + value.translation.height)
             }
     }
@@ -106,7 +106,7 @@ struct SingleShapeView_Previews: PreviewProvider {
         
         ShapesLayerView(playerManager: VideoPlayerManager())
             .environmentObject(VideoLayerManager())
-//        SingleShapeView(shapeModel: .constant(.init(type: .circle, location: .init(x: 100, y: 100), color: .red, size: .init(width: 100, height: 100)))){}
+//        SingleShapeView(shapeModel: .constant(.init(type: .circle, location: .init(x: 100, y: 100), color: .red, size: .init(width: 100, height: 100))), onSelected: { }, onDelete: {_ in})
     }
 }
 
