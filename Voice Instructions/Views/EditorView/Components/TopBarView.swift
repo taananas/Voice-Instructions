@@ -59,13 +59,13 @@ extension TopBarView{
     
     @ViewBuilder
     private var closeButton: some View{
-        if !recorderManager.recorderIsActive{
-            Button {
-                isPresentedAlert.toggle()
-            } label: {
-                buttonLabel("xmark")
-            }
+        Button {
+            isPresentedAlert.toggle()
+        } label: {
+            buttonLabel("xmark")
         }
+        .opacity(recorderManager.recorderIsActive ? 0 : 1)
+        .disabled(recorderManager.recorderIsActive)
     }
     
     @ViewBuilder

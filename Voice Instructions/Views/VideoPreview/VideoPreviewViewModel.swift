@@ -45,6 +45,7 @@ class VideoPreviewViewModel: ObservableObject{
                     DispatchQueue.main.async {
                         self.showLoader = false
                     }
+                    FileManager.default.removeFileIfExists(for: url)
                 }
             }
         }
@@ -87,7 +88,6 @@ extension VideoPreviewViewModel{
         let asset = AVAsset(url: url)
         
         let outputURL = URL.documentsDirectory.appending(path: "\(UUID().uuidString).mp4")
-        FileManager.default.removeFileIfExists(for: outputURL)
         
         let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)!
         exportSession.outputURL = outputURL
